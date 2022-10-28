@@ -27,23 +27,24 @@ data class Meta(
             throw IllegalStateException("Cannot merge two logically distinct entities")
         }
 
-        val mergedMap = timestampMeta.entries.fold(HashMap<String, String>()) { acc, mutableEntry ->
-            val newValue = other.timestampMeta[mutableEntry.key]?.let { otherValue ->
-                maxOf(mutableEntry.value, otherValue)
-            } ?: mutableEntry.value
+        val allKeys = timestampMeta.entries union other.timestampMeta.entries
+
+        val newMap = allKeys.fold(HashMap<String, String>()) { acc, mutableEntry ->
+
+            val firstValue = timestampMeta[mutableEntry.key]
+            val secondValue = other.timestampMeta[mutableEntry.key]
+
+            val newValue = if(firstValue != null && secondValue != null) {
+               maxOf(firstValue, secondValue)
+            } else {
+                firstValue ?: secondValue
+            }
 
             acc.apply {
-                put(mutableEntry.key, newValue)
+                put(mutableEntry.key, newValue!!)
             }
         }
-
-        val newKeys = other.timestampMeta.keys subtract timestampMeta.keys
-        val newMap = newKeys.fold(mergedMap) { acc, key ->
-            acc.apply {
-                put(key, other.timestampMeta[key]!!)
-            }
-        }
-
+        
         return Meta(
             clazz,
             newMap
