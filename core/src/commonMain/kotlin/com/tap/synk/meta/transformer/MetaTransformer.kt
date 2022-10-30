@@ -6,5 +6,5 @@ import com.tap.synk.meta.Meta
  *
  */
 interface MetaTransformer<in T> {
-    fun toMeta(crdt: T) : Meta
+    fun toMeta(crdt: T): Meta
 }

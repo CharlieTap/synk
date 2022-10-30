@@ -1,7 +1,5 @@
 package com.tap.synk.meta
 
-import com.tap.synk.merge.Mergeable
-
 /**
  * Metadata needed differentiate between CRDT state updates
  *
@@ -20,35 +18,4 @@ import com.tap.synk.merge.Mergeable
 data class Meta(
     val clazz: String,
     val timestampMeta: HashMap<String, String>
-) : Mergeable<Meta>
-{
-    override fun merge(other: Meta): Meta {
-        if(clazz != other.clazz) {
-            throw IllegalStateException("Cannot merge two logically distinct entities")
-        }
-
-        val allKeys = timestampMeta.entries union other.timestampMeta.entries
-
-        val newMap = allKeys.fold(HashMap<String, String>()) { acc, mutableEntry ->
-
-            val firstValue = timestampMeta[mutableEntry.key]
-            val secondValue = other.timestampMeta[mutableEntry.key]
-
-            val newValue = if(firstValue != null && secondValue != null) {
-               maxOf(firstValue, secondValue)
-            } else {
-                firstValue ?: secondValue
-            }
-
-            acc.apply {
-                put(mutableEntry.key, newValue!!)
-            }
-        }
-        
-        return Meta(
-            clazz,
-            newMap
-        )
-    }
-
-}
+)

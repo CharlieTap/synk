@@ -1,15 +1,12 @@
 package com.tap.synk.meta
 
 import com.benasher44.uuid.Uuid
-import kotlin.test.Test
 import com.tap.synk.meta.store.InMemoryMetaStore
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-
 class InMemoryMetaStoreTest {
-
-
 
     @Test
     fun `can save and retrieve meta maps from store`() {
@@ -17,8 +14,8 @@ class InMemoryMetaStoreTest {
 
         val key = Uuid.randomUUID()
         val meta = mutableMapOf<String, String>().apply {
-           put("name", "123456789")
-           put("phone", "234567890")
+            put("name", "123456789")
+            put("phone", "234567890")
         }
 
         metaStore.putMeta(key, meta)
@@ -27,6 +24,4 @@ class InMemoryMetaStoreTest {
         assertNotNull(result)
         assertEquals(meta, result)
     }
-
-
 }

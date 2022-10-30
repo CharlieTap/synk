@@ -20,7 +20,7 @@ internal class InMemoryMetaStore(
 
     override fun putMeta(id: Uuid, meta: Map<String, String>) {
         val serial = meta.entries.foldIndexed("") { idx, acc, entry ->
-            val postFix = if(idx < meta.entries.size - 1) {
+            val postFix = if (idx < meta.entries.size - 1) {
                 "|"
             } else ""
             acc + entry.key + ":" + entry.value + postFix

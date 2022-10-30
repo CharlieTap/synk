@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.declaredMemberProperties
 
+typealias ReflectionsMetaCache = HashMap<KClass<*>, Pair<String, Set<String>>>
+
 /**
  * This class transforms a CRDT class into its Meta data
  *
@@ -20,40 +22,29 @@ import kotlin.reflect.full.declaredMemberProperties
  *
  */
 class ReflectionsMetaTransformer(
-    private val hlcFactory: () -> HybridLogicalClock
+    private val hlcFactory: () -> HybridLogicalClock = {HybridLogicalClock()},
+    private val metaCache: ReflectionsMetaCache = HashMap(),
+    private val ignoredKeys: Set<String> = setOf("id")
 ) : MetaTransformer<Any> {
 
-    companion object {
-        private val CACHE = HashMap<KClass<*>, Pair<String, Set<String>>>()
-
-        private fun getCacheEntry(clazz: KClass<*>) : Pair<String, Set<String>>? {
-            return CACHE[clazz]
-        }
-
-        private fun putCacheEntry(clazz: KClass<*>, entry: Pair<String, Set<String>>) {
-            CACHE[clazz] = entry
-        }
-    }
-
-
-    override fun toMeta(crdt: Any) : Meta {
+    override fun toMeta(crdt: Any): Meta {
         val clazz = crdt::class
-        val cacheEntry =  getCacheEntry(clazz)
+        val cacheEntry = metaCache[clazz]
 
         val clazzName = cacheEntry?.first ?: clazz::qualifiedName.get() ?: clazz.simpleName ?: ""
         val properties = cacheEntry?.second ?: clazz::declaredMemberProperties.get().map(KProperty<*>::name).filter {
-            it == "id"
+            ignoredKeys.contains(it).not()
         }.toSet()
 
         val hlc = hlcFactory().toString()
-        val timestamps =  properties.fold(HashMap<String, String>(properties.size)) { acc, name ->
+        val timestamps = properties.fold(HashMap<String, String>(properties.size)) { acc, name ->
             acc.apply {
                 put(name, hlc)
             }
         }
 
-        if(cacheEntry == null) {
-            putCacheEntry(clazz, clazzName to properties)
+        if (cacheEntry == null) {
+            metaCache[clazz] = clazzName to properties
         }
 
         return Meta(
@@ -61,5 +52,4 @@ class ReflectionsMetaTransformer(
             timestamps
         )
     }
-
 }

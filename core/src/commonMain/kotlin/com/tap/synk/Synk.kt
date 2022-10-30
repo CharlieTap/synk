@@ -1,5 +1,3 @@
 package com.tap.synk
 
-object Synk {
-
-}
+object Synk
