@@ -3,12 +3,12 @@ package com.tap.synk.meta.store
 import com.benasher44.uuid.Uuid
 
 internal class InMemoryMetaStore(
-    private val store: HashMap<String, String>
+    private val store: HashMap<String, String> = HashMap()
 ) : MetaStore {
 
-    override fun getMeta(id: Uuid): Map<String, String>? {
+    override fun getMeta(id: Uuid): HashMap<String, String>? {
         return store[id.toString()]?.let { serial ->
-            mutableMapOf<String, String>().apply {
+            HashMap<String, String>().apply {
                 serial.split("|").map { pairSerial ->
                     val key = pairSerial.substringBefore(":")
                     val value = pairSerial.substringAfter(":")
@@ -18,7 +18,7 @@ internal class InMemoryMetaStore(
         }
     }
 
-    override fun putMeta(id: Uuid, meta: Map<String, String>) {
+    override fun putMeta(id: Uuid, meta: HashMap<String, String>) {
         val serial = meta.entries.foldIndexed("") { idx, acc, entry ->
             val postFix = if (idx < meta.entries.size - 1) {
                 "|"

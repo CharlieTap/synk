@@ -4,7 +4,10 @@ import com.tap.synk.abstraction.Monoid
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
 
-fun <T : Monoid<T>> Synk.outbound(old: T, new: T): Message<T> {
+fun <T : Monoid<T>> Synk.outbound(new: T, old: T? = null): Message<T> {
+    // diff what properties changed or were added, return them as a set
+    // update meta for these properties to now
+    // return message
     return Message(new, Meta("", HashMap()))
 }
 

@@ -23,13 +23,13 @@ typealias ReflectionsMetaCache = HashMap<KClass<*>, Pair<String, Set<String>>>
  */
 class ReflectionsMetaTransformer(
     private val hlcFactory: () -> HybridLogicalClock = {HybridLogicalClock()},
-    private val metaCache: ReflectionsMetaCache = HashMap(),
+    private val reflectionCache: ReflectionsMetaCache = HashMap(),
     private val ignoredKeys: Set<String> = setOf("id")
 ) : MetaTransformer<Any> {
 
     override fun toMeta(crdt: Any): Meta {
         val clazz = crdt::class
-        val cacheEntry = metaCache[clazz]
+        val cacheEntry = reflectionCache[clazz]
 
         val clazzName = cacheEntry?.first ?: clazz::qualifiedName.get() ?: clazz.simpleName ?: ""
         val properties = cacheEntry?.second ?: clazz::declaredMemberProperties.get().map(KProperty<*>::name).filter {
@@ -44,7 +44,7 @@ class ReflectionsMetaTransformer(
         }
 
         if (cacheEntry == null) {
-            metaCache[clazz] = clazzName to properties
+            reflectionCache[clazz] = clazzName to properties
         }
 
         return Meta(
