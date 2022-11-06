@@ -13,7 +13,7 @@ class InMemoryMetaStoreFactory(
     }
 
     override fun getStore(clazz: KClass<*>): MetaStore {
-        val key = clazz.toString()
+        val key = clazz.qualifiedName.toString()
         return stores[key] ?: createStore(key)
     }
 }

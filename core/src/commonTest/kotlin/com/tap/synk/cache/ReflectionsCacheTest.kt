@@ -11,7 +11,7 @@ class ReflectionsCacheTest {
 
     @Test
     fun `cache returns class constructor and cache is populated after call`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry>()
+        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
         val crdt = CRDT("", "", 1)
@@ -24,7 +24,7 @@ class ReflectionsCacheTest {
 
     @Test
     fun `cache returns properties and cache is populated after call`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry>()
+        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
         val crdt = CRDT("", "", 1)
@@ -38,7 +38,7 @@ class ReflectionsCacheTest {
 
     @Test
     fun `cache returns params properties combo and cache is populated after call`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry>()
+        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
         val crdt = CRDT("", "", 1)

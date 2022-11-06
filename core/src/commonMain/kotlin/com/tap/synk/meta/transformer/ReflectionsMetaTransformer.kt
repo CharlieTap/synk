@@ -1,12 +1,10 @@
 package com.tap.synk.meta.transformer
 
 import com.tap.hlc.HybridLogicalClock
+import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.KProperty1
 
-typealias ReflectionsMetaCache = HashMap<KClass<*>, Pair<String, Set<String>>>
 
 /**
  * This class transforms a CRDT class into its Meta data
@@ -22,17 +20,16 @@ typealias ReflectionsMetaCache = HashMap<KClass<*>, Pair<String, Set<String>>>
  *
  */
 class ReflectionsMetaTransformer(
+    private val reflectionCache: ReflectionsCache = ReflectionsCache(),
     private val hlcFactory: () -> HybridLogicalClock = {HybridLogicalClock()},
-    private val reflectionCache: ReflectionsMetaCache = HashMap(),
     private val ignoredKeys: Set<String> = setOf("id")
 ) : MetaTransformer<Any> {
 
     override fun toMeta(crdt: Any): Meta {
         val clazz = crdt::class
-        val cacheEntry = reflectionCache[clazz]
 
-        val clazzName = cacheEntry?.first ?: clazz::qualifiedName.get() ?: clazz.simpleName ?: ""
-        val properties = cacheEntry?.second ?: clazz::declaredMemberProperties.get().map(KProperty<*>::name).filter {
+        val clazzName = clazz::qualifiedName.get() ?: clazz.simpleName ?: ""
+        val properties = reflectionCache.getProps(clazz).map(KProperty1<out Any, *>::name).filter {
             ignoredKeys.contains(it).not()
         }.toSet()
 
@@ -41,10 +38,6 @@ class ReflectionsMetaTransformer(
             acc.apply {
                 put(name, hlc)
             }
-        }
-
-        if (cacheEntry == null) {
-            reflectionCache[clazz] = clazzName to properties
         }
 
         return Meta(

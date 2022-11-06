@@ -51,7 +51,7 @@ class MessageMonoidTest {
         val message1 = Message(crdt1, meta1)
         val message2 = Message(crdt2, meta2)
 
-        val result = MessageMonoid(ReflectionsCache(), MetaMonoid).combine(message1, message2)
+        val result = MessageMonoid<Any>(ReflectionsCache(), MetaMonoid).combine(message1, message2)
         val expectedCrdt = CRDT(
             "bob",
             "smith",

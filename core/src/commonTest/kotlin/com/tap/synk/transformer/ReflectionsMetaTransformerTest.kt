@@ -1,8 +1,10 @@
 package com.tap.synk.transformer
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.meta.transformer.ReflectionsMetaCache
+import com.tap.synk.cache.ReflectionCacheEntry
+import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.transformer.ReflectionsMetaTransformer
+import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +17,7 @@ class ReflectionsMetaTransformerTest {
             hlc
         }
 
-        val transformer = ReflectionsMetaTransformer(factory)
+        val transformer = ReflectionsMetaTransformer(hlcFactory = factory)
 
         val crdt = CRDT("", "", "")
         val meta = transformer.toMeta(crdt)
@@ -37,44 +39,17 @@ class ReflectionsMetaTransformerTest {
         val factory = {
             hlc
         }
-        val cache = ReflectionsMetaCache()
+        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val reflectionsCache = ReflectionsCache(cache)
 
-        val transformer = ReflectionsMetaTransformer(factory, cache)
+        val transformer = ReflectionsMetaTransformer(reflectionsCache, factory)
 
         val crdt = CRDT("", "", "")
         val meta = transformer.toMeta(crdt)
-
-        val expected = CRDT::class.qualifiedName!! to setOf("name", "secondName", "thirdName")
 
         assertEquals(1, cache.size)
-        assertEquals(expected, cache[CRDT::class])
     }
 
-    @Test
-    fun `meta cache is used if available`() {
-        val hlc = HybridLogicalClock()
-        val factory = {
-            hlc
-        }
-        val cache = ReflectionsMetaCache().apply {
-            put(CRDT::class, "testclass" to setOf("fakename", "fakename2", "fakename3"))
-        }
-
-        val transformer = ReflectionsMetaTransformer(factory, cache)
-
-        val crdt = CRDT("", "", "")
-        val meta = transformer.toMeta(crdt)
-
-        val expected = HashMap<String, String>().apply {
-            val hlcs = hlc.toString()
-            put("fakename", hlcs)
-            put("fakename2", hlcs)
-            put("fakename3", hlcs)
-        }
-
-        assertEquals("testclass", meta.clazz)
-        assertEquals(expected, meta.timestampMeta)
-    }
 
 
     @Test
@@ -84,7 +59,7 @@ class ReflectionsMetaTransformerTest {
             hlc
         }
 
-        val transformer = ReflectionsMetaTransformer(factory, ignoredKeys = setOf("name"))
+        val transformer = ReflectionsMetaTransformer(hlcFactory = factory, ignoredKeys = setOf("name"))
 
         val crdt = CRDT("", "", "")
         val meta = transformer.toMeta(crdt)

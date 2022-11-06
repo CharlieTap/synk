@@ -12,8 +12,8 @@ class InMemoryMetaStoreTest {
     fun `can save and retrieve meta maps from store`() {
         val metaStore = InMemoryMetaStore(HashMap())
 
-        val key = Uuid.randomUUID()
-        val meta = mutableMapOf<String, String>().apply {
+        val key = Uuid.randomUUID().toString()
+        val meta = HashMap<String, String>().apply {
             put("name", "123456789")
             put("phone", "234567890")
         }
