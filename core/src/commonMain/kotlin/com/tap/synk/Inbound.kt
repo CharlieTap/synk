@@ -4,6 +4,7 @@ import com.github.michaelbull.result.getOr
 import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
+import kotlinx.atomicfu.update
 
 /**
  * Inbound is designed for Messages from other remote nodes in the system
@@ -16,10 +17,12 @@ import com.tap.synk.relay.Message
  * This function will the new value to be inserted into the database
  */
 fun <T : Any> SynkContract.inbound(message: Message<T>, old: T? = null): T {
-    val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc) }.reduce { acc, result ->
+    val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc.value) }.reduce { acc, result ->
         maxOf(acc, result)
     }
-    hlc = HybridLogicalClock.remoteTock(hlc, remoteHlc).getOr(hlc)
+    hlc.update { atomicHlc ->
+        HybridLogicalClock.remoteTock(atomicHlc, remoteHlc).getOr(atomicHlc)
+    }
 
     val metaStore = factory.getStore(message.crdt::class)
     val id = idResolver(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")

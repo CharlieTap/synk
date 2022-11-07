@@ -4,6 +4,7 @@ import com.github.michaelbull.result.getOr
 import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
+import kotlinx.atomicfu.update
 
 /**
  * Outbound is designed for creating Messages intended to be propagated to other nodes in the system
@@ -15,7 +16,9 @@ fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
     val metaStore = factory.getStore(new::class)
     val id = idResolver(old ?: new) ?: throw Exception("Unable to find id for CRDT")
 
-    hlc = HybridLogicalClock.localTick(hlc).getOr(hlc)
+    hlc.update { atomicHlc ->
+        HybridLogicalClock.localTick(atomicHlc).getOr(atomicHlc)
+    }
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id) ?: throw Exception("Failed to find meta for provided old value")
@@ -33,7 +36,7 @@ fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
         val newMeta = Meta(new::class.qualifiedName!!, newMetaMap)
 
         Message(new, newMeta)
-    } ?: Message(new, metaTransformer.toMeta(new, hlc))
+    } ?: Message(new, metaTransformer.toMeta(new, hlc.value))
 
     metaStore.putMeta(id, newMessage.meta.timestampMeta)
 

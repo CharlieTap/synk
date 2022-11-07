@@ -10,6 +10,7 @@ import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.meta.store.decodeToHashmap
 import com.tap.synk.meta.store.encodeToString
 import com.tap.synk.relay.Message
+import kotlinx.atomicfu.atomic
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,7 +25,7 @@ class OutboundTest {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(cache = reflectionsCache, factory = metaStoreFactory, hlc = hlc)
+        return Synk(cache = reflectionsCache, factory = metaStoreFactory, hlc = atomic(hlc))
     }
 
     @Test
@@ -42,11 +43,11 @@ class OutboundTest {
         )
 
         val result = synk.outbound(newCRDT)
-
+        val expectedHLC = synk.hlc.value
         val expectedMetaMap = HashMap<String, String>().apply {
-            put("name", synk.hlc.toString())
-            put("last_name", synk.hlc.toString())
-            put("phone", synk.hlc.toString())
+            put("name", expectedHLC.toString())
+            put("last_name", expectedHLC.toString())
+            put("phone", expectedHLC.toString())
         }
         val expectedMeta = Meta(
             IDCRDT::class.qualifiedName.toString(),
@@ -55,8 +56,8 @@ class OutboundTest {
         val expectedMessage = Message(newCRDT, expectedMeta)
 
         assertEquals(expectedMessage, result)
-        assertTrue(synk.hlc > currentHlc)
-        assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
+        assertTrue(expectedHLC > currentHlc)
+        assertEquals(expectedHLC.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
         assertEquals(expectedMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
     }
@@ -74,12 +75,6 @@ class OutboundTest {
             "Jonesss",
             123344477
         )
-
-        val oldMetaMap = HashMap<String, String>().apply {
-            put("name", currentHlc.toString())
-            put("last_name", currentHlc.toString())
-            put("phone", currentHlc.toString())
-        }
 
         val newCRDT = IDCRDT(
             "123",
@@ -123,10 +118,11 @@ class OutboundTest {
 
         val result = synk.outbound(newCRDT, oldCRDT)
 
+        val expectedHLC = synk.hlc.value
         val expectedMetaMap = HashMap<String, String>().apply {
             put("name", currentHlc.toString())
-            put("last_name", synk.hlc.toString())
-            put("phone", synk.hlc.toString())
+            put("last_name", expectedHLC.toString())
+            put("phone", expectedHLC.toString())
         }
         val expectedMeta = Meta(
             IDCRDT::class.qualifiedName.toString(),
@@ -135,8 +131,8 @@ class OutboundTest {
         val expectedMessage = Message(newCRDT, expectedMeta)
 
         assertEquals(expectedMessage, result)
-        assertTrue(synk.hlc > currentHlc)
-        assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
+        assertTrue(expectedHLC > currentHlc)
+        assertEquals(expectedHLC.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
         assertEquals(expectedMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
     }

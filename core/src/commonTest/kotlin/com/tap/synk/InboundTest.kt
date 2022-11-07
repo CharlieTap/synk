@@ -11,6 +11,7 @@ import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.meta.store.decodeToHashmap
 import com.tap.synk.meta.store.encodeToString
 import com.tap.synk.relay.Message
+import kotlinx.atomicfu.atomic
 import kotlinx.datetime.Clock
 import kotlin.reflect.KClass
 import kotlin.test.Test
@@ -26,7 +27,7 @@ class InboundTest {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(cache = reflectionsCache, factory = metaStoreFactory, hlc = hlc)
+        return Synk(cache = reflectionsCache, factory = metaStoreFactory, hlc = atomic(hlc))
     }
 
     @Test
@@ -58,8 +59,8 @@ class InboundTest {
         val syncedCRDT = synk.inbound(newMessage)
 
         assertEquals(newCRDT, syncedCRDT)
-        assertTrue(synk.hlc > currentHlc)
-        assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
+        assertTrue(synk.hlc.value > currentHlc)
+        assertEquals(synk.hlc.value.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
         assertEquals(newMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
     }
@@ -116,11 +117,13 @@ class InboundTest {
             put("phone", futureHlc.toString())
         }
 
+        val expectedHlc = synk.hlc.value
+
         assertEquals(expectedCRDT, syncedCRDT)
-        assertTrue(synk.hlc > currentHlc)
-        assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
+        assertTrue(expectedHlc > currentHlc)
+        assertEquals(expectedHlc.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
         assertEquals(expectedMeta, metaStoreMap[newCRDT.id]?.decodeToHashmap())
-        assertTrue(synk.hlc > futureHlc)
+        assertTrue(expectedHlc > futureHlc)
     }
 }

@@ -7,10 +7,10 @@ import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.meta.transformer.MetaTransformer
 import com.tap.synk.relay.MessageMonoid
 import com.tap.synk.resolver.IDResolver
+import kotlinx.atomicfu.AtomicRef
 
 interface SynkContract {
-
-    var hlc: HybridLogicalClock
+    val hlc: AtomicRef<HybridLogicalClock>
     val factory: MetaStoreFactory
     val cache: ReflectionsCache
     val merger: MessageMonoid<Any>
