@@ -10,7 +10,6 @@ import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.meta.store.decodeToHashmap
 import com.tap.synk.meta.store.encodeToString
 import com.tap.synk.relay.Message
-import kotlinx.atomicfu.atomic
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,7 +24,7 @@ class OutboundTest {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(cache = reflectionsCache, factory = metaStoreFactory, hlc = atomic(hlc))
+        return Synk(cache = reflectionsCache, factory = metaStoreFactory, clock = hlc)
     }
 
     @Test

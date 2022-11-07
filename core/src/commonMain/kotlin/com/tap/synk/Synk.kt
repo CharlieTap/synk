@@ -16,11 +16,13 @@ import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 
 class Synk(
-    override val hlc: AtomicRef<HybridLogicalClock> = atomic(HybridLogicalClock()), // todo load from storage or newest object
+    clock: HybridLogicalClock = HybridLogicalClock(), // todo load from storage or newest object
     override val factory: MetaStoreFactory = InMemoryMetaStoreFactory(),
     override val cache: ReflectionsCache = ReflectionsCache(),
     override val merger: MessageMonoid<Any> = MessageMonoid(cache, MetaMonoid),
     override val idResolver: IDResolver<Any> = ReflectionsIDResolver(cache),
     override val metaTransformer: MetaTransformer<Any> = ReflectionsMetaTransformer(cache),
     override val differ: ObjectDiffer<Any> = ReflectionsObjectDiffer(cache)
-) : SynkContract
+) : SynkContract {
+    override val hlc: AtomicRef<HybridLogicalClock> = atomic(clock)
+}
