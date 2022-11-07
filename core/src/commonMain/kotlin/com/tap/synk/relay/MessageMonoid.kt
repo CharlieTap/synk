@@ -7,16 +7,15 @@ import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
 import kotlin.reflect.jvm.isAccessible
 
-class MessageMonoid<T: Any>(
+class MessageMonoid<T : Any>(
     private val reflectionsCache: ReflectionsCache,
     private val metaMonoid: Monoid<Meta>
-): Monoid<Message<T>> {
+) : Monoid<Message<T>> {
 
     override val neutral: Message<T>
         get() = Message(Unit as T, MetaMonoid.neutral)
 
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
-
         val constructor = reflectionsCache.getConstructor(a.crdt::class)
         val paramsProps = reflectionsCache.getParamsAndProps(a.crdt::class)
         val parameters = paramsProps.map(ParamPropPair::first)
@@ -31,7 +30,7 @@ class MessageMonoid<T: Any>(
             val prop = props.first { it.name == param.name }
             prop.isAccessible = true
 
-            if(ahlc == winner) {
+            if (ahlc == winner) {
                 prop.getter.call(a.crdt)
             } else {
                 prop.getter.call(b.crdt)
@@ -40,6 +39,6 @@ class MessageMonoid<T: Any>(
             constructor.call(*params.toTypedArray())
         }
 
-       return Message(crdt, meta)
+        return Message(crdt, meta)
     }
 }

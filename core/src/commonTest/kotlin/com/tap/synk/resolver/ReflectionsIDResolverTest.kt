@@ -1,12 +1,9 @@
 package com.tap.synk.resolver
 
-import com.tap.synk.CRDT
 import com.tap.synk.IDCRDT
 import com.tap.synk.cache.ReflectionCacheEntry
 import com.tap.synk.cache.ReflectionsCache
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
-import kotlin.reflect.full.primaryConstructor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +15,6 @@ class ReflectionsIDResolverTest {
         val reflectionsCache = ReflectionsCache(cache)
 
         val reflectionsIDResolver = ReflectionsIDResolver(reflectionsCache)
-
 
         val crdt = IDCRDT("5", "", "", 1)
 
@@ -43,5 +39,4 @@ class ReflectionsIDResolverTest {
 //        assertEquals("5", id)
 //        assertEquals(1, cache.entries.size)
 //    }
-
 }

@@ -12,20 +12,19 @@ class ReflectionsDifferTest {
         val crdt1 = CRDT(
             "test",
             "test",
-            "test",
+            "test"
         )
 
         val crdt2 = CRDT(
             "test",
             "test2",
-            "test",
+            "test"
         )
 
         val diff = differ.diff(crdt1, crdt2)
 
         assertEquals(setOf("secondName"), diff)
     }
-
 }
 
 private data class CRDT(

@@ -111,7 +111,7 @@ hilt-integrations-work = { module = "androidx.hilt:hilt-work", version.ref = "hi
 hilt-integrations-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt-integrations"}
 hilt-integrations-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-compose"}
 
-hlc = { module = "com.tap.hlc:hlc", version.ref = "hlc"}
+hlc = { module = "com.github.charlietap:hlc", version.ref = "hlc"}
 
 kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin"}
 kotlin-reflection = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin"}

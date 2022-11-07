@@ -5,7 +5,6 @@ import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
 
-
 /**
  * Inbound is designed for Messages from other remote nodes in the system
  *
@@ -16,9 +15,8 @@ import com.tap.synk.relay.Message
  *
  * This function will the new value to be inserted into the database
  */
-fun <T: Any> SynkContract.inbound(message: Message<T>, old: T? = null) : T {
-
-    val remoteHlc = message.meta.timestampMeta.map{ HybridLogicalClock.decodeFromString(it.value).getOr(hlc) }.reduce { acc, result ->
+fun <T : Any> SynkContract.inbound(message: Message<T>, old: T? = null): T {
+    val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc) }.reduce { acc, result ->
         maxOf(acc, result)
     }
     hlc = HybridLogicalClock.remoteTock(hlc, remoteHlc).getOr(hlc)
@@ -27,14 +25,13 @@ fun <T: Any> SynkContract.inbound(message: Message<T>, old: T? = null) : T {
     val id = idResolver(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")
 
     val newMessage = old?.let {
+        val oldMetaMap = metaStore.getMeta(id)
+        val oldMeta = Meta(old::class.qualifiedName!!, oldMetaMap!!)
 
-         val oldMetaMap = metaStore.getMeta(id)
-         val oldMeta = Meta(old::class.qualifiedName!!, oldMetaMap!!)
-
-         merger.combine(Message(old, oldMeta), message)
-     } ?: message
+        merger.combine(Message(old, oldMeta), message)
+    } ?: message
 
     metaStore.putMeta(id, newMessage.meta.timestampMeta)
 
     return newMessage.crdt as T
- }
+}

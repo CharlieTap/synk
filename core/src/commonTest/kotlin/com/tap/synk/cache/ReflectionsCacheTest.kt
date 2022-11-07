@@ -48,5 +48,4 @@ class ReflectionsCacheTest {
         assertEquals(3, props.size)
         assertEquals(1, cache.entries.size)
     }
-
 }

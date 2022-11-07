@@ -16,8 +16,7 @@ class ReflectionsCache(
     private val cache: HashMap<KClass<*>, ReflectionCacheEntry<Any>> = HashMap()
 ) {
 
-    private fun reflect(clazz: KClass<*>) : ReflectionCacheEntry<Any> {
-
+    private fun reflect(clazz: KClass<*>): ReflectionCacheEntry<Any> {
         val constructor = clazz::primaryConstructor.get()?.apply {
             isAccessible = true
         } ?: throw IllegalStateException("Failed to find primary constructor on object")
@@ -31,28 +30,24 @@ class ReflectionsCache(
             }
         }.toSet()
 
-
         return (constructor to paramPropSet).apply {
             cache[clazz] = this
         }
     }
 
-    fun <T: Any> getConstructor(clazz: KClass<T>) : CRDTConstructor<T> {
+    fun <T : Any> getConstructor(clazz: KClass<T>): CRDTConstructor<T> {
         val entry = cache[clazz] ?: reflect(clazz)
 
         return entry.first as CRDTConstructor<T>
     }
 
-
-    fun getProps(clazz: KClass<*>) : Set<KProperty1<out Any, *>> {
-
+    fun getProps(clazz: KClass<*>): Set<KProperty1<out Any, *>> {
         val entry = cache[clazz] ?: reflect(clazz)
 
         return entry.second.map { it.second }.toSet()
     }
 
-    fun getParamsAndProps(clazz: KClass<*>) : Set<ParamPropPair> {
-
+    fun getParamsAndProps(clazz: KClass<*>): Set<ParamPropPair> {
         val entry = cache[clazz] ?: reflect(clazz)
 
         return entry.second

@@ -3,9 +3,9 @@ package com.tap.synk.resolver
 import com.tap.synk.cache.ReflectionsCache
 
 class ReflectionsIDResolver(
-    private val reflectionsCache: ReflectionsCache = ReflectionsCache(),
+    private val reflectionsCache: ReflectionsCache = ReflectionsCache()
 //    private val stringType: KType = String::class.createType()
-): IDResolver<Any> {
+) : IDResolver<Any> {
 
 //    override fun populateID(crdt: Any): Any {
 //
@@ -38,7 +38,7 @@ class ReflectionsIDResolver(
 //    }
 
     override fun invoke(crdt: Any): String? {
-        val idProp =  reflectionsCache.getProps(crdt::class).firstOrNull {
+        val idProp = reflectionsCache.getProps(crdt::class).firstOrNull {
             it.name.lowercase() == "id"
         } ?: return null
 

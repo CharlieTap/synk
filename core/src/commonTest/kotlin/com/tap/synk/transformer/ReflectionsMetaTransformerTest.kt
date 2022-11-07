@@ -13,14 +13,10 @@ class ReflectionsMetaTransformerTest {
     @Test
     fun `can turn object into meta`() {
         val hlc = HybridLogicalClock()
-        val factory = {
-            hlc
-        }
-
-        val transformer = ReflectionsMetaTransformer(hlcFactory = factory)
+        val transformer = ReflectionsMetaTransformer()
 
         val crdt = CRDT("", "", "")
-        val meta = transformer.toMeta(crdt)
+        val meta = transformer.toMeta(crdt, hlc)
 
         val expected = HashMap<String, String>().apply {
             val hlcs = hlc.toString()
@@ -36,33 +32,25 @@ class ReflectionsMetaTransformerTest {
     @Test
     fun `meta cache is populated after first run`() {
         val hlc = HybridLogicalClock()
-        val factory = {
-            hlc
-        }
+
         val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
-        val transformer = ReflectionsMetaTransformer(reflectionsCache, factory)
+        val transformer = ReflectionsMetaTransformer(reflectionsCache)
 
         val crdt = CRDT("", "", "")
-        val meta = transformer.toMeta(crdt)
+        val meta = transformer.toMeta(crdt, hlc)
 
         assertEquals(1, cache.size)
     }
 
-
-
     @Test
     fun `meta transformer ignores given keys`() {
         val hlc = HybridLogicalClock()
-        val factory = {
-            hlc
-        }
-
-        val transformer = ReflectionsMetaTransformer(hlcFactory = factory, ignoredKeys = setOf("name"))
+        val transformer = ReflectionsMetaTransformer(ignoredKeys = setOf("name"))
 
         val crdt = CRDT("", "", "")
-        val meta = transformer.toMeta(crdt)
+        val meta = transformer.toMeta(crdt, hlc)
 
         val expected = HashMap<String, String>().apply {
             val hlcs = hlc.toString()

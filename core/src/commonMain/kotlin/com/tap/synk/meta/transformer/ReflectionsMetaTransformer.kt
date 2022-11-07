@@ -5,7 +5,6 @@ import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
 import kotlin.reflect.KProperty1
 
-
 /**
  * This class transforms a CRDT class into its Meta data
  *
@@ -21,11 +20,10 @@ import kotlin.reflect.KProperty1
  */
 class ReflectionsMetaTransformer(
     private val reflectionCache: ReflectionsCache = ReflectionsCache(),
-    private val hlcFactory: () -> HybridLogicalClock = {HybridLogicalClock()},
     private val ignoredKeys: Set<String> = setOf("id")
 ) : MetaTransformer<Any> {
 
-    override fun toMeta(crdt: Any): Meta {
+    override fun toMeta(crdt: Any, hlc: HybridLogicalClock): Meta {
         val clazz = crdt::class
 
         val clazzName = clazz::qualifiedName.get() ?: clazz.simpleName ?: ""
@@ -33,10 +31,10 @@ class ReflectionsMetaTransformer(
             ignoredKeys.contains(it).not()
         }.toSet()
 
-        val hlc = hlcFactory().toString()
+        val hlcString = hlc.toString()
         val timestamps = properties.fold(HashMap<String, String>(properties.size)) { acc, name ->
             acc.apply {
-                put(name, hlc)
+                put(name, hlcString)
             }
         }
 

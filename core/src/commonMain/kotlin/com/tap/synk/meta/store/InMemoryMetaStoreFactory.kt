@@ -4,9 +4,9 @@ import kotlin.reflect.KClass
 
 class InMemoryMetaStoreFactory(
     private val stores: HashMap<String, MetaStore> = HashMap()
-): MetaStoreFactory {
+) : MetaStoreFactory {
 
-    private fun createStore(clazz: String) : MetaStore {
+    private fun createStore(clazz: String): MetaStore {
         val store = InMemoryMetaStore()
         stores[clazz] = store
         return store

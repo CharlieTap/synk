@@ -16,7 +16,7 @@ internal class InMemoryMetaStore(
     }
 }
 
-internal fun HashMap<String, String>.encodeToString() : String {
+internal fun HashMap<String, String>.encodeToString(): String {
     return entries.foldIndexed("") { idx, acc, entry ->
         val postFix = if (idx < entries.size - 1) {
             "|"
@@ -25,7 +25,7 @@ internal fun HashMap<String, String>.encodeToString() : String {
     }
 }
 
-internal fun String.decodeToHashmap() : HashMap<String, String> {
+internal fun String.decodeToHashmap(): HashMap<String, String> {
     return HashMap<String, String>().apply {
         split("|").map { pairSerial ->
             val key = pairSerial.substringBefore(":")

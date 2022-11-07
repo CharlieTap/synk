@@ -1,7 +1,6 @@
 package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.hlc.Timestamp
 import com.tap.synk.cache.ReflectionCacheEntry
 import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
@@ -11,13 +10,12 @@ import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.meta.store.decodeToHashmap
 import com.tap.synk.meta.store.encodeToString
 import com.tap.synk.relay.Message
-import kotlinx.datetime.Clock
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class InboundTest {
+class OutboundTest {
 
     private fun setupSynk(rCache: HashMap<KClass<*>, ReflectionCacheEntry<Any>>, metaStoreMap: HashMap<String, String>, hlc: HybridLogicalClock = HybridLogicalClock()): SynkContract {
         val reflectionsCache = ReflectionsCache(rCache)
@@ -30,11 +28,10 @@ class InboundTest {
     }
 
     @Test
-    fun `calling inbound with old as null uses the timestamps found in the Message`() {
+    fun `calling outbound with old as null returns a correctly formed Message`() {
         val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val metaStoreMap = HashMap<String, String>()
-        val now = Timestamp.now(Clock.System)
-        val currentHlc = HybridLogicalClock(now)
+        val currentHlc = HybridLogicalClock()
         val synk = setupSynk(cache, metaStoreMap, currentHlc)
 
         val newCRDT = IDCRDT(
@@ -43,84 +40,104 @@ class InboundTest {
             "Jones",
             123344433
         )
-        val pastHlc = HybridLogicalClock(Timestamp(now.epochMillis - (1000 * 60)))
-        val newMetaMap = HashMap<String, String>().apply {
-            put("name", pastHlc.toString()) // On inbound meta timestamps are predetermined
-            put("last_name", pastHlc.toString())
-            put("phone", pastHlc.toString())
+
+        val result = synk.outbound(newCRDT)
+
+        val expectedMetaMap = HashMap<String, String>().apply {
+            put("name", synk.hlc.toString())
+            put("last_name", synk.hlc.toString())
+            put("phone", synk.hlc.toString())
         }
-        val newMeta = Meta(
+        val expectedMeta = Meta(
             IDCRDT::class.qualifiedName.toString(),
-            newMetaMap
+            expectedMetaMap
         )
-        val newMessage = Message(newCRDT, newMeta)
+        val expectedMessage = Message(newCRDT, expectedMeta)
 
-        val syncedCRDT = synk.inbound(newMessage)
-
-        assertEquals(newCRDT, syncedCRDT)
+        assertEquals(expectedMessage, result)
         assertTrue(synk.hlc > currentHlc)
         assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
-        assertEquals(newMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
+        assertEquals(expectedMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
     }
 
     @Test
-    fun `calling inbound with old as previous value correctly diffs`() {
+    fun `calling outbound with old but no meta causes a runtime crash`() {
         val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val metaStoreMap = HashMap<String, String>()
-        val now = Timestamp.now(Clock.System)
-        val currentHlc = HybridLogicalClock(now)
+        val currentHlc = HybridLogicalClock()
         val synk = setupSynk(cache, metaStoreMap, currentHlc)
 
-        val futureHlc = HybridLogicalClock(Timestamp(now.epochMillis + (1000 * 60)))
         val oldCRDT = IDCRDT(
             "123",
-            "Jimmy",
-            "Jones",
-            123344438
+            "Jim",
+            "Jonesss",
+            123344477
         )
+
         val oldMetaMap = HashMap<String, String>().apply {
             put("name", currentHlc.toString())
             put("last_name", currentHlc.toString())
-            put("phone", futureHlc.toString())
+            put("phone", currentHlc.toString())
         }
+
         val newCRDT = IDCRDT(
             "123",
             "Jim",
             "Jones",
             123344433
         )
-        val newMetaMap = HashMap<String, String>().apply {
-            put("name", futureHlc.toString())
+
+        val result = kotlin.runCatching { synk.outbound(newCRDT, oldCRDT) }
+        assertTrue(result.isFailure)
+    }
+
+    @Test
+    fun `calling outbound with old correctly updates timestamps for values which changed`() {
+        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val metaStoreMap = HashMap<String, String>()
+        val currentHlc = HybridLogicalClock()
+        val synk = setupSynk(cache, metaStoreMap, currentHlc)
+
+        val oldCRDT = IDCRDT(
+            "123",
+            "Jim",
+            "Jonesss",
+            123344477
+        )
+
+        val oldMetaMap = HashMap<String, String>().apply {
+            put("name", currentHlc.toString())
             put("last_name", currentHlc.toString())
             put("phone", currentHlc.toString())
         }
-        val newMeta = Meta(
-            IDCRDT::class.qualifiedName.toString(),
-            newMetaMap
-        )
-        val newMessage = Message(newCRDT, newMeta)
 
         metaStoreMap[oldCRDT.id] = oldMetaMap.encodeToString()
-        val syncedCRDT = synk.inbound(newMessage, oldCRDT)
 
-        val expectedCRDT = IDCRDT(
+        val newCRDT = IDCRDT(
             "123",
             "Jim",
             "Jones",
-            123344438
+            123344433
         )
-        val expectedMeta = HashMap<String, String>().apply {
-            put("name", futureHlc.toString())
-            put("last_name", currentHlc.toString())
-            put("phone", futureHlc.toString())
-        }
 
-        assertEquals(expectedCRDT, syncedCRDT)
+        val result = synk.outbound(newCRDT, oldCRDT)
+
+        val expectedMetaMap = HashMap<String, String>().apply {
+            put("name", currentHlc.toString())
+            put("last_name", synk.hlc.toString())
+            put("phone", synk.hlc.toString())
+        }
+        val expectedMeta = Meta(
+            IDCRDT::class.qualifiedName.toString(),
+            expectedMetaMap
+        )
+        val expectedMessage = Message(newCRDT, expectedMeta)
+
+        assertEquals(expectedMessage, result)
         assertTrue(synk.hlc > currentHlc)
         assertEquals(synk.hlc.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
-        assertEquals(expectedMeta, metaStoreMap[newCRDT.id]?.decodeToHashmap())
-        assertTrue(synk.hlc > futureHlc)
+        assertEquals(expectedMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
     }
 }

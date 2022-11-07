@@ -1,14 +1,12 @@
 package com.tap.synk.diff
 
 import com.tap.synk.cache.ReflectionsCache
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.isAccessible
 
 class ReflectionsObjectDiffer(
     private val reflectionsCache: ReflectionsCache = ReflectionsCache()
-): ObjectDiffer<Any> {
+) : ObjectDiffer<Any> {
     override fun diff(old: Any, new: Any): Set<String> {
-
         return reflectionsCache.getProps(old::class).filter { prop ->
 
             prop.isAccessible = true
@@ -18,10 +16,9 @@ class ReflectionsObjectDiffer(
 
             oldValue != newValue
         }.fold(mutableSetOf()) { acc, prop ->
-          acc.apply {
-              add(prop.name)
-          }
+            acc.apply {
+                add(prop.name)
+            }
         }
-
     }
 }
