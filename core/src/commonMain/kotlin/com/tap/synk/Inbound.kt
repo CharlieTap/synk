@@ -25,7 +25,7 @@ fun <T : Any> SynkContract.inbound(message: Message<T>, old: T? = null): T {
     }
 
     val metaStore = factory.getStore(message.crdt::class)
-    val id = idResolver(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")
+    val id = synkAdapter.resolveId(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id)

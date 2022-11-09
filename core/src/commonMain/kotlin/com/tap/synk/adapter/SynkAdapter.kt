@@ -1,0 +1,15 @@
+package com.tap.synk.adapter
+
+import com.tap.synk.resolver.IDResolver
+
+interface SynkAdapter<T> : IDResolver<T> {
+
+    /**
+     * Only mutable values need to be tracked
+     * Should return a HashMap where the key is the property name and the value is the property value
+     * Only values that are mutable need to be present in the Hashmap, identifiers and immutable properties should be omitted
+     *
+     */
+    // todo debate value class here for hashmap props
+    fun encode(crdt: T): HashMap<String, String>
+}

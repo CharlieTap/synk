@@ -2,6 +2,7 @@ package com.tap.synk.relay
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
+import com.tap.synk.IDCRDT
 import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
@@ -36,13 +37,15 @@ class MessageMonoidTest {
             }
         )
 
-        val crdt1 = CRDT(
+        val crdt1 = IDCRDT(
+            "123",
             "jim",
             "smith",
             12345678
         )
 
-        val crdt2 = CRDT(
+        val crdt2 = IDCRDT(
+            "123",
             "bob",
             "jones",
             23456789
@@ -52,7 +55,8 @@ class MessageMonoidTest {
         val message2 = Message(crdt2, meta2)
 
         val result = MessageMonoid<Any>(ReflectionsCache(), MetaMonoid).combine(message1, message2)
-        val expectedCrdt = CRDT(
+        val expectedCrdt = IDCRDT(
+            "123",
             "bob",
             "smith",
             12345678
@@ -69,9 +73,3 @@ class MessageMonoidTest {
         assertEquals(Message(expectedCrdt, expectedMeta), result)
     }
 }
-
-private data class CRDT(
-    val name: String,
-    val last_name: String,
-    val phone: Int
-)

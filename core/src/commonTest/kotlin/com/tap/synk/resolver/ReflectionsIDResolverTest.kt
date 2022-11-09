@@ -18,7 +18,7 @@ class ReflectionsIDResolverTest {
 
         val crdt = IDCRDT("5", "", "", 1)
 
-        val id = reflectionsIDResolver(crdt)
+        val id = reflectionsIDResolver.resolveId(crdt)
 
         assertEquals("5", id)
         assertEquals(1, cache.entries.size)

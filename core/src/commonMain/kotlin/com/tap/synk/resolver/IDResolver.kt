@@ -1,3 +1,5 @@
 package com.tap.synk.resolver
 
-fun interface IDResolver<T> : (T) -> String?
+interface IDResolver<T> {
+    fun resolveId(crdt: T): String?
+}

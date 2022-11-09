@@ -2,7 +2,9 @@ package com.tap.synk
 
 import com.github.michaelbull.result.getOr
 import com.tap.hlc.HybridLogicalClock
+import com.tap.synk.diff.diff
 import com.tap.synk.meta.Meta
+import com.tap.synk.meta.transform.transformToMeta
 import com.tap.synk.relay.Message
 import kotlinx.atomicfu.update
 
@@ -14,7 +16,7 @@ import kotlinx.atomicfu.update
  */
 fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
     val metaStore = factory.getStore(new::class)
-    val id = idResolver(old ?: new) ?: throw Exception("Unable to find id for CRDT")
+    val id = synkAdapter.resolveId(old ?: new) ?: throw Exception("Unable to find id for CRDT")
 
     hlc.update { atomicHlc ->
         HybridLogicalClock.localTick(atomicHlc).getOr(atomicHlc)
@@ -22,7 +24,7 @@ fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id) ?: throw Exception("Failed to find meta for provided old value")
-        val diff = differ.diff(old, new)
+        val diff = synkAdapter.diff(old, new)
 
         val newMetaMap = HashMap<String, String>()
         oldMetaMap.entries.forEach { entry ->
@@ -36,7 +38,7 @@ fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
         val newMeta = Meta(new::class.qualifiedName!!, newMetaMap)
 
         Message(new, newMeta)
-    } ?: Message(new, metaTransformer.toMeta(new, hlc.value))
+    } ?: Message(new, synkAdapter.transformToMeta(new, hlc.value))
 
     metaStore.putMeta(id, newMessage.meta.timestampMeta)
 

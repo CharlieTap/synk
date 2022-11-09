@@ -34,7 +34,7 @@ faker = "1.11.0"
 hilt-core = "2.42"
 hilt-integrations = "1.0.0"
 hilt-compose="1.0.0"
-hlc = "1.0.0"
+hlc = "1.0.1"
 
 kotlin = "1.7.20"
 ksp = "1.7.20-1.0.6"
