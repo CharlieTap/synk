@@ -10,6 +10,7 @@ interface SynkAdapter<T> : IDResolver<T> {
      * Only values that are mutable need to be present in the Hashmap, identifiers and immutable properties should be omitted
      *
      */
-    // todo debate value class here for hashmap props
     fun encode(crdt: T): HashMap<String, String>
+
+    fun decode(crdt: T, map: HashMap<String, String>) : T
 }

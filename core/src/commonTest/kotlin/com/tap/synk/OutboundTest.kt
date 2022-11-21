@@ -1,6 +1,7 @@
 package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
+import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.cache.ReflectionCacheEntry
 import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
@@ -24,7 +25,8 @@ class OutboundTest {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(cache = reflectionsCache, factory = metaStoreFactory, clock = hlc)
+        val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
+        return Synk(factory = metaStoreFactory, clock = hlc, synkAdapter = synkAdapter)
     }
 
     @Test

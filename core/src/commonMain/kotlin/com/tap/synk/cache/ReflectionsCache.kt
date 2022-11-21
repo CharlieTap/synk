@@ -34,7 +34,6 @@ class ReflectionsCache(
             cache[clazz] = this
         }
     }
-
     fun <T : Any> getConstructor(clazz: KClass<T>): CRDTConstructor<T> {
         val entry = cache[clazz] ?: reflect(clazz)
 

@@ -1,14 +1,12 @@
 package com.tap.synk.relay
 
 import com.tap.synk.abstraction.Monoid
-import com.tap.synk.cache.ParamPropPair
-import com.tap.synk.cache.ReflectionsCache
+import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
-import kotlin.reflect.jvm.isAccessible
 
 class MessageMonoid<T : Any>(
-    private val reflectionsCache: ReflectionsCache,
+    private val synkAdapter: SynkAdapter<Any>,
     private val metaMonoid: Monoid<Meta>
 ) : Monoid<Message<T>> {
 
@@ -16,28 +14,26 @@ class MessageMonoid<T : Any>(
         get() = Message(Unit as T, MetaMonoid.neutral)
 
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
-        val constructor = reflectionsCache.getConstructor(a.crdt::class)
-        val paramsProps = reflectionsCache.getParamsAndProps(a.crdt::class)
-        val parameters = paramsProps.map(ParamPropPair::first)
-        val props = paramsProps.map(ParamPropPair::second)
 
+        val aEncoded = synkAdapter.encode(a.crdt)
+        val bEncoded = synkAdapter.encode(b.crdt)
         val meta = metaMonoid.combine(a.meta, b.meta)
-        val crdt = parameters.map { param ->
 
-            val ahlc = a.meta.timestampMeta[param.name]
-            val winner = meta.timestampMeta[param.name]
+        val newMap = meta.timestampMeta.entries.fold(HashMap<String, String>()) { acc, entry ->
 
-            val prop = props.first { it.name == param.name }
-            prop.isAccessible = true
-
-            if (ahlc == winner) {
-                prop.getter.call(a.crdt)
+            val value = if(a.meta.timestampMeta[entry.key] == entry.value) {
+                aEncoded[entry.key]
             } else {
-                prop.getter.call(b.crdt)
+                bEncoded[entry.key]
+            } ?: throw Exception("Failed to find key: " + entry.key + " in encoded hashmap, please check that you have implemented the encode function correctly")
+
+            acc.apply {
+                put(entry.key, value)
             }
-        }.let { params ->
-            constructor.call(*params.toTypedArray())
         }
+
+        // here we need to set all the values back onto the T
+        val crdt = synkAdapter.decode(a.crdt, newMap) as T
 
         return Message(crdt, meta)
     }

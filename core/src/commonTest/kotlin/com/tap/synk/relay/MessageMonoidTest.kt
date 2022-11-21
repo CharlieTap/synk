@@ -3,6 +3,7 @@ package com.tap.synk.relay
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
 import com.tap.synk.IDCRDT
+import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.cache.ReflectionsCache
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
@@ -19,6 +20,7 @@ class MessageMonoidTest {
 
         val hlc = HybridLogicalClock()
         val laterHlc = HybridLogicalClock(futureTimestamp)
+        val monoid = MessageMonoid<Any>(ReflectionsSynkAdapter(ReflectionsCache()), MetaMonoid)
 
         val meta1 = Meta(
             "test",
@@ -54,7 +56,7 @@ class MessageMonoidTest {
         val message1 = Message(crdt1, meta1)
         val message2 = Message(crdt2, meta2)
 
-        val result = MessageMonoid<Any>(ReflectionsCache(), MetaMonoid).combine(message1, message2)
+        val result = monoid.combine(message1, message2)
         val expectedCrdt = IDCRDT(
             "123",
             "bob",
