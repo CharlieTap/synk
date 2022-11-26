@@ -5,6 +5,7 @@ import com.tap.hlc.Timestamp
 import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.cache.ReflectionCacheEntry
 import com.tap.synk.cache.ReflectionsCache
+import com.tap.synk.config.StorageConfiguration
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.store.InMemoryMetaStore
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
@@ -13,6 +14,8 @@ import com.tap.synk.meta.store.decodeToHashmap
 import com.tap.synk.meta.store.encodeToString
 import com.tap.synk.relay.Message
 import kotlinx.datetime.Clock
+import okio.Path.Companion.toPath
+import okio.fakefilesystem.FakeFileSystem
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,6 +24,14 @@ import kotlin.test.assertTrue
 class InboundTest {
 
     private fun setupSynk(rCache: HashMap<KClass<*>, ReflectionCacheEntry<Any>>, metaStoreMap: HashMap<String, String>, hlc: HybridLogicalClock = HybridLogicalClock()): SynkContract {
+        val filePath = "/test".toPath()
+        val fileSystem = FakeFileSystem()
+        val storageConfiguration = StorageConfiguration(
+            filePath = filePath,
+            fileSystem = fileSystem
+        )
+        HybridLogicalClock.store(hlc, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
+
         val reflectionsCache = ReflectionsCache(rCache)
         val metaStore = InMemoryMetaStore(metaStoreMap)
         val metaStoreFactoryMap = HashMap<String, MetaStore>().apply {
@@ -28,7 +39,7 @@ class InboundTest {
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
         val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
-        return Synk(factory = metaStoreFactory, clock = hlc, synkAdapter = synkAdapter)
+        return Synk(factory = metaStoreFactory, synkAdapter = synkAdapter, storageConfiguration = storageConfiguration)
     }
 
     @Test

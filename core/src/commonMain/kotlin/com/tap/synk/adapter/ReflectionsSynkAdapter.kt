@@ -32,8 +32,7 @@ class ReflectionsSynkAdapter(
         }
     }
 
-    override fun decode(crdt: Any, map: HashMap<String, String>) : Any {
-
+    override fun decode(crdt: Any, map: HashMap<String, String>): Any {
         val clazz = crdt::class
 
         val constructor = reflectionCache.getConstructor(clazz)

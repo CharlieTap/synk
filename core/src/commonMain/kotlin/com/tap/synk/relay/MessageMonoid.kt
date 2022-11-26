@@ -14,14 +14,13 @@ class MessageMonoid<T : Any>(
         get() = Message(Unit as T, MetaMonoid.neutral)
 
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
-
         val aEncoded = synkAdapter.encode(a.crdt)
         val bEncoded = synkAdapter.encode(b.crdt)
         val meta = metaMonoid.combine(a.meta, b.meta)
 
         val newMap = meta.timestampMeta.entries.fold(HashMap<String, String>()) { acc, entry ->
 
-            val value = if(a.meta.timestampMeta[entry.key] == entry.value) {
+            val value = if (a.meta.timestampMeta[entry.key] == entry.value) {
                 aEncoded[entry.key]
             } else {
                 bEncoded[entry.key]

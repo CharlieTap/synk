@@ -21,6 +21,7 @@ fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
     hlc.update { atomicHlc ->
         HybridLogicalClock.localTick(atomicHlc).getOr(atomicHlc)
     }
+    storeClock(hlc.value)
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id) ?: throw Exception("Failed to find meta for provided old value")

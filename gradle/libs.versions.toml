@@ -34,7 +34,7 @@ faker = "1.11.0"
 hilt-core = "2.42"
 hilt-integrations = "1.0.0"
 hilt-compose="1.0.0"
-hlc = "1.0.1"
+hlc = "1.1.0"
 
 kotlin = "1.7.20"
 ksp = "1.7.20-1.0.6"
@@ -138,6 +138,7 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback"}
 
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp-logging-interceptor"}
 okio = { module = "com.squareup.okio:okio", version.ref = "okio"}
+okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio"}
 retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit-core"}
 retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-serialization"}
 

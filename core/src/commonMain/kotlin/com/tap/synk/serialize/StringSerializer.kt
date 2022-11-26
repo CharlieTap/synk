@@ -3,22 +3,9 @@ package com.tap.synk.serialize
 import java.lang.Exception
 import kotlin.reflect.KClass
 
-
-internal val ALLOWED_TYPES = setOf<KClass<*>>(
-    Boolean::class,
-    Byte::class,
-    Short::class,
-    Int::class,
-    Long::class,
-    Float::class,
-    Double::class,
-    Char::class,
-    String::class,
-)
-
-internal fun serialize(value: Any?) : String {
-    return when(value) {
-        is Boolean -> if(value) "1" else "0"
+internal fun serialize(value: Any?): String {
+    return when (value) {
+        is Boolean -> if (value) "1" else "0"
         is Byte -> value.toString()
         is Short -> value.toString()
         is Int -> value.toString()
@@ -32,11 +19,10 @@ internal fun serialize(value: Any?) : String {
     }
 }
 
-internal fun <T: Any> deserialize(clazz: KClass<T>, serialized: String) : T? {
+internal fun <T : Any> deserialize(clazz: KClass<T>, serialized: String): T? {
+    if (serialized == "null") return null
 
-    if(serialized == "null") return null
-
-    return when(clazz) {
+    return when (clazz) {
         Boolean::class -> serialized == "1"
         Byte::class -> serialized.toByte()
         Short::class -> serialized.toShort()

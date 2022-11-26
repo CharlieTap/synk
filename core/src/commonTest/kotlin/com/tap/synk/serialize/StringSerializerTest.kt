@@ -16,7 +16,7 @@ class StringSerializerTest {
 
     @Test
     fun `can serialize and deserialize a Byte`() {
-        val byte : Byte = 30
+        val byte: Byte = 30
         val serialized = serialize(byte)
         val deserialized = deserialize(Byte::class, serialized)
 
@@ -25,7 +25,7 @@ class StringSerializerTest {
 
     @Test
     fun `can serialize and deserialize a Short`() {
-        val short : Short = 4
+        val short: Short = 4
         val serialized = serialize(short)
         val deserialized = deserialize(Short::class, serialized)
 
@@ -58,5 +58,4 @@ class StringSerializerTest {
 
         assertEquals(nully, deserialized)
     }
-
 }

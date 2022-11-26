@@ -12,5 +12,5 @@ interface SynkAdapter<T> : IDResolver<T> {
      */
     fun encode(crdt: T): HashMap<String, String>
 
-    fun decode(crdt: T, map: HashMap<String, String>) : T
+    fun decode(crdt: T, map: HashMap<String, String>): T
 }

@@ -33,12 +33,14 @@ kotlin {
                 api(libs.kotlinx.coroutines.core)
                 api(libs.hlc)
                 api(libs.uuid)
+                api(libs.okio)
             }
         }
 
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.okio.fakefilesystem)
             }
         }
     }
