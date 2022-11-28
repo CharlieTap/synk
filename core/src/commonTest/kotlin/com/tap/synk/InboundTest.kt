@@ -23,13 +23,19 @@ import kotlin.test.assertTrue
 
 class InboundTest {
 
-    private fun setupSynk(rCache: HashMap<KClass<*>, ReflectionCacheEntry<Any>>, metaStoreMap: HashMap<String, String>, hlc: HybridLogicalClock = HybridLogicalClock()): SynkContract {
-        val filePath = "/test".toPath()
-        val fileSystem = FakeFileSystem()
-        val storageConfiguration = StorageConfiguration(
-            filePath = filePath,
-            fileSystem = fileSystem
+    private val storageConfig by lazy {
+        StorageConfiguration(
+            filePath = "/test".toPath(),
+            fileSystem = FakeFileSystem()
         )
+    }
+
+    private fun setupSynk(
+        storageConfiguration: StorageConfiguration,
+        rCache: HashMap<KClass<*>, ReflectionCacheEntry<Any>>,
+        metaStoreMap: HashMap<String, String>,
+        hlc: HybridLogicalClock = HybridLogicalClock()
+    ): SynkContract {
         HybridLogicalClock.store(hlc, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
 
         val reflectionsCache = ReflectionsCache(rCache)
@@ -48,7 +54,7 @@ class InboundTest {
         val metaStoreMap = HashMap<String, String>()
         val now = Timestamp.now(Clock.System)
         val currentHlc = HybridLogicalClock(now)
-        val synk = setupSynk(cache, metaStoreMap, currentHlc)
+        val synk = setupSynk(storageConfig, cache, metaStoreMap, currentHlc)
 
         val newCRDT = IDCRDT(
             "123",
@@ -75,6 +81,7 @@ class InboundTest {
         assertEquals(synk.hlc.value.node.toString(), currentHlc.node.toString())
         assertEquals(1, cache.entries.size)
         assertEquals(newMetaMap, metaStoreMap[newCRDT.id]?.decodeToHashmap())
+        assertTrue(storageConfig.fileSystem.exists(storageConfig.filePath / storageConfig.clockFileName))
     }
 
     @Test
@@ -83,7 +90,7 @@ class InboundTest {
         val metaStoreMap = HashMap<String, String>()
         val now = Timestamp.now(Clock.System)
         val currentHlc = HybridLogicalClock(now)
-        val synk = setupSynk(cache, metaStoreMap, currentHlc)
+        val synk = setupSynk(storageConfig, cache, metaStoreMap, currentHlc)
 
         val futureHlc = HybridLogicalClock(Timestamp(now.epochMillis + (1000 * 60)))
         val oldCRDT = IDCRDT(
@@ -137,5 +144,6 @@ class InboundTest {
         assertEquals(1, cache.entries.size)
         assertEquals(expectedMeta, metaStoreMap[newCRDT.id]?.decodeToHashmap())
         assertTrue(expectedHlc > futureHlc)
+        assertTrue(storageConfig.fileSystem.exists(storageConfig.filePath / storageConfig.clockFileName))
     }
 }
