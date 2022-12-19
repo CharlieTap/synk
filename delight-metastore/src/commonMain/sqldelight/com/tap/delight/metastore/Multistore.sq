@@ -1,0 +1,21 @@
+CREATE TABLE multistore (
+  id TEXT NOT NULL,
+  namespace TEXT NOT NULL,
+  data TEXT NOT NULL,
+  PRIMARY KEY ( id, namespace )
+);
+
+all:
+SELECT * FROM multistore;
+
+allForNamespace:
+SELECT * FROM multistore WHERE namespace = :namespace LIMIT :limit;
+
+getById:
+SELECT * FROM multistore WHERE id = :id AND namespace = :namespace LIMIT 1;
+
+upsert:
+INSERT OR REPLACE INTO multistore (id, namespace, data) VALUES (:id, :namespace, :data);
+
+wipe:
+DELETE FROM multistore;

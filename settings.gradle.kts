@@ -22,7 +22,10 @@ dependencyResolutionManagement {
 //    include(it.name)
 //}
 
-include(":core")
+include(":api")
+include(":encode")
+include(":runtime")
+include(":delight-metastore")
 
 rootProject.name = "synk"
 
