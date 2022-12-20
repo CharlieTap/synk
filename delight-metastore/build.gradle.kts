@@ -25,6 +25,8 @@ kotlin {
                 implementation(projects.encode)
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
+                api(libs.sqldelight.jvm.driver.legacy)
+
             }
         }
 

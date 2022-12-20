@@ -1,9 +1,10 @@
 package com.tap.delight.metastore
 
-import androidx.collection.LruCache
 import com.benasher44.uuid.Uuid
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import com.tap.delight.metastore.cache.DelightfulMemCache
 import com.tap.delight.metastore.hash.Hasher
+import com.tap.delight.metastore.schema.delightfulSchemaInitializer
 import com.tap.synk.encode.encodeToString
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -13,9 +14,7 @@ class DelightfulMetastoreTest {
 
     private val database by lazy {
         val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-        DelightfulDatabase(driver).apply {
-            DelightfulDatabase.Schema.create(driver)
-        }
+        DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
     }
 
     @BeforeTest
@@ -31,9 +30,9 @@ class DelightfulMetastoreTest {
                 return hasherResult
             }
         }
-        val cache = LruCache<String, String>(100)
+        val cache = DelightfulMemCache(100)
         val namespace = "test"
-        val metastore = DelightfulMetastore(database, namespace, hasher, cache = cache)
+        val metastore = DelightfulMetastore(database, namespace, hasher, cache)
         val id = Uuid.randomUUID().toString()
         val meta = HashMap<String, String>().apply {
             put("property", "value")
@@ -70,8 +69,8 @@ class DelightfulMetastoreTest {
                 return hasherResult
             }
         }
-        val cache = LruCache<String, String>(100)
-        val metastore = DelightfulMetastore(database, namespace, hasher, cache = cache)
+        val cache = DelightfulMemCache(100)
+        val metastore = DelightfulMetastore(database, namespace, hasher, cache)
 
         val result = metastore.getMeta(id)
 
@@ -106,10 +105,10 @@ class DelightfulMetastoreTest {
             put("property1", "value123")
             put("property2", "value345")
         }
-        val cache = LruCache<String, String>(100).apply {
+        val cache = DelightfulMemCache(100).apply {
             put(hasherResult, cacheMeta.encodeToString())
         }
-        val metastore = DelightfulMetastore(database, namespace, hasher, cache = cache)
+        val metastore = DelightfulMetastore(database, namespace, hasher, cache)
 
         val result = metastore.getMeta(id)
 
@@ -128,9 +127,9 @@ class DelightfulMetastoreTest {
                 return hasherResult
             }
         }
-        val cache = LruCache<String, String>(100)
+        val cache = DelightfulMemCache(100)
         val namespace = "test"
-        val metastore = DelightfulMetastore(database, namespace, hasher, cache = cache)
+        val metastore = DelightfulMetastore(database, namespace, hasher, cache)
         val id = Uuid.randomUUID().toString()
         val meta = HashMap<String, String>().apply {
             put("property", "value")

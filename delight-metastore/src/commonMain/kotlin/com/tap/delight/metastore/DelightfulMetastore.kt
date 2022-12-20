@@ -1,6 +1,6 @@
 package com.tap.delight.metastore
 
-import androidx.collection.LruCache
+import com.tap.delight.metastore.cache.MemCache
 import com.tap.delight.metastore.hash.Hasher
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
@@ -10,13 +10,8 @@ class DelightfulMetastore internal constructor(
     private val database: DelightfulDatabase,
     private val namespace: String,
     private val hasher: Hasher,
-    private val cacheSize: Int = DEFAULT_CACHE_SIZE,
-    private val cache: LruCache<String, String> = LruCache(cacheSize)
+    private val cache: MemCache<String, String>
 ) : MetaStore {
-
-    companion object {
-        private const val DEFAULT_CACHE_SIZE = 1000
-    }
 
     private fun getMetaFromDatabase(id: String, namespace: String): HashMap<String, String>? {
         return database.multistoreQueries.getById(id, namespace).executeAsOneOrNull()?.data_?.decodeToHashmap()
@@ -37,7 +32,7 @@ class DelightfulMetastore internal constructor(
     }
 
     override fun warm() {
-        val results = database.multistoreQueries.allForNamespace(namespace, cacheSize.toLong()).executeAsList()
+        val results = database.multistoreQueries.allForNamespace(namespace, cache.maxSize().toLong()).executeAsList()
         results.forEach { multistore ->
             putMetaInCache(multistore.id, multistore.namespace, multistore.data_)
         }
