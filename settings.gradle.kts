@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 //    include(it.name)
 //}
 
-include(":api")
+include(":concurrent-map")
 include(":encode")
 include(":runtime")
 include(":delight-metastore")

@@ -1,10 +1,11 @@
 package com.tap.synk.meta.store
 
+import com.tap.synk.CMap
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
 
 internal class InMemoryMetaStore(
-    private val store: HashMap<String, String> = HashMap()
+    private val store: CMap<String, String> = CMap()
 ) : MetaStore {
     override fun warm() {
         // No op
@@ -18,6 +19,6 @@ internal class InMemoryMetaStore(
 
     override fun putMeta(id: String, meta: HashMap<String, String>) {
         val serial = meta.encodeToString()
-        store[id] = serial
+        store.put(id, serial)
     }
 }

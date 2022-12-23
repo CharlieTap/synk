@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 /**
 
  */
-class ReflectionsSynkAdapter(
+internal class ReflectionsSynkAdapter(
     private val reflectionCache: ReflectionsCache,
     private val ignoredKeys: Set<String> = setOf("id"),
     private val idResolver: IDResolver<Any> = ReflectionsIDResolver(reflectionCache)

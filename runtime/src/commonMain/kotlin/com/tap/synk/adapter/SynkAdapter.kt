@@ -2,7 +2,7 @@ package com.tap.synk.adapter
 
 import com.tap.synk.resolver.IDResolver
 
-interface SynkAdapter<T> : IDResolver<T> {
+interface SynkAdapter<T : Any> : IDResolver<T> {
 
     /**
      * Only mutable values need to be tracked

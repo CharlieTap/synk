@@ -1,5 +1,6 @@
 package com.tap.synk.adapter
 
+import com.tap.synk.CMap
 import com.tap.synk.IDCRDT
 import com.tap.synk.cache.ReflectionCacheEntry
 import com.tap.synk.cache.ReflectionsCache
@@ -11,7 +12,7 @@ class ReflectionsSynkAdapterTest {
 
     @Test
     fun `can resolve id`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
         val adapter = ReflectionsSynkAdapter(reflectionsCache)
 
@@ -19,12 +20,12 @@ class ReflectionsSynkAdapterTest {
         val id = adapter.resolveId(crdt)
 
         assertEquals("123", id)
-        assertEquals(1, cache.size)
+        assertEquals(1, cache.size())
     }
 
     @Test
     fun `can encode crdt to hashmap`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
         val adapter = ReflectionsSynkAdapter(reflectionsCache)
 
@@ -38,12 +39,12 @@ class ReflectionsSynkAdapterTest {
         }
 
         assertEquals(map, expectedMap)
-        assertEquals(1, cache.size)
+        assertEquals(1, cache.size())
     }
 
     @Test
     fun `can encode crdt to hashmap and ignore keys`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
         val adapter = ReflectionsSynkAdapter(reflectionsCache, ignoredKeys = setOf("id", "name"))
 
@@ -56,6 +57,6 @@ class ReflectionsSynkAdapterTest {
         }
 
         assertEquals(map, expectedMap)
-        assertEquals(1, cache.size)
+        assertEquals(1, cache.size())
     }
 }

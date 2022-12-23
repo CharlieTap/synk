@@ -1,6 +1,7 @@
 package com.tap.synk.meta.transform
 
 import com.tap.hlc.HybridLogicalClock
+import com.tap.synk.CMap
 import com.tap.synk.IDCRDT
 import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.cache.ReflectionCacheEntry
@@ -13,7 +14,7 @@ class TransformTest {
 
     @Test
     fun `can turn object into meta`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
         val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
         val hlc = HybridLogicalClock()

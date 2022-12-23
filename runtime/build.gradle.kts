@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.tap.synk"
-version = "1.0-SNAPSHOT"
+version = "0.1"
 
 kotlin {
 
@@ -26,14 +26,15 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(projects.concurrentMap)
                 implementation(projects.encode)
-                api(libs.kotlin.reflection)
-                api(libs.kotlinx.atomic.fu)
-                api(libs.kotlinx.datetime)
-                api(libs.kotlinx.serialization)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.hlc)
-                api(libs.uuid)
+                implementation(libs.kotlin.reflection)
+                implementation(libs.kotlinx.atomic.fu)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.hlc)
+                implementation(libs.uuid)
                 api(libs.okio)
             }
         }
@@ -42,6 +43,18 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.okio.fakefilesystem)
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+
+            }
+        }
+
+        val nativeMain by creating {
+            dependencies {
+
             }
         }
     }

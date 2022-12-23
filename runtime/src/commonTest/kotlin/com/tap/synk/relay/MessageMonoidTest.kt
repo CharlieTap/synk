@@ -3,8 +3,7 @@ package com.tap.synk.relay
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
 import com.tap.synk.IDCRDT
-import com.tap.synk.adapter.ReflectionsSynkAdapter
-import com.tap.synk.cache.ReflectionsCache
+import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
 import kotlinx.datetime.Clock
@@ -20,7 +19,7 @@ class MessageMonoidTest {
 
         val hlc = HybridLogicalClock()
         val laterHlc = HybridLogicalClock(futureTimestamp)
-        val monoid = MessageMonoid<Any>(ReflectionsSynkAdapter(ReflectionsCache()), MetaMonoid)
+        val monoid = MessageMonoid<Any>(SynkAdapterStore(), MetaMonoid)
 
         val meta1 = Meta(
             "test",

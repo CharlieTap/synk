@@ -3,11 +3,11 @@ package com.tap.delight.metastore.schema
 import com.squareup.sqldelight.db.SqlDriver
 
 class SqliteSchemaInitializer(
-    private val createSchema: (SqlDriver) -> Unit,
-): SchemaInitializer {
+    private val createSchema: (SqlDriver) -> Unit
+) : SchemaInitializer {
 
     companion object {
-        private fun getSchemaVersion(driver: SqlDriver) : Long {
+        private fun getSchemaVersion(driver: SqlDriver): Long {
             val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
             return cursor.use { it.getLong(0) ?: 0 }
         }
@@ -16,7 +16,7 @@ class SqliteSchemaInitializer(
             driver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
         }
 
-        private fun schemaHasBeenCreated(driver: SqlDriver) : Boolean {
+        private fun schemaHasBeenCreated(driver: SqlDriver): Boolean {
             return getSchemaVersion(driver) > 0
         }
 
@@ -26,10 +26,9 @@ class SqliteSchemaInitializer(
     }
 
     override fun init(driver: SqlDriver) {
-        if(!schemaHasBeenCreated(driver)) {
+        if (!schemaHasBeenCreated(driver)) {
             createSchema(driver)
             markSchemaAsCreated(driver)
         }
     }
-
 }

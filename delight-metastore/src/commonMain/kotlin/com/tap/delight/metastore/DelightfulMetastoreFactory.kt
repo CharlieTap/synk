@@ -21,8 +21,8 @@ class DelightfulMetastoreFactory(
     private val config: MetastoreConfig? = null,
     private val hasher: Hasher = MurmurHasher(MurmurHash3()),
     private val memCache: MemCache<String, String> = DelightfulMemCache(config?.cacheSize ?: DEFAULT_CACHE_SIZE),
-    private val schemaInitializer : SchemaInitializer = delightfulSchemaInitializer(),
-    private val storeCache: HashMap<String, MetaStore> = HashMap(),
+    private val schemaInitializer: SchemaInitializer = delightfulSchemaInitializer(),
+    private val storeCache: HashMap<String, MetaStore> = HashMap()
 ) : MetaStoreFactory {
 
     companion object {
@@ -35,13 +35,13 @@ class DelightfulMetastoreFactory(
         }
 
         internal fun createDatabase(driver: SqlDriver, schemaInitializer: SchemaInitializer): DelightfulDatabase {
-             schemaInitializer.init(driver)
+            schemaInitializer.init(driver)
 
             return DelightfulDatabase(driver)
         }
     }
 
-    private val database : DelightfulDatabase = createDatabase(driver, schemaInitializer)
+    private val database: DelightfulDatabase = createDatabase(driver, schemaInitializer)
 
     private fun createMetastore(key: String): MetaStore {
         return DelightfulMetastore(database, key, hasher, memCache).apply {

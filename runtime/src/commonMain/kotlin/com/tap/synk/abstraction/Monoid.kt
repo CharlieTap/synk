@@ -1,6 +1,6 @@
 package com.tap.synk.abstraction
 
-interface Monoid<T> : Semigroup<T> {
+internal interface Monoid<T> : Semigroup<T> {
 
     val neutral: T
 

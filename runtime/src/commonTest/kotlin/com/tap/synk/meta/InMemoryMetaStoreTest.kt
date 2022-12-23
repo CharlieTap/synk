@@ -1,6 +1,7 @@
 package com.tap.synk.meta
 
 import com.benasher44.uuid.Uuid
+import com.tap.synk.CMap
 import com.tap.synk.meta.store.InMemoryMetaStore
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,7 +11,7 @@ class InMemoryMetaStoreTest {
 
     @Test
     fun `can save and retrieve meta maps from store`() {
-        val metaStore = InMemoryMetaStore(HashMap())
+        val metaStore = InMemoryMetaStore(CMap())
 
         val key = Uuid.randomUUID().toString()
         val meta = HashMap<String, String>().apply {

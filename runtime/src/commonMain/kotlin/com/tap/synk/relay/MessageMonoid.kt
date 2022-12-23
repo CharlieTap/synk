@@ -1,12 +1,12 @@
 package com.tap.synk.relay
 
 import com.tap.synk.abstraction.Monoid
-import com.tap.synk.adapter.SynkAdapter
+import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.MetaMonoid
 
-class MessageMonoid<T : Any>(
-    private val synkAdapter: SynkAdapter<Any>,
+internal class MessageMonoid<T : Any>(
+    private val synkAdapterStore: SynkAdapterStore,
     private val metaMonoid: Monoid<Meta>
 ) : Monoid<Message<T>> {
 
@@ -14,6 +14,7 @@ class MessageMonoid<T : Any>(
         get() = Message(Unit as T, MetaMonoid.neutral)
 
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
+        val synkAdapter = synkAdapterStore.resolve(a.crdt::class)
         val aEncoded = synkAdapter.encode(a.crdt)
         val bEncoded = synkAdapter.encode(b.crdt)
         val meta = metaMonoid.combine(a.meta, b.meta)

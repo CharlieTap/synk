@@ -18,10 +18,10 @@ import kotlinx.atomicfu.update
  * and @param old which is the current persisted value for object contained in the message, if one exists, if it
  * is a new CRDT then null is the correct input
  *
- * This function will the new value to be inserted into the database
+ * This function will produce the new value to be inserted into the database
  */
-fun <T : Any> SynkContract.inbound(message: Message<T>, old: T? = null): T {
-    return synkInbound(message, old, hlc, factory, synkAdapter, merger, this::storeClock) as T
+fun <T : Any> Synk.inbound(message: Message<T>, old: T? = null): T {
+    return synkInbound(message, old, hlc, factory, synkAdapterStore.resolve(message.crdt::class), merger, this::storeClock) as T
 }
 
 private fun <T : Any> synkInbound(
@@ -39,7 +39,7 @@ private fun <T : Any> synkInbound(
     hlc.update { atomicHlc ->
         HybridLogicalClock.remoteTock(atomicHlc, remoteHlc).getOr(atomicHlc)
     }
-    clockFileSync(hlc.value)
+    clockFileSync(hlc.value) // todo pipe this into an actor
 
     val metaStore = metaStoreFactory.getStore(message.crdt::class)
     val id = synkAdapter.resolveId(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")
@@ -53,5 +53,5 @@ private fun <T : Any> synkInbound(
 
     metaStore.putMeta(id, newMessage.meta.timestampMeta)
 
-    return newMessage.crdt as T
+    return newMessage.crdt
 }

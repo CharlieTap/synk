@@ -2,7 +2,7 @@ package com.tap.synk.meta
 
 import com.tap.synk.abstraction.Monoid
 
-object MetaMonoid : Monoid<Meta> {
+internal object MetaMonoid : Monoid<Meta> {
 
     override fun combine(a: Meta, b: Meta): Meta {
         val allKeys = a.timestampMeta.entries union b.timestampMeta.entries

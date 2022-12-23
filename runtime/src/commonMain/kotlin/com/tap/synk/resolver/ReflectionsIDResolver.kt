@@ -2,7 +2,7 @@ package com.tap.synk.resolver
 
 import com.tap.synk.cache.ReflectionsCache
 
-class ReflectionsIDResolver(
+internal class ReflectionsIDResolver(
     private val reflectionsCache: ReflectionsCache = ReflectionsCache()
 ) : IDResolver<Any> {
 

@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 class DelightfulMetastoreFactoryTest {
 
     private class CRDT
-    
+
     private val driver by lazy {
         JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
     }
@@ -48,7 +48,7 @@ class DelightfulMetastoreFactoryTest {
         val namespace = CRDT::class.qualifiedName ?: ""
         seedDatabase(1..100, hasher.hash(namespace))
 
-        val cache = DelightfulMemCache(maxCacheSize) //Rather confusingly the conf cache size is overridden as we replace the whole cache here
+        val cache = DelightfulMemCache(maxCacheSize) // Rather confusingly the conf cache size is overridden as we replace the whole cache here
         val factory = DelightfulMetastoreFactory(
             driver,
             conf,
@@ -72,7 +72,7 @@ class DelightfulMetastoreFactoryTest {
         val namespace = CRDT::class.qualifiedName ?: ""
         seedDatabase(1..100, hasher.hash(namespace))
 
-        val cache = DelightfulMemCache(maxCacheSize) //Rather confusingly the conf cache size is overridden as we replace the whole cache here
+        val cache = DelightfulMemCache(maxCacheSize) // Rather confusingly the conf cache size is overridden as we replace the whole cache here
         val factory = DelightfulMetastoreFactory(
             driver,
             conf,
@@ -84,5 +84,4 @@ class DelightfulMetastoreFactoryTest {
 
         assertEquals(0, cache.size())
     }
-
 }

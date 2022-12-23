@@ -1,5 +1,6 @@
 package com.tap.synk.diff
 
+import com.tap.synk.CMap
 import com.tap.synk.IDCRDT
 import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.cache.ReflectionCacheEntry
@@ -12,7 +13,7 @@ class DiffTest {
 
     @Test
     fun `can turn object into meta`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
+        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
         val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
 

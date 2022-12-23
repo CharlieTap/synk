@@ -13,12 +13,16 @@ class DelightfulMetastore internal constructor(
     private val cache: MemCache<String, String>
 ) : MetaStore {
 
+    private fun deriveCacheKey(id: String, namespace: String) : String {
+        return hasher.hash("$namespace:$id")
+    }
+
     private fun getMetaFromDatabase(id: String, namespace: String): HashMap<String, String>? {
         return database.multistoreQueries.getById(id, namespace).executeAsOneOrNull()?.data_?.decodeToHashmap()
     }
 
     private fun getMetaFromCache(id: String, namespace: String): HashMap<String, String>? {
-        val key = hasher.hash("$namespace:$id")
+        val key = deriveCacheKey(id, namespace)
         return cache[key]?.decodeToHashmap()
     }
 
@@ -27,15 +31,16 @@ class DelightfulMetastore internal constructor(
     }
 
     private fun putMetaInCache(id: String, namespace: String, data: String) {
-        val key = hasher.hash("$namespace:$id")
+        val key = deriveCacheKey(id, namespace)
         cache.put(key, data)
     }
 
     override fun warm() {
         val results = database.multistoreQueries.allForNamespace(namespace, cache.maxSize().toLong()).executeAsList()
-        results.forEach { multistore ->
-            putMetaInCache(multistore.id, multistore.namespace, multistore.data_)
-        }
+        val entries = results.map { multistore ->
+            deriveCacheKey(multistore.id, multistore.namespace) to multistore.data_
+        }.toSet()
+        cache.put(entries)
     }
 
     override fun getMeta(id: String): HashMap<String, String>? {

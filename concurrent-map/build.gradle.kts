@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.kotlin.atomic.fu)
 }
 
 kotlin {
@@ -11,7 +12,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.atomic.fu)
             }
         }
 

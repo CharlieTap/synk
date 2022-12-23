@@ -23,8 +23,10 @@ kotlin {
             dependencies {
                 implementation(projects.runtime)
                 implementation(projects.encode)
+                implementation(projects.concurrentMap)
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
+                implementation(libs.uuid)
                 api(libs.sqldelight.jvm.driver.legacy)
 
             }

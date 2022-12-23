@@ -14,7 +14,8 @@ import kotlinx.atomicfu.update
  * This function should be called after locally persisting data on the current node
  * It's expected that both @param new and @param old contain populated id properties
  */
-fun <T : Any> SynkContract.outbound(new: T, old: T? = null): Message<T> {
+fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
+    val synkAdapter = synkAdapterStore.resolve(new::class)
     val metaStore = factory.getStore(new::class)
     val id = synkAdapter.resolveId(old ?: new) ?: throw Exception("Unable to find id for CRDT")
 

@@ -1,5 +1,6 @@
 package com.tap.synk.cache
 
+import com.tap.synk.CMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -12,8 +13,8 @@ typealias CRDTConstructor<T> = KFunction<T>
 typealias ParamPropPair = Pair<KParameter, KProperty1<out Any, *>>
 typealias ReflectionCacheEntry<T> = Pair<CRDTConstructor<T>, Set<ParamPropPair>>
 
-class ReflectionsCache(
-    private val cache: HashMap<KClass<*>, ReflectionCacheEntry<Any>> = HashMap()
+internal class ReflectionsCache(
+    private val cache: CMap<KClass<*>, ReflectionCacheEntry<Any>> = CMap()
 ) {
 
     private fun reflect(clazz: KClass<*>): ReflectionCacheEntry<Any> {
@@ -31,7 +32,7 @@ class ReflectionsCache(
         }.toSet()
 
         return (constructor to paramPropSet).apply {
-            cache[clazz] = this
+            cache.put(clazz, this)
         }
     }
     fun <T : Any> getConstructor(clazz: KClass<T>): CRDTConstructor<T> {
