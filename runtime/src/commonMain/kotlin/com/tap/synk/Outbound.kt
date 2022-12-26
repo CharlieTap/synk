@@ -6,7 +6,7 @@ import com.tap.synk.diff.diff
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.transform.transformToMeta
 import com.tap.synk.relay.Message
-import kotlinx.atomicfu.update
+import kotlinx.coroutines.flow.update
 
 /**
  * Outbound is designed for creating Messages intended to be propagated to other nodes in the system
@@ -22,7 +22,6 @@ fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
     hlc.update { atomicHlc ->
         HybridLogicalClock.localTick(atomicHlc).getOr(atomicHlc)
     }
-    storeClock(hlc.value)
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id) ?: throw Exception("Failed to find meta for provided old value")
@@ -32,7 +31,7 @@ fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
         oldMetaMap.entries.forEach { entry ->
 
             val value = if (diff.contains(entry.key)) {
-                hlc.toString()
+                hlc.value.toString()
             } else entry.value
 
             newMetaMap[entry.key] = value

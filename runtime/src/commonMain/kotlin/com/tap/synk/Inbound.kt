@@ -7,8 +7,8 @@ import com.tap.synk.meta.Meta
 import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.Message
 import com.tap.synk.relay.MessageMonoid
-import kotlinx.atomicfu.AtomicRef
-import kotlinx.atomicfu.update
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * Inbound is designed for Messages from other remote nodes in the system
@@ -21,17 +21,16 @@ import kotlinx.atomicfu.update
  * This function will produce the new value to be inserted into the database
  */
 fun <T : Any> Synk.inbound(message: Message<T>, old: T? = null): T {
-    return synkInbound(message, old, hlc, factory, synkAdapterStore.resolve(message.crdt::class), merger, this::storeClock) as T
+    return synkInbound(message, old, hlc, factory, synkAdapterStore.resolve(message.crdt::class), merger) as T
 }
 
 private fun <T : Any> synkInbound(
     message: Message<T>,
     old: T? = null,
-    hlc: AtomicRef<HybridLogicalClock>,
+    hlc: MutableStateFlow<HybridLogicalClock>,
     metaStoreFactory: MetaStoreFactory,
     synkAdapter: SynkAdapter<Any>,
-    messageMerger: MessageMonoid<T>,
-    clockFileSync: (HybridLogicalClock) -> Unit
+    messageMerger: MessageMonoid<T>
 ): T {
     val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc.value) }.reduce { acc, result ->
         maxOf(acc, result)
@@ -39,7 +38,6 @@ private fun <T : Any> synkInbound(
     hlc.update { atomicHlc ->
         HybridLogicalClock.remoteTock(atomicHlc, remoteHlc).getOr(atomicHlc)
     }
-    clockFileSync(hlc.value) // todo pipe this into an actor
 
     val metaStore = metaStoreFactory.getStore(message.crdt::class)
     val id = synkAdapter.resolveId(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")

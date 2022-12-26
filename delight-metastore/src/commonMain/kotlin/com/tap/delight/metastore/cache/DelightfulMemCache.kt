@@ -21,15 +21,15 @@ internal class DelightfulMemCache(
                     get() = TODO("Not yet implemented")
 
                 override fun clear() {
-                    TODO("Not yet implemented")
+                   lruCache.evictAll()
                 }
 
                 override fun isEmpty(): Boolean {
-                    TODO("Not yet implemented")
+                    return lruCache.size() == 0
                 }
 
                 override fun remove(key: K): V? {
-                    TODO("Not yet implemented")
+                    return lruCache.remove(key)
                 }
 
                 override fun putAll(from: Map<out K, V>) {

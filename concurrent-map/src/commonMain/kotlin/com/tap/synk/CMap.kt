@@ -2,6 +2,10 @@ package com.tap.synk
 
 import kotlinx.coroutines.runBlocking
 
+/**
+ * KMP Friendly concurrent hashmap
+ * This will have subpar performance compared to something like Javas Concurrent Hashmap given the course grained use of mutexes
+ */
 class CMap<K, V>(
     private val map: MutableMap<K, V> = HashMap()
 ) {

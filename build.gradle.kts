@@ -12,6 +12,8 @@ plugins {
     alias(libs.plugins.sqldelight.legacy) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.kotlinter) apply false
+
+    alias(libs.plugins.dependency.analysis)
 }
 
 tasks.register("clean",Delete::class){

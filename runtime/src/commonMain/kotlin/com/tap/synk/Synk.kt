@@ -8,17 +8,32 @@ import com.tap.synk.meta.MetaMonoid
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.MessageMonoid
-import kotlinx.atomicfu.AtomicRef
-import kotlinx.atomicfu.atomic
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 
 class Synk internal constructor(
     val storageConfiguration: StorageConfiguration,
     val factory: MetaStoreFactory = InMemoryMetaStoreFactory(),
     val synkAdapterStore: SynkAdapterStore = SynkAdapterStore()
 ) {
-    internal val hlc: AtomicRef<HybridLogicalClock> = atomic(loadClock())
+    internal val hlc : MutableStateFlow<HybridLogicalClock> = MutableStateFlow(loadClock())
+    private val hlcSynk : Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds)
     internal val merger: MessageMonoid<Any> = MessageMonoid(synkAdapterStore, MetaMonoid)
+
+    init {
+        GlobalScope.launch(Dispatchers.IO) {
+            hlcSynk.collectLatest { hlc ->
+                storeClock(hlc)
+            }
+        }
+    }
 
     data class Builder(private val storageConfiguration: StorageConfiguration) {
         private var factory: MetaStoreFactory? = null

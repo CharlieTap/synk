@@ -30,6 +30,8 @@ compose-constraint-layout = "1.0.0"
 compose-navigation = "2.5.0-rc01"
 compose-viewmodel = "2.4.0"
 
+dependency-analysis="1.18.0"
+
 faker = "1.11.0"
 
 hilt-core = "2.42"
@@ -65,6 +67,7 @@ uuid = "0.5.0"
 android = { id = "com.android.application", version.ref = "android-build-tools-plugin" }
 android-lib = { id = "com.android.library", version.ref = "android-build-tools-plugin" }
 android-test = { id = "com.android.test", version.ref = "android-build-tools-plugin" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref="dependency-analysis" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-core" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
