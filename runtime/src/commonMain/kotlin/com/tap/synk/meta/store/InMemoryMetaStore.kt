@@ -11,13 +11,13 @@ internal class InMemoryMetaStore(
         // No op
     }
 
-    override fun getMeta(id: String): HashMap<String, String>? {
+    override fun getMeta(id: String): Map<String, String>? {
         return store[id]?.let { serial ->
             serial.decodeToHashmap()
         }
     }
 
-    override fun putMeta(id: String, meta: HashMap<String, String>) {
+    override fun putMeta(id: String, meta: Map<String, String>) {
         val serial = meta.encodeToString()
         store.put(id, serial)
     }

@@ -1,21 +1,16 @@
-package com.tap.synk.meta.transform
+package com.tap.synk.meta
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.IDCRDT
-import com.tap.synk.adapter.ReflectionsSynkAdapter
-import com.tap.synk.cache.ReflectionCacheEntry
-import com.tap.synk.cache.ReflectionsCache
-import kotlin.reflect.KClass
+import com.tap.synk.IDCRDTAdapter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TransformTest {
+class MetaTest {
 
     @Test
-    fun `can turn object into meta`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
-        val reflectionsCache = ReflectionsCache(cache)
-        val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
+    fun `can derive meta from crdt`() {
+        val synkAdapter = IDCRDTAdapter()
         val hlc = HybridLogicalClock()
 
         val crdt = IDCRDT(
@@ -25,10 +20,11 @@ class TransformTest {
             1234
         )
 
-        val result = synkAdapter.transformToMeta(crdt, hlc)
+        val result = meta(crdt, synkAdapter, hlc)
 
         val expected = HashMap<String, String>().apply {
             val hlcs = hlc.toString()
+            put("id", hlcs)
             put("name", hlcs)
             put("last_name", hlcs)
             put("phone", hlcs)

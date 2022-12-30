@@ -9,6 +9,7 @@ class SynkAdapterStore(
     private val default: SynkAdapter<Any> = ReflectionsSynkAdapter(ReflectionsCache()),
     private val lookup: HashMap<KClass<*>, SynkAdapter<Any>> = HashMap()
 ) {
+
     fun <T : Any> register(clazz: KClass<T>, adapter: SynkAdapter<T>) {
         lookup[clazz] = (adapter as SynkAdapter<Any>)
     }

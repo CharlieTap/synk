@@ -52,10 +52,10 @@ kotlin {
             }
         }
 
-        val nativeMain by creating {
-            dependencies {
-
-            }
-        }
+//        val nativeMain by creating {
+//            dependencies {
+//
+//            }
+//        }
     }
 }

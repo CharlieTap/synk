@@ -32,8 +32,7 @@ internal class MessageMonoid<T : Any>(
             }
         }
 
-        // here we need to set all the values back onto the T
-        val crdt = synkAdapter.decode(a.crdt, newMap) as T
+        val crdt = synkAdapter.decode(newMap) as T
 
         return Message(crdt, meta)
     }

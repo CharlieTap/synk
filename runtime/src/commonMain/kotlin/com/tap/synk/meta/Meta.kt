@@ -1,5 +1,8 @@
 package com.tap.synk.meta
 
+import com.tap.hlc.HybridLogicalClock
+import com.tap.synk.adapter.SynkAdapter
+
 /**
  * Metadata needed differentiate between CRDT state updates
  *
@@ -17,5 +20,21 @@ package com.tap.synk.meta
  */
 data class Meta(
     val clazz: String,
-    val timestampMeta: HashMap<String, String>
+    val timestampMeta: Map<String, String>
 )
+
+internal fun <T : Any> meta(crdt: T, adapter: SynkAdapter<T>, hlc: HybridLogicalClock): Meta {
+    val encoded = adapter.encode(crdt)
+    val hlcs = hlc.toString()
+
+    return encoded.keys.fold(HashMap<String, String>()) { acc, key ->
+        acc.apply {
+            put(key, hlcs)
+        }
+    }.let { meta ->
+        Meta(
+            crdt::class.qualifiedName ?: "",
+            meta
+        )
+    }
+}

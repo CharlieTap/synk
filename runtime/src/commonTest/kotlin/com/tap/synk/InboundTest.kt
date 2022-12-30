@@ -2,6 +2,7 @@ package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
+import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.config.StorageConfiguration
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
@@ -37,7 +38,10 @@ class InboundTest {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration)
+        val synkAdapterStore = SynkAdapterStore().apply {
+            register(IDCRDT::class, IDCRDTAdapter())
+        }
+        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
     }
 
     @Test
@@ -91,6 +95,7 @@ class InboundTest {
             123344438
         )
         val oldMetaMap = HashMap<String, String>().apply {
+            put("id", currentHlc.toString())
             put("name", currentHlc.toString())
             put("last_name", currentHlc.toString())
             put("phone", futureHlc.toString())
@@ -122,6 +127,7 @@ class InboundTest {
             123344438
         )
         val expectedMeta = HashMap<String, String>().apply {
+            put("id", currentHlc.toString())
             put("name", futureHlc.toString())
             put("last_name", currentHlc.toString())
             put("phone", futureHlc.toString())

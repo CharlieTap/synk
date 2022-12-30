@@ -1,7 +1,7 @@
 package com.tap.synk.cache
 
 import com.tap.synk.CMap
-import com.tap.synk.CRDT
+import com.tap.synk.IDCRDT
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.primaryConstructor
@@ -15,7 +15,7 @@ class ReflectionsCacheTest {
         val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
-        val crdt = CRDT("", "", 1)
+        val crdt = IDCRDT("", "", "", 1)
 
         val constructor = reflectionsCache.getConstructor(crdt::class)
 
@@ -28,12 +28,12 @@ class ReflectionsCacheTest {
         val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
-        val crdt = CRDT("", "", 1)
+        val crdt = IDCRDT("", "", "", 1)
 
         val props = reflectionsCache.getProps(crdt::class)
 
-        assertEquals(3, props.size)
-        assertEquals(listOf("name", "last_name", "phone"), props.map(KProperty1<out Any, *>::name))
+        assertEquals(4, props.size)
+        assertEquals(listOf("id", "name", "last_name", "phone"), props.map(KProperty1<out Any, *>::name))
         assertEquals(1, cache.size())
     }
 
@@ -42,11 +42,11 @@ class ReflectionsCacheTest {
         val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
 
-        val crdt = CRDT("", "", 1)
+        val crdt = IDCRDT("", "", "", 1)
 
         val props = reflectionsCache.getParamsAndProps(crdt::class)
 
-        assertEquals(3, props.size)
+        assertEquals(4, props.size)
         assertEquals(1, cache.size())
     }
 }

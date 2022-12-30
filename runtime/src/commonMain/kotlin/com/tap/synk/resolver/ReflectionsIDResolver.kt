@@ -6,11 +6,11 @@ internal class ReflectionsIDResolver(
     private val reflectionsCache: ReflectionsCache = ReflectionsCache()
 ) : IDResolver<Any> {
 
-    override fun resolveId(crdt: Any): String? {
+    override fun resolveId(crdt: Any): String {
         val idProp = reflectionsCache.getProps(crdt::class).firstOrNull {
             it.name.lowercase() == "id"
-        } ?: return null
+        } ?: throw IllegalStateException("id property not found on CRDT " + crdt::class.toString())
 
-        return idProp.getter.call(crdt)?.toString()
+        return idProp.getter.call(crdt)?.toString() ?: throw IllegalStateException("id property not found on CRDT " + crdt::class.toString())
     }
 }

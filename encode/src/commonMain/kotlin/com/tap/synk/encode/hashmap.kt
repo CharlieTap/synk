@@ -1,6 +1,6 @@
 package com.tap.synk.encode
 
-fun HashMap<String, String>.encodeToString(): String {
+fun Map<String, String>.encodeToString(): String {
     return entries.foldIndexed("") { idx, acc, entry ->
         val postFix = if (idx < entries.size - 1) {
             "|"
@@ -9,7 +9,7 @@ fun HashMap<String, String>.encodeToString(): String {
     }
 }
 
-fun String.decodeToHashmap(): HashMap<String, String> {
+fun String.decodeToHashmap(): Map<String, String> {
     return HashMap<String, String>().apply {
         split("|").map { pairSerial ->
             val key = pairSerial.substringBefore(":")

@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 class CMap<K, V>(
     private val map: MutableMap<K, V> = HashMap()
 ) {
-    private val rwLock : ReadWriteMutex = ReadWriteMutex()
+    private val rwLock: ReadWriteMutex = ReadWriteMutex()
 
     operator fun get(k: K): V? {
         return runBlocking {
@@ -20,7 +20,7 @@ class CMap<K, V>(
         }
     }
 
-    fun get(keys: Set<K>) : Set<Pair<K, V?>> {
+    fun get(keys: Set<K>): Set<Pair<K, V?>> {
         return runBlocking {
             rwLock.read.lock()
             val pairs = keys.map { k ->
@@ -52,5 +52,4 @@ class CMap<K, V>(
     fun size(): Int {
         return map.size
     }
-
 }

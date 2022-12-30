@@ -16,11 +16,11 @@ interface MetaStore {
      * Retrieve CRDT metadata
      * This method may block is metastore has not been warmed
      */
-    fun getMeta(id: String): HashMap<String, String>?
+    fun getMeta(id: String): Map<String, String>?
 
     /**
      * Persist CRDT metadata
      * This method will block
      */
-    fun putMeta(id: String, meta: HashMap<String, String>)
+    fun putMeta(id: String, meta: Map<String, String>)
 }

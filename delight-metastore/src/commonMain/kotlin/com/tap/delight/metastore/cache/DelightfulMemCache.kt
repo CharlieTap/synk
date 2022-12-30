@@ -9,7 +9,7 @@ internal class DelightfulMemCache(
 ) : MemCache<String, String> {
 
     companion object {
-        fun <K: Any, V: Any> lruToMap(lruCache: LruCache<K, V>) : MutableMap<K, V> {
+        fun <K : Any, V : Any> lruToMap(lruCache: LruCache<K, V>): MutableMap<K, V> {
             return object : MutableMap<K, V> {
                 override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
                     get() = TODO("Not yet implemented")
@@ -21,7 +21,7 @@ internal class DelightfulMemCache(
                     get() = TODO("Not yet implemented")
 
                 override fun clear() {
-                   lruCache.evictAll()
+                    lruCache.evictAll()
                 }
 
                 override fun isEmpty(): Boolean {
@@ -51,7 +51,6 @@ internal class DelightfulMemCache(
                 override fun get(key: K): V? {
                     return lruCache[key]
                 }
-
             }
         }
     }

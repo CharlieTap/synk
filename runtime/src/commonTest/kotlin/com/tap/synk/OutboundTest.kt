@@ -1,7 +1,7 @@
 package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.cache.ReflectionCacheEntry
+import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.config.StorageConfiguration
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
@@ -12,7 +12,6 @@ import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.relay.Message
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
-import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -37,8 +36,11 @@ class OutboundTest {
         val metaStoreFactoryMap = HashMap<String, MetaStore>().apply {
             put(IDCRDT::class.qualifiedName.toString(), metaStore)
         }
+        val synkAdapterStore = SynkAdapterStore().apply {
+            register(IDCRDT::class, IDCRDTAdapter())
+        }
         val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration)
+        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
     }
 
     @Test
@@ -57,6 +59,7 @@ class OutboundTest {
         val result = synk.outbound(newCRDT)
         val expectedHLC = synk.hlc.value
         val expectedMetaMap = HashMap<String, String>().apply {
+            put("id", expectedHLC.toString())
             put("name", expectedHLC.toString())
             put("last_name", expectedHLC.toString())
             put("phone", expectedHLC.toString())
@@ -100,7 +103,6 @@ class OutboundTest {
 
     @Test
     fun `calling outbound with old correctly updates timestamps for values which changed`() {
-        val cache = HashMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val metaStoreMap = CMap<String, String>()
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)

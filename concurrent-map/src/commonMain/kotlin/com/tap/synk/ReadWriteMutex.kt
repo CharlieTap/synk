@@ -1,13 +1,11 @@
 package com.tap.synk
 
-
+import kotlinx.atomicfu.AtomicInt
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.selects.SelectClause2
 import kotlinx.coroutines.sync.Mutex
-
 import javax.naming.OperationNotSupportedException
-import kotlinx.atomicfu.AtomicInt
-import kotlinx.atomicfu.atomic
 
 interface ReadWriteMutex {
     val read: Mutex
@@ -45,7 +43,7 @@ fun ReadWriteMutex(): ReadWriteMutex {
     return SimpleReadWriteMutex(
         pendingCount,
         ReaderMutex(mutex, writePermissions, readPermissions, pendingCount, readersDeparting),
-        WriterMutex(mutex, writePermissions, readPermissions, pendingCount, readersDeparting),
+        WriterMutex(mutex, writePermissions, readPermissions, pendingCount, readersDeparting)
     )
 }
 
@@ -54,23 +52,25 @@ fun ReadWriteMutex(): ReadWriteMutex {
 internal class SimpleReadWriteMutex(
     private val pendingCount: AtomicInt,
     override val read: ReaderMutex,
-    override val write: WriterMutex,
+    override val write: WriterMutex
 ) : ReadWriteMutex {
     override val state: ReadWriteMutex.LockState
         get() {
             val state = pendingCount.value
-            return if (state > 0)
+            return if (state > 0) {
                 ReadWriteMutex.LockState.READ_LOCKED
-            else if (state == 0)
+            } else if (state == 0) {
                 ReadWriteMutex.LockState.UNLOCKED
-            else
+            } else {
                 ReadWriteMutex.LockState.WRITE_LOCKED
+            }
         }
 
     override fun ensure(targetState: ReadWriteMutex.LockState) {
         val currentState = state
-        if (currentState != targetState)
+        if (currentState != targetState) {
             throw IllegalStateException("the ReadWriteMutex was expected to be $targetState but was $currentState")
+        }
     }
 
     override fun ensureWriteLocked() {
@@ -93,7 +93,7 @@ internal sealed class AbstractReadOrWriteMutex(
     protected val writePermissions: Channel<Unit>,
     protected val readPermissions: Channel<Unit>,
     protected val pendingCount: AtomicInt,
-    protected val readersDeparting: AtomicInt,
+    protected val readersDeparting: AtomicInt
 ) : Mutex {
 
     companion object {
@@ -103,7 +103,7 @@ internal sealed class AbstractReadOrWriteMutex(
     @Deprecated(
         message = "Mutex.onLock deprecated without replacement. For additional details please refer to #2794",
         level = DeprecationLevel.WARNING,
-        replaceWith = ReplaceWith(""),
+        replaceWith = ReplaceWith("")
     )
     override val onLock: SelectClause2<Any?, Mutex>
         get() = throw OperationNotSupportedException("")
@@ -125,7 +125,7 @@ internal class ReaderMutex(
     writePermissions: Channel<Unit>,
     readPermissions: Channel<Unit>,
     pendingCount: AtomicInt,
-    readersDeparting: AtomicInt,
+    readersDeparting: AtomicInt
 ) : AbstractReadOrWriteMutex(mutex, writePermissions, readPermissions, pendingCount, readersDeparting) {
 
     override val isLocked: Boolean
@@ -174,7 +174,7 @@ internal class WriterMutex(
     writePermissions: Channel<Unit>,
     readPermissions: Channel<Unit>,
     pendingCount: AtomicInt,
-    readersDeparting: AtomicInt,
+    readersDeparting: AtomicInt
 ) : AbstractReadOrWriteMutex(mutex, writePermissions, readPermissions, pendingCount, readersDeparting) {
 
     override val isLocked: Boolean

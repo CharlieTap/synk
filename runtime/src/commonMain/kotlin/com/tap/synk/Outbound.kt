@@ -2,10 +2,13 @@ package com.tap.synk
 
 import com.github.michaelbull.result.getOr
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.diff.diff
+import com.tap.synk.adapter.diff
+import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.meta.Meta
-import com.tap.synk.meta.transform.transformToMeta
+import com.tap.synk.meta.meta
+import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.Message
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
@@ -15,9 +18,19 @@ import kotlinx.coroutines.flow.update
  * It's expected that both @param new and @param old contain populated id properties
  */
 fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
-    val synkAdapter = synkAdapterStore.resolve(new::class)
+    return synkOutbound(new, old, hlc, synkAdapterStore, factory)
+}
+
+internal fun <T : Any> synkOutbound(
+    new: T,
+    old: T?,
+    hlc: MutableStateFlow<HybridLogicalClock>,
+    adapterStore: SynkAdapterStore,
+    factory: MetaStoreFactory
+): Message<T> {
+    val synkAdapter = adapterStore.resolve(new::class)
     val metaStore = factory.getStore(new::class)
-    val id = synkAdapter.resolveId(old ?: new) ?: throw Exception("Unable to find id for CRDT")
+    val id = synkAdapter.resolveId(old ?: new)
 
     hlc.update { atomicHlc ->
         HybridLogicalClock.localTick(atomicHlc).getOr(atomicHlc)
@@ -39,7 +52,7 @@ fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
         val newMeta = Meta(new::class.qualifiedName!!, newMetaMap)
 
         Message(new, newMeta)
-    } ?: Message(new, synkAdapter.transformToMeta(new, hlc.value))
+    } ?: Message(new, meta(new, synkAdapter, hlc.value))
 
     metaStore.putMeta(id, newMessage.meta.timestampMeta)
 

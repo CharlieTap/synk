@@ -31,32 +31,34 @@ class ReflectionsSynkAdapterTest {
 
         val crdt = IDCRDT("123", "John", "Smith", 1234)
 
-        val map = adapter.encode(crdt)
-        val expectedMap = HashMap<String, String>().apply {
+        val result = adapter.encode(crdt)
+        val expectedMap = ReflectionsSynkAdapter.createMap(crdt::class).apply {
+            put("id", "123")
             put("name", "John")
             put("last_name", "Smith")
             put("phone", "1234")
         }
 
-        assertEquals(map, expectedMap)
+        assertEquals(expectedMap, result)
         assertEquals(1, cache.size())
     }
 
     @Test
-    fun `can encode crdt to hashmap and ignore keys`() {
+    fun `can decode crdt from hashmap`() {
         val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
         val reflectionsCache = ReflectionsCache(cache)
-        val adapter = ReflectionsSynkAdapter(reflectionsCache, ignoredKeys = setOf("id", "name"))
+        val adapter = ReflectionsSynkAdapter(reflectionsCache)
 
-        val crdt = IDCRDT("123", "John", "Smith", 1234)
-
-        val map = adapter.encode(crdt)
-        val expectedMap = HashMap<String, String>().apply {
+        val input = ReflectionsSynkAdapter.createMap(IDCRDT::class).apply {
+            put("name", "John")
             put("last_name", "Smith")
             put("phone", "1234")
         }
 
-        assertEquals(map, expectedMap)
+        val result = adapter.decode(input)
+        val expected = IDCRDT("123", "John", "Smith", 1234)
+
+        assertEquals(expected, result)
         assertEquals(1, cache.size())
     }
 }

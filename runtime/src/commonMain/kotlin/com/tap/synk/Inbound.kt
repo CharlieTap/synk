@@ -24,11 +24,11 @@ fun <T : Any> Synk.inbound(message: Message<T>, old: T? = null): T {
     return synkInbound(message, old, hlc, factory, synkAdapterStore.resolve(message.crdt::class), merger) as T
 }
 
-private fun <T : Any> synkInbound(
+internal fun <T : Any> synkInbound(
     message: Message<T>,
     old: T? = null,
     hlc: MutableStateFlow<HybridLogicalClock>,
-    metaStoreFactory: MetaStoreFactory,
+    factory: MetaStoreFactory,
     synkAdapter: SynkAdapter<Any>,
     messageMerger: MessageMonoid<T>
 ): T {
@@ -39,8 +39,8 @@ private fun <T : Any> synkInbound(
         HybridLogicalClock.remoteTock(atomicHlc, remoteHlc).getOr(atomicHlc)
     }
 
-    val metaStore = metaStoreFactory.getStore(message.crdt::class)
-    val id = synkAdapter.resolveId(old ?: message.crdt) ?: throw Exception("Unable to find id for CRDT")
+    val metaStore = factory.getStore(message.crdt::class)
+    val id = synkAdapter.resolveId(old ?: message.crdt)
 
     val newMessage = old?.let {
         val oldMetaMap = metaStore.getMeta(id)

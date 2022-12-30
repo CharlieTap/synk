@@ -12,29 +12,29 @@ class CustomSynkAdapterTest {
     private data class CRDT3(val id: String)
 
     private class CRDT1Adapter() : SynkAdapter<CRDT1> {
-        override fun encode(crdt: CRDT1): HashMap<String, String> {
+        override fun encode(crdt: CRDT1): Map<String, String> {
             TODO("Not yet implemented")
         }
 
-        override fun decode(crdt: CRDT1, map: HashMap<String, String>): CRDT1 {
+        override fun decode(map: Map<String, String>): CRDT1 {
             TODO("Not yet implemented")
         }
 
-        override fun resolveId(crdt: CRDT1): String? {
+        override fun resolveId(crdt: CRDT1): String {
             TODO("Not yet implemented")
         }
     }
 
     private class CRDT2Adapter : SynkAdapter<CRDT2> {
-        override fun encode(crdt: CRDT2): HashMap<String, String> {
+        override fun encode(crdt: CRDT2): Map<String, String> {
             TODO("Not yet implemented")
         }
 
-        override fun decode(crdt: CRDT2, map: HashMap<String, String>): CRDT2 {
+        override fun decode(map: Map<String, String>): CRDT2 {
             TODO("Not yet implemented")
         }
 
-        override fun resolveId(crdt: CRDT2): String? {
+        override fun resolveId(crdt: CRDT2): String {
             TODO("Not yet implemented")
         }
     }

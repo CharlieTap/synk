@@ -4,13 +4,23 @@ import com.tap.synk.resolver.IDResolver
 
 interface SynkAdapter<T : Any> : IDResolver<T> {
 
-    /**
-     * Only mutable values need to be tracked
-     * Should return a HashMap where the key is the property name and the value is the property value
-     * Only values that are mutable need to be present in the Hashmap, identifiers and immutable properties should be omitted
-     *
-     */
-    fun encode(crdt: T): HashMap<String, String>
+    fun encode(crdt: T): Map<String, String>
 
-    fun decode(crdt: T, map: HashMap<String, String>): T
+    fun decode(map: Map<String, String>): T
+}
+
+internal fun <T : Any> SynkAdapter<T>.diff(old: T, new: T): Set<String> {
+    val encodedOld = encode(old)
+    val encodedNew = encode(new)
+
+    return encodedNew.entries.fold(mutableSetOf()) { acc, newEntry ->
+
+        val oldEntry = encodedOld.entries.firstOrNull {
+            newEntry.key == it.key
+        } ?: return@fold acc.apply { add(newEntry.key) }
+
+        if (newEntry.value != oldEntry.value) {
+            acc.apply { add(newEntry.key) }
+        } else acc
+    }
 }

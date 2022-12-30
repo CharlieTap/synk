@@ -1,21 +1,15 @@
-package com.tap.synk.diff
+package com.tap.synk.adapter
 
-import com.tap.synk.CMap
 import com.tap.synk.IDCRDT
-import com.tap.synk.adapter.ReflectionsSynkAdapter
-import com.tap.synk.cache.ReflectionCacheEntry
-import com.tap.synk.cache.ReflectionsCache
-import kotlin.reflect.KClass
+import com.tap.synk.IDCRDTAdapter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class DiffTest {
+class SynkAdapterDiffTest {
 
     @Test
     fun `can turn object into meta`() {
-        val cache = CMap<KClass<*>, ReflectionCacheEntry<Any>>()
-        val reflectionsCache = ReflectionsCache(cache)
-        val synkAdapter = ReflectionsSynkAdapter(reflectionsCache)
+        val synkAdapter = IDCRDTAdapter()
 
         val crdt1 = IDCRDT(
             "123",

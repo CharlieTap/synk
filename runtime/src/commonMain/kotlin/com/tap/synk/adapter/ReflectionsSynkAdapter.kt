@@ -7,42 +7,45 @@ import com.tap.synk.serialize.deserialize
 import com.tap.synk.serialize.serialize
 import kotlin.reflect.KClass
 
-/**
-
- */
 internal class ReflectionsSynkAdapter(
     private val reflectionCache: ReflectionsCache,
-    private val ignoredKeys: Set<String> = setOf("id"),
     private val idResolver: IDResolver<Any> = ReflectionsIDResolver(reflectionCache)
 ) : SynkAdapter<Any> {
 
-    override fun resolveId(crdt: Any): String? {
+    companion object {
+        private const val CLASS_KEY = "__clazz__"
+
+        internal fun createMap(crdt: KClass<*>): HashMap<String, String> {
+            return HashMap<String, String>().apply {
+                put(CLASS_KEY, crdt.toString())
+            }
+        }
+    }
+
+    override fun resolveId(crdt: Any): String {
         return idResolver.resolveId(crdt)
     }
 
-    override fun encode(crdt: Any): HashMap<String, String> {
-        val properties = reflectionCache.getProps(crdt::class).filter {
-            ignoredKeys.contains(it.name).not()
-        }.toSet()
+    override fun encode(crdt: Any): Map<String, String> {
+        val properties = reflectionCache.getProps(crdt::class).toSet()
 
-        return properties.fold(HashMap(properties.size)) { acc, prop ->
+        return properties.fold(createMap(crdt::class)) { acc, prop ->
             acc.apply {
                 put(prop.name, serialize(prop.getter.call(crdt)))
             }
         }
     }
 
-    override fun decode(crdt: Any, map: HashMap<String, String>): Any {
-        val clazz = crdt::class
+    override fun decode(map: Map<String, String>): Any {
+        val clazz = Class.forName(map[CLASS_KEY]).kotlin
 
         val constructor = reflectionCache.getConstructor(clazz)
         val paramsProps = reflectionCache.getParamsAndProps(clazz)
 
         return paramsProps.map { paramProp ->
             val serialClass = paramProp.first.type.classifier as KClass<*>
-            deserialize(serialClass, map[paramProp.first.name] ?: "null") ?: paramProp.second.getter.call(crdt)
+            deserialize(serialClass, map[paramProp.first.name] ?: "null")
         }.let { params ->
-            println(params)
             constructor.call(*params.toTypedArray())
         }
     }
