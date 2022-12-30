@@ -1,50 +1,21 @@
 package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.config.StorageConfiguration
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
 import com.tap.synk.meta.Meta
-import com.tap.synk.meta.store.InMemoryMetaStore
-import com.tap.synk.meta.store.InMemoryMetaStoreFactory
-import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.relay.Message
-import okio.Path.Companion.toPath
-import okio.fakefilesystem.FakeFileSystem
+import com.tap.synk.utils.setupSynk
+import com.tap.synk.utils.storageConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class OutboundTest {
 
-    private val storageConfig by lazy {
-        StorageConfiguration(
-            filePath = "/test".toPath(),
-            fileSystem = FakeFileSystem()
-        )
-    }
-
-    private fun setupSynk(
-        storageConfiguration: StorageConfiguration,
-        metaStoreMap: CMap<String, String>,
-        hlc: HybridLogicalClock = HybridLogicalClock()
-    ): Synk {
-        HybridLogicalClock.store(hlc, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
-
-        val metaStore = InMemoryMetaStore(metaStoreMap)
-        val metaStoreFactoryMap = HashMap<String, MetaStore>().apply {
-            put(IDCRDT::class.qualifiedName.toString(), metaStore)
-        }
-        val synkAdapterStore = SynkAdapterStore().apply {
-            register(IDCRDT::class, IDCRDTAdapter())
-        }
-        val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
-    }
-
     @Test
     fun `calling outbound with old as null returns a correctly formed Message`() {
+        val storageConfig = storageConfig()
         val metaStoreMap = CMap<String, String>()
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
@@ -79,6 +50,7 @@ class OutboundTest {
 
     @Test
     fun `calling outbound with old but no meta causes a runtime crash`() {
+        val storageConfig = storageConfig()
         val metaStoreMap = CMap<String, String>()
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
@@ -103,6 +75,7 @@ class OutboundTest {
 
     @Test
     fun `calling outbound with old correctly updates timestamps for values which changed`() {
+        val storageConfig = storageConfig()
         val metaStoreMap = CMap<String, String>()
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)

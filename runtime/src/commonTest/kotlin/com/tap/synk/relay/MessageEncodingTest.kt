@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class MessageEncodingTest {
 
     companion object {
-        private fun json(crdt: IDCRDT, hlc: HybridLogicalClock): String {
+        internal fun json(crdt: IDCRDT, hlc: HybridLogicalClock): String {
             return """
             {
                 "crdt":{

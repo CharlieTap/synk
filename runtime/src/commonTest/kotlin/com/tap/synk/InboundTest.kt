@@ -11,6 +11,8 @@ import com.tap.synk.meta.store.InMemoryMetaStore
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.relay.Message
+import com.tap.synk.utils.setupSynk
+import com.tap.synk.utils.storageConfig
 import kotlinx.datetime.Clock
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
@@ -19,30 +21,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class InboundTest {
-
-    private fun storageConfig() =
-        StorageConfiguration(
-            filePath = "/test".toPath(),
-            fileSystem = FakeFileSystem()
-        )
-
-    private fun setupSynk(
-        storageConfiguration: StorageConfiguration,
-        metaStoreMap: CMap<String, String>,
-        hlc: HybridLogicalClock = HybridLogicalClock()
-    ): Synk {
-        HybridLogicalClock.store(hlc, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
-
-        val metaStore = InMemoryMetaStore(metaStoreMap)
-        val metaStoreFactoryMap = HashMap<String, MetaStore>().apply {
-            put(IDCRDT::class.qualifiedName.toString(), metaStore)
-        }
-        val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
-        val synkAdapterStore = SynkAdapterStore().apply {
-            register(IDCRDT::class, IDCRDTAdapter())
-        }
-        return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
-    }
 
     @Test
     fun `calling inbound with old as null uses the timestamps found in the Message`() {
