@@ -6,7 +6,7 @@ import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MetaMonoidTest {
+class MetaSemigroupTest {
 
     @Test
     fun `can combine instances of meta`() {
@@ -32,7 +32,7 @@ class MetaMonoidTest {
             }
         )
 
-        val result = MetaMonoid.combine(meta1, meta2)
+        val result = MetaSemigroup.combine(meta1, meta2)
         val expected = Meta(
             "test",
             HashMap<String, String>().apply {

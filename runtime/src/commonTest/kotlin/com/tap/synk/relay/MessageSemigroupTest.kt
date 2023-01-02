@@ -6,12 +6,11 @@ import com.tap.synk.IDCRDT
 import com.tap.synk.IDCRDTAdapter
 import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.meta.Meta
-import com.tap.synk.meta.MetaMonoid
 import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class MessageMonoidTest {
+class MessageSemigroupTest {
 
     @Test
     fun `can combine instances of messages`() {
@@ -23,7 +22,7 @@ class MessageMonoidTest {
         val synkAdapterStore = SynkAdapterStore().apply {
             register(IDCRDT::class, IDCRDTAdapter())
         }
-        val monoid = MessageMonoid<Any>(synkAdapterStore, MetaMonoid)
+        val monoid = MessageSemigroup<Any>(synkAdapterStore)
 
         val meta1 = Meta(
             "test",

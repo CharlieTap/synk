@@ -1,9 +1,8 @@
 package com.tap.synk.meta
 
-import com.tap.synk.abstraction.Monoid
+import com.tap.synk.abstraction.Semigroup
 
-internal object MetaMonoid : Monoid<Meta> {
-
+internal object MetaSemigroup : Semigroup<Meta> {
     override fun combine(a: Meta, b: Meta): Meta {
         val allKeys = a.timestampMeta.entries union b.timestampMeta.entries
 
@@ -28,10 +27,4 @@ internal object MetaMonoid : Monoid<Meta> {
             newMap
         )
     }
-
-    override val neutral: Meta
-        get() = Meta(
-            "",
-            HashMap()
-        )
 }

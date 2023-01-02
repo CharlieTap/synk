@@ -6,7 +6,7 @@ import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.Message
-import com.tap.synk.relay.MessageMonoid
+import com.tap.synk.relay.MessageSemigroup
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -30,7 +30,7 @@ internal fun <T : Any> synkInbound(
     hlc: MutableStateFlow<HybridLogicalClock>,
     factory: MetaStoreFactory,
     synkAdapter: SynkAdapter<Any>,
-    messageMerger: MessageMonoid<T>
+    messageMerger: MessageSemigroup<T>
 ): T {
     val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc.value) }.reduce { acc, result ->
         maxOf(acc, result)

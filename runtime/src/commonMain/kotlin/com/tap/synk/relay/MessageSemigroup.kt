@@ -1,23 +1,16 @@
 package com.tap.synk.relay
 
-import com.tap.synk.abstraction.Monoid
+import com.tap.synk.abstraction.Semigroup
 import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.meta.Meta
-import com.tap.synk.meta.MetaMonoid
 
-internal class MessageMonoid<T : Any>(
-    private val synkAdapterStore: SynkAdapterStore,
-    private val metaMonoid: Monoid<Meta>
-) : Monoid<Message<T>> {
-
-    override val neutral: Message<T>
-        get() = Message(Unit as T, MetaMonoid.neutral)
-
+internal class MessageSemigroup<T: Any>(
+    private val synkAdapterStore: SynkAdapterStore
+) : Semigroup<Message<T>> {
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
         val synkAdapter = synkAdapterStore.resolve(a.crdt::class)
         val aEncoded = synkAdapter.encode(a.crdt)
         val bEncoded = synkAdapter.encode(b.crdt)
-        val meta = metaMonoid.combine(a.meta, b.meta)
+        val meta = a.meta + b.meta
 
         val newMap = meta.timestampMeta.entries.fold(HashMap<String, String>()) { acc, entry ->
 

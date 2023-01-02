@@ -2,7 +2,7 @@ package com.tap.synk
 
 import com.tap.synk.relay.Message
 
-fun <T : Any> Synk.Compress(messages: List<Message<T>>): List<Message<T>> {
+fun <T : Any> Synk.compress(messages: List<Message<T>>): List<Message<T>> {
     if (messages.isEmpty()) return emptyList()
     val adapter = synkAdapterStore.resolve(messages.first().crdt::class)
     return messages

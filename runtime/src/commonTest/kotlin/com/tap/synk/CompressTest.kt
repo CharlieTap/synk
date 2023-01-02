@@ -68,7 +68,7 @@ class CompressTest {
             }
         }
 
-        val result = synk.Compress(messages1 + messages2)
+        val result = synk.compress(messages1 + messages2)
 
         assertEquals(2, result.size)
         assertEquals(message1Latest, result[0])

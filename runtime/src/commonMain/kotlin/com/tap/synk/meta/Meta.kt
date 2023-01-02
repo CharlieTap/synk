@@ -21,7 +21,11 @@ import com.tap.synk.adapter.SynkAdapter
 data class Meta(
     val clazz: String,
     val timestampMeta: Map<String, String>
-)
+) {
+    operator fun plus(meta: Meta) : Meta {
+        return MetaSemigroup.combine(this, meta)
+    }
+}
 
 internal fun <T : Any> meta(crdt: T, adapter: SynkAdapter<T>, hlc: HybridLogicalClock): Meta {
     val encoded = adapter.encode(crdt)

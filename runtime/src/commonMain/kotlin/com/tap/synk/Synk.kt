@@ -4,10 +4,9 @@ import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.config.StorageConfiguration
-import com.tap.synk.meta.MetaMonoid
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStoreFactory
-import com.tap.synk.relay.MessageMonoid
+import com.tap.synk.relay.MessageSemigroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +24,7 @@ class Synk internal constructor(
 ) {
     internal val hlc: MutableStateFlow<HybridLogicalClock> = MutableStateFlow(loadClock())
     private val hlcSynk: Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds)
-    internal val merger: MessageMonoid<Any> = MessageMonoid(synkAdapterStore, MetaMonoid)
+    internal val merger: MessageSemigroup<Any> = MessageSemigroup(synkAdapterStore)
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
