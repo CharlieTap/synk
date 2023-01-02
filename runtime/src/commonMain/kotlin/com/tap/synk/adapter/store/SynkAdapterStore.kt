@@ -1,12 +1,9 @@
 package com.tap.synk.adapter.store
 
-import com.tap.synk.adapter.ReflectionsSynkAdapter
 import com.tap.synk.adapter.SynkAdapter
-import com.tap.synk.cache.ReflectionsCache
 import kotlin.reflect.KClass
 
 class SynkAdapterStore(
-    private val default: SynkAdapter<Any> = ReflectionsSynkAdapter(ReflectionsCache()),
     private val lookup: HashMap<KClass<*>, SynkAdapter<Any>> = HashMap()
 ) {
 
@@ -15,6 +12,6 @@ class SynkAdapterStore(
     }
 
     fun <T : Any> resolve(clazz: KClass<T>): SynkAdapter<Any> {
-        return lookup[clazz] ?: default
+        return lookup[clazz] ?: throw IllegalStateException("No synk adapter found for given class " + clazz.qualifiedName)
     }
 }

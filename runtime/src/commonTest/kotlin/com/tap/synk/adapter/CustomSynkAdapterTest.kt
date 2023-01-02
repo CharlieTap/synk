@@ -41,8 +41,9 @@ class CustomSynkAdapterTest {
 
     @Test
     fun `can resolve correct adapter by generic type`() {
-        val reflectionsSynkAdapter = ReflectionsSynkAdapter(ReflectionsCache())
-        val adapterStore = SynkAdapterStore(reflectionsSynkAdapter)
+//        val reflectionsSynkAdapter = ReflectionsSynkAdapter(ReflectionsCache())
+//        val adapterStore = SynkAdapterStore(reflectionsSynkAdapter)
+        val adapterStore = SynkAdapterStore()
         val adapter1 = CRDT1Adapter()
         val adapter2 = CRDT2Adapter()
         adapterStore.register(CRDT1::class, adapter1)
@@ -54,7 +55,7 @@ class CustomSynkAdapterTest {
         val resultAdapter2 = adapterStore.resolve(CRDT2::class)
         assertEquals(resultAdapter2.hashCode(), adapter2.hashCode())
 
-        val resultAdapter3 = adapterStore.resolve(CRDT3::class)
-        assertEquals(resultAdapter3.hashCode(), reflectionsSynkAdapter.hashCode())
+//        val resultAdapter3 = adapterStore.resolve(CRDT3::class)
+//        assertEquals(resultAdapter3.hashCode(), reflectionsSynkAdapter.hashCode())
     }
 }
