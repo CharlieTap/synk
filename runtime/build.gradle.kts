@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.atomic.fu)
     alias(libs.plugins.kotlinter)
+    id("maven-publish")
 }
 
 group = "com.tap.synk"

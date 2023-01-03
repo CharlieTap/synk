@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.lib)
     alias(libs.plugins.sqldelight.legacy)
     alias(libs.plugins.kotlinter)
+    id("maven-publish")
 }
 
 sqldelight {
