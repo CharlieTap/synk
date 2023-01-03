@@ -1,5 +1,8 @@
 # Synk
 
+![badge][badge-android]
+![badge][badge-jvm]
+
 Synk is a library that seeks to have as little impact on your application architecture as possible, it's goal is to provide:
 
 - Conflict Resolution
@@ -47,3 +50,13 @@ graph TD;
 
 
 # API Usage
+
+
+
+[badge-android]: http://img.shields.io/badge/-android-6EDB8D.svg?style=flat
+[badge-jvm]: http://img.shields.io/badge/-jvm-DB413D.svg?style=flat
+[badge-js]: http://img.shields.io/badge/-js-F8DB5D.svg?style=flat
+[badge-linux]: http://img.shields.io/badge/-linux-2D3F6C.svg?style=flat
+[badge-windows]: http://img.shields.io/badge/-windows-4D76CD.svg?style=flat
+[badge-ios]: http://img.shields.io/badge/-ios-CDCDCD.svg?style=flat
+[badge-mac]: http://img.shields.io/badge/-macos-111111.svg?style=flat
