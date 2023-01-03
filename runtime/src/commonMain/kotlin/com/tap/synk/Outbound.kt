@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.update
  * Outbound is designed for creating Messages intended to be propagated to other nodes in the system
  *
  * This function should be called after locally persisting data on the current node
- * It's expected that both @param new and @param old contain populated id properties
  */
 fun <T : Any> Synk.outbound(new: T, old: T? = null): Message<T> {
     return synkOutbound(new, old, hlc, synkAdapterStore, factory)
