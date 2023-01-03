@@ -3,7 +3,7 @@ package com.tap.synk.config
 import okio.FileSystem
 import okio.Path
 
-data class StorageConfiguration(
+data class ClockStorageConfiguration(
     val fileSystem: FileSystem,
     val filePath: Path,
     val clockFileName: String = FILENAME_CLOCK

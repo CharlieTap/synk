@@ -2,20 +2,13 @@ package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
-import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.config.StorageConfiguration
 import com.tap.synk.encode.decodeToHashmap
 import com.tap.synk.encode.encodeToString
 import com.tap.synk.meta.Meta
-import com.tap.synk.meta.store.InMemoryMetaStore
-import com.tap.synk.meta.store.InMemoryMetaStoreFactory
-import com.tap.synk.meta.store.MetaStore
 import com.tap.synk.relay.Message
 import com.tap.synk.utils.setupSynk
 import com.tap.synk.utils.storageConfig
 import kotlinx.datetime.Clock
-import okio.Path.Companion.toPath
-import okio.fakefilesystem.FakeFileSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

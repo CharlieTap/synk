@@ -6,7 +6,7 @@ import com.tap.synk.IDCRDT
 import com.tap.synk.IDCRDTAdapter
 import com.tap.synk.Synk
 import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.config.StorageConfiguration
+import com.tap.synk.config.ClockStorageConfiguration
 import com.tap.synk.meta.store.InMemoryMetaStore
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStore
@@ -14,13 +14,13 @@ import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 
 internal fun storageConfig() =
-    StorageConfiguration(
+    ClockStorageConfiguration(
         filePath = "/test".toPath(),
         fileSystem = FakeFileSystem()
     )
 
 internal fun setupSynk(
-    storageConfiguration: StorageConfiguration,
+    storageConfiguration: ClockStorageConfiguration,
     metaStoreMap: CMap<String, String>,
     hlc: HybridLogicalClock = HybridLogicalClock()
 ): Synk {
@@ -34,5 +34,5 @@ internal fun setupSynk(
     val synkAdapterStore = SynkAdapterStore().apply {
         register(IDCRDT::class, IDCRDTAdapter())
     }
-    return Synk(factory = metaStoreFactory, storageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
+    return Synk(factory = metaStoreFactory, clockStorageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
 }

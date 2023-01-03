@@ -3,7 +3,7 @@ package com.tap.synk
 import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.config.StorageConfiguration
+import com.tap.synk.config.ClockStorageConfiguration
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.MessageSemigroup
@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 
 class Synk internal constructor(
-    val storageConfiguration: StorageConfiguration,
+    val clockStorageConfiguration: ClockStorageConfiguration,
     val factory: MetaStoreFactory = InMemoryMetaStoreFactory(),
     val synkAdapterStore: SynkAdapterStore = SynkAdapterStore()
 ) {
@@ -34,15 +34,15 @@ class Synk internal constructor(
         }
     }
 
-    data class Builder(private val storageConfiguration: StorageConfiguration) {
+    data class Builder(private val storageConfiguration: ClockStorageConfiguration) {
         private var factory: MetaStoreFactory? = null
         private var synkAdapterStore = SynkAdapterStore()
 
-        fun <T : Any> registerSynkAdapter(clazz: KClass<T>, synkAdapter: SynkAdapter<T>) {
+        fun <T : Any> registerSynkAdapter(clazz: KClass<T>, synkAdapter: SynkAdapter<T>)  = apply {
             synkAdapterStore.register(clazz, synkAdapter)
         }
 
-        fun metaStoreFactory(metaStoreFactory: MetaStoreFactory) {
+        fun metaStoreFactory(metaStoreFactory: MetaStoreFactory) = apply {
             factory = metaStoreFactory
         }
 
@@ -57,9 +57,9 @@ class Synk internal constructor(
 }
 
 internal fun Synk.loadClock(): HybridLogicalClock {
-    return HybridLogicalClock.load(storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName) ?: HybridLogicalClock()
+    return HybridLogicalClock.load(clockStorageConfiguration.filePath, clockStorageConfiguration.fileSystem, clockStorageConfiguration.clockFileName) ?: HybridLogicalClock()
 }
 
 internal fun Synk.storeClock(hybridLogicalClock: HybridLogicalClock) {
-    return HybridLogicalClock.store(hybridLogicalClock, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
+    return HybridLogicalClock.store(hybridLogicalClock, clockStorageConfiguration.filePath, clockStorageConfiguration.fileSystem, clockStorageConfiguration.clockFileName)
 }
