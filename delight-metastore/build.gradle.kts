@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlinter)
     id("maven-publish")
 }
+group = "com.tap.synk"
+version = "0.1"
 
 sqldelight {
     database("DelightfulDatabase") {
