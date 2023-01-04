@@ -3,6 +3,9 @@
 ![badge][badge-android]
 ![badge][badge-jvm]
 
+---
+
+A Kotlin multiplatform CRDT library for offline first applications.  
 Synk is a library that seeks to have as little impact on your application architecture as possible, it's goal is to provide:
 
 - Conflict Resolution
@@ -35,9 +38,38 @@ When receiving a Message from another client application, inbound needs to be ca
 be persisted.
 
 
-# How should I build 
+# How should I architect my application using Synk
 
-Offline first applications that mutate state are distributed systems 
+Synk is intentionally unopinionated in design, but there are of course some constraints that come from building an application with it.  
+The two that stand out are the following:
+
+- Messages must be relayed to all nodes in order for state to be consistent 
+- Data can never be deleted, at least not in the short term, soft deletes using tombstone fields is the recommended solution. 
+
+
+Offline first applications that mutate state are distributed systems, there's no two ways about it. Synk is designed with this in mind, it has no concept of server like central storage.
+Synk sees the world how any node in a distributed system would.
+
+```mermaid
+graph LR;
+ NodeA[(NodeA)]
+ NodeB[(NodeB)]
+ NodeC[(NodeC)]
+ NodeA--Message-->NodeB;
+ NodeB--Message-->NodeC;
+ NodeC--Message-->NodeA;
+```
+
+But this doesn't mean you have to use it this way, unless you're working on a peer to peer application it's quite likely you're using a client/server 
+architecture. Servers in these architectures act 
+
+Compression on the backend
+
+You could architect an api in a RESTful fashion, where each distinct  T for `Message<T>` has its own endpoint. 
+
+
+
+
 
 Message T where T is the resource
 
@@ -56,15 +88,35 @@ graph TD;
 ---
 ## Setup
 
+### State
+
 Synk maintains two pieces of state in order to function:
 
-- A logical clock
-- A key value database called the MetaStore
+- A logical clock, the location of this file is configured through ClockStorageConfiguration
+- A key value database called the MetaStore, you can provide an instance of the DelightfulMetastoreFactory. This factory
+uses Sqldelight under the hood and needs a Sqldriver to function. Depending on your platform you will need to provide the
+appropriate driver, you can read how to do this [here](https://cashapp.github.io/sqldelight/1.5.4/multiplatform_sqlite/)
+
+```kotlin
+val clockStorageConfig = ClockStorageConfiguration(
+    filePath = "/synk".toPath(),
+    fileSystem = FileSystem.SYSTEM
+)
+val factory = DelightfulMetastoreFactory(driver)
+val synk = Synk.Builder(clockStorageConfig)
+    .metaStoreFactory(factory)
+    .build()
+```
+
+### Synk Adapters
+
+Synk adapters tell synk how to serialize and deserialize types into generic maps it can perform conflict resolution on. For 
+every type T you intend to use with Synk you must provide a SynkAdapter<T> when constructing your synk instance.
 
 ```kotlin
 val synk = Synk.Builder(storageConfig())
     .registerSynkAdapter(CRDT::class, adapter)
-    .metaStoreFactory(factory)
+    .registerSynkAdapter(CRDT2::class, adapter2)
     .build()
 ```
 
@@ -72,9 +124,19 @@ val synk = Synk.Builder(storageConfig())
 
 ## Conflict Resolution, Ordering and Messages
 
+Synk resolves conflicts by recording a causal order of events in the Metastore, it groups events into two categories.
+
+Local events are events that occur on the current node (client application), notify Synk of the event by passing the new
+and old (in the case of updates) to outbound once they have already been persisted to the database.  
+
+Synk will return you a Message, it's your responsibility to ensure all nodes receive all messages relevant to them.
+
 ```kotlin
 Synk.outbound(new: T, old: T? = null): Message<T>
 ```
+
+`inbound` is the ying to `outbound`'s yang, and the destination for the Messages `outbound` creates. The result of inbound is an object ready to be inserted into a database, free of conflicts and consistent across all nodes. 
+
 
 ```kotlin
 Synk.inbound(message: Message<T>, old: T? = null): T 
@@ -82,7 +144,9 @@ Synk.inbound(message: Message<T>, old: T? = null): T
 
 ## Encoding
 
-
+To aid the relay of messages between applications Synk provides methods of encoding Messages to and from json.
+These encoders make use of the Synk adapters provided and tend to have better performance than reflections powered
+encoders like gson.
 
 ```kotlin
 Synk.encode(messages: List<Message<T>>): String
