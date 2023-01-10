@@ -28,7 +28,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(projects.concurrentMap)
-                implementation(projects.encode)
                 implementation(libs.kotlin.reflection)
                 implementation(libs.kotlinx.atomic.fu)
                 implementation(libs.kotlinx.datetime)

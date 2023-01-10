@@ -1,4 +1,4 @@
-package com.tap.synk.encode
+package com.tap.synk.serialize
 
 fun Map<String, String>.encodeToString(): String {
     return entries.foldIndexed("") { idx, acc, entry ->

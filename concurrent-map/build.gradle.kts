@@ -3,7 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.kotlin.atomic.fu)
+    id("maven-publish")
 }
+group = "com.tap.synk"
+version = libs.versions.version.name.get()
+
 
 kotlin {
     targets {

@@ -5,7 +5,7 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.tap.delight.metastore.cache.DelightfulMemCache
 import com.tap.delight.metastore.hash.Hasher
 import com.tap.delight.metastore.schema.delightfulSchemaInitializer
-import com.tap.synk.encode.encodeToString
+import com.tap.synk.serialize.encodeToString
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
