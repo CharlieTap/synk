@@ -7,7 +7,7 @@ plugins {
     id("maven-publish")
 }
 group = "com.tap.synk"
-version = "0.1"
+version = libs.versions.version.name.get()
 
 sqldelight {
     database("DelightfulDatabase") {
