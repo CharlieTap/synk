@@ -5,7 +5,7 @@ application-namespace = "com.tap.synk"
 compile-sdk = "32"
 target-sdk = "32"
 min-sdk = "24"
-version-name = "0.16"
+version-name = "0.17"
 
 android-build-tools-plugin = "7.2.0"
 

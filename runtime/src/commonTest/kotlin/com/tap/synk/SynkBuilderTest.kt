@@ -29,9 +29,9 @@ class SynkBuilderTest {
         assertEquals(adapter, synk.synkAdapterStore.resolve(IDCRDT::class) as IDCRDTAdapter)
     }
 
-    private sealed class SealedTest {
-        object Test1 : SealedTest()
-        object Test2 : SealedTest()
+    private sealed interface SealedTest {
+        object Test1 : SealedTest
+        object Test2 : SealedTest
     }
 
     private class SealedTestAdapter : SynkAdapter<SealedTest> {
@@ -65,6 +65,7 @@ class SynkBuilderTest {
             .build()
 
         assertEquals(factory, synk.factory)
+        assertEquals(adapter, synk.synkAdapterStore.resolve(SealedTest::class) as SealedTestAdapter)
         assertEquals(adapter, synk.synkAdapterStore.resolve(SealedTest.Test1::class) as SealedTestAdapter)
         assertEquals(adapter, synk.synkAdapterStore.resolve(SealedTest.Test2::class) as SealedTestAdapter)
     }

@@ -43,9 +43,9 @@ class Synk internal constructor(
                 clazz.sealedSubclasses.forEach { sealedClazz ->
                     synkAdapterStore.register(sealedClazz as KClass<T>, synkAdapter)
                 }
-            } else {
-                synkAdapterStore.register(clazz, synkAdapter)
             }
+
+            synkAdapterStore.register(clazz, synkAdapter)
         }
 
         fun metaStoreFactory(metaStoreFactory: MetaStoreFactory) = apply {
