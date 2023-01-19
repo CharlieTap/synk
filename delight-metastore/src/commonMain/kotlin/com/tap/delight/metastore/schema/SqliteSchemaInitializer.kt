@@ -9,9 +9,11 @@ class SqliteSchemaInitializer(
     companion object {
         private fun getSchemaVersion(driver: SqlDriver): Long {
             return kotlin.runCatching {
-                val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-                cursor.use { it.getLong(0) ?: 0 }
-            }.getOrDefault(1)
+                driver.executeQuery(null, "PRAGMA user_version;", 0, null).use { cursor ->
+                    cursor.next()
+                    cursor.getLong(0) ?: 0
+                }
+            }.getOrDefault(0)
         }
 
         private fun setSchemaVersion(driver: SqlDriver, version: Long) {
