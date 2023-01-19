@@ -8,12 +8,16 @@ class SqliteSchemaInitializer(
 
     companion object {
         private fun getSchemaVersion(driver: SqlDriver): Long {
-            val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
-            return cursor.use { it.getLong(0) ?: 0 }
+            return kotlin.runCatching {
+                val cursor = driver.executeQuery(null, "PRAGMA user_version;", 0, null)
+                cursor.use { it.getLong(0) ?: 0 }
+            }.getOrDefault(1)
         }
 
         private fun setSchemaVersion(driver: SqlDriver, version: Long) {
-            driver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
+            kotlin.runCatching {
+                driver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
+            }
         }
 
         private fun schemaHasBeenCreated(driver: SqlDriver): Boolean {

@@ -84,4 +84,10 @@ class DelightfulMetastoreFactoryTest {
 
         assertEquals(0, cache.size())
     }
+
+    @Test
+    fun `can init database twice in a row`() {
+        val database = DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
+        val database2 = DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
+    }
 }
