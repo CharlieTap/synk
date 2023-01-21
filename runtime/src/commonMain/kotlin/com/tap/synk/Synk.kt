@@ -8,7 +8,6 @@ import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStoreFactory
 import com.tap.synk.relay.MessageSemigroup
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,6 +15,9 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.cancellable
 
 class Synk internal constructor(
     val clockStorageConfiguration: ClockStorageConfiguration,
@@ -23,15 +25,21 @@ class Synk internal constructor(
     val synkAdapterStore: SynkAdapterStore = SynkAdapterStore()
 ) {
     internal val hlc: MutableStateFlow<HybridLogicalClock> = MutableStateFlow(loadClock())
-    private val hlcSynk: Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds)
     internal val merger: MessageSemigroup<Any> = MessageSemigroup(synkAdapterStore)
 
+    private val hlcSynk: Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds).cancellable()
+    private val synkScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        GlobalScope.launch(Dispatchers.IO) {
+        synkScope.launch(Dispatchers.IO) {
             hlcSynk.collectLatest { hlc ->
                 storeClock(hlc)
             }
         }
+    }
+
+    fun finish() {
+        synkScope.cancel()
     }
 
     data class Builder(private val storageConfiguration: ClockStorageConfiguration) {

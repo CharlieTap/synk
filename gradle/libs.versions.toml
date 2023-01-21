@@ -39,8 +39,8 @@ hilt-integrations = "1.0.0"
 hilt-compose="1.0.0"
 hlc = "1.1.0"
 
-kotlin = "1.7.20"
-ksp = "1.7.20-1.0.6"
+kotlin = "1.8.0"
+ksp = "1.8.0-1.0.8"
 kotlinter = "3.11.1"
 
 kotlinx-atomic-fu = "0.18.5"
@@ -59,7 +59,7 @@ retrofit-core="2.9.0"
 retrofit-serialization = "0.8.0"
 
 result = "1.1.16"
-sqldelight = "1.5.4"
+sqldelight = "1.5.5"
 uuid = "0.5.0"
 
 [plugins]
