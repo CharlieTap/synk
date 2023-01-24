@@ -10,10 +10,17 @@ plugins {
 group = "com.tap.synk"
 version = libs.versions.version.name.get()
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.build.version.get().toInt()))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+}
+
 kotlin {
 
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(19))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.build.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
