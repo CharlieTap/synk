@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -7,6 +9,10 @@ plugins {
 }
 group = "com.tap.synk"
 version = libs.versions.version.name.get()
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = "1.8"
+}
 
 kotlin {
 
@@ -18,6 +24,7 @@ kotlin {
     targets {
         jvm()
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {

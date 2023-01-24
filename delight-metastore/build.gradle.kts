@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -15,6 +17,10 @@ sqldelight {
     }
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 kotlin {
 
     jvmToolchain {
@@ -26,6 +32,7 @@ kotlin {
         jvm()
         android()
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
