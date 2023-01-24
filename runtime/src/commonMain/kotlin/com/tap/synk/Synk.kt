@@ -17,7 +17,6 @@ import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.cancellable
 
 class Synk internal constructor(
     val clockStorageConfiguration: ClockStorageConfiguration,
@@ -27,7 +26,7 @@ class Synk internal constructor(
     internal val hlc: MutableStateFlow<HybridLogicalClock> = MutableStateFlow(loadClock())
     internal val merger: MessageSemigroup<Any> = MessageSemigroup(synkAdapterStore)
 
-    private val hlcSynk: Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds).cancellable()
+    private val hlcSynk: Flow<HybridLogicalClock> = hlc.debounce(200.milliseconds)
     private val synkScope = CoroutineScope(Dispatchers.IO)
 
     init {

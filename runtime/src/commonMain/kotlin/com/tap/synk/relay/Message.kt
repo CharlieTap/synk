@@ -68,7 +68,7 @@ internal fun JsonObject.decodeToMap(): Map<String, String> {
     return map
 }
 
-internal fun <T : Any> Message<T>.encodeAsString(synkAdapter: SynkAdapter<T>): String {
+fun <T : Any> Message<T>.encodeAsString(synkAdapter: SynkAdapter<T>): String {
     return encodeAsJsonObject(synkAdapter).toString()
 }
 
@@ -76,7 +76,7 @@ fun <T : Any> List<Message<T>>.encodeAsString(synkAdapter: SynkAdapter<T>): Stri
     return encodeAsJsonObject(synkAdapter).toString()
 }
 
-internal fun <T : Any> String.decodeToMessage(synkAdapter: SynkAdapter<T>): Message<T> {
+fun <T : Any> String.decodeToMessage(synkAdapter: SynkAdapter<T>): Message<T> {
     return decodeToJsonObject().decodeToMessage(synkAdapter)
 }
 

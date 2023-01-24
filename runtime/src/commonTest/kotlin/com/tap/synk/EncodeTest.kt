@@ -48,4 +48,30 @@ class EncodeTest {
         assertEquals(expected, result)
     }
 
+    @Test
+    fun `can encode a message to a json string using a provided synk adapter`() {
+        val storageConfig = storageConfig()
+        val metaStoreMap = CMap<String, String>()
+        val now = Timestamp.now(Clock.System)
+        val currentHlc = HybridLogicalClock(now)
+        val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
+
+        val crdt1 = IDCRDT(
+            "123",
+            "Chest",
+            "Prah",
+            1234567
+        )
+
+        val adapter = IDCRDTAdapter()
+        val hlc = HybridLogicalClock()
+        val meta1 = meta(crdt1, adapter, hlc)
+        val message1 = Message(crdt1, meta1)
+
+
+        val result = synk.encodeOne(message1)
+        val expected = MessageEncodingTest.json(crdt1, hlc)
+
+        assertEquals(expected, result)
+    }
 }

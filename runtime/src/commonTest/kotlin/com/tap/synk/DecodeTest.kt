@@ -47,4 +47,29 @@ class DecodeTest {
         assertEquals(listOf(message1, message2), result)
     }
 
+    @Test
+    fun `can decode a json encoded object to a message`() {
+        val storageConfig = storageConfig()
+        val metaStoreMap = CMap<String, String>()
+        val now = Timestamp.now(Clock.System)
+        val currentHlc = HybridLogicalClock(now)
+        val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
+
+        val crdt1 = IDCRDT(
+            "123",
+            "Chest",
+            "Prah",
+            1234567
+        )
+
+        val adapter = IDCRDTAdapter()
+        val hlc = HybridLogicalClock()
+        val meta1 = meta(crdt1, adapter, hlc)
+        val message1 = Message(crdt1, meta1)
+
+        val encoded = MessageEncodingTest.json(crdt1, hlc)
+        val result = synk.decodeOne<IDCRDT>(encoded)
+
+        assertEquals(message1, result)
+    }
 }
