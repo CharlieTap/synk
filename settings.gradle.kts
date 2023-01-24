@@ -16,6 +16,16 @@ dependencyResolutionManagement {
     }
 }
 
+//toolchainManagement {
+//    jvm {
+//        javaRepositories {
+//            repository("adoptium") {
+//                resolverClass.set(AdoptiumResolver::class.java)
+//            }
+//        }
+//    }
+//}
+
 //rootDir.listFiles()?.filter {
 //    File(it, "build.gradle.kts").exists()
 //}?.forEach {
