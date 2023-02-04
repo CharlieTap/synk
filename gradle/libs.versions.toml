@@ -7,9 +7,9 @@ java-build-version = "19"
 java-bytecode-version = "11"
 target-sdk = "32"
 min-sdk = "24"
-version-name = "0.22"
+version-name = "0.23"
 
-android-build-tools-plugin = "7.2.0"
+android-build-tools-plugin = "7.4.0-beta02"
 
 androidx-core = "1.8.0-alpha05"
 androidx-appcompat = "1.4.1"

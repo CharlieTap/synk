@@ -10,10 +10,6 @@ plugins {
 group = "com.tap.synk"
 version = libs.versions.version.name.get()
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 kotlin {
 
     jvmToolchain {
@@ -39,4 +35,8 @@ kotlin {
             }
         }
     }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = libs.versions.java.bytecode.version.get()
 }

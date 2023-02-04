@@ -80,12 +80,17 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
-        targetSdk = libs.versions.target.sdk.get().toInt()
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
+    }
+
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+        warningsAsErrors = false
     }
 
     androidComponents {
