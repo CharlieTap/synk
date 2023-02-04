@@ -4,7 +4,7 @@ import android.content.Context
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
-fun ClockStorageConfiguration.android(
+fun ClockStorageConfiguration.Presets.android(
     context: Context
 ): ClockStorageConfiguration {
     return CustomClockStorageConfiguration(
