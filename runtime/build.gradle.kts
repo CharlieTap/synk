@@ -21,6 +21,10 @@ kotlin {
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
+    android {
+        publishLibraryVariants("release")
+    }
+
     targets.configureEach {
         compilations.configureEach {
             kotlinOptions {
