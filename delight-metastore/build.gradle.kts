@@ -17,10 +17,6 @@ sqldelight {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 kotlin {
 
     jvmToolchain {
@@ -56,17 +52,19 @@ kotlin {
 }
 
 android {
+
     namespace = "com.tap.delight.metastore"
     compileSdk = libs.versions.compile.sdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
         targetSdk = libs.versions.target.sdk.get().toInt()
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
     }
 
     androidComponents {
@@ -79,4 +77,8 @@ android {
             }
         }
     }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = libs.versions.java.bytecode.version.get()
 }

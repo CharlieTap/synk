@@ -4,9 +4,10 @@ application-id = "com.tap.synk"
 application-namespace = "com.tap.synk"
 compile-sdk = "32"
 java-build-version = "19"
+java-bytecode-version = "11"
 target-sdk = "32"
 min-sdk = "24"
-version-name = "0.21"
+version-name = "0.22"
 
 android-build-tools-plugin = "7.2.0"
 

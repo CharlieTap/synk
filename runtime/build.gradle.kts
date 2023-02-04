@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.lib)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.atomic.fu)
     alias(libs.plugins.kotlinter)
@@ -12,9 +13,6 @@ plugins {
 group = "com.tap.synk"
 version = libs.versions.version.name.get()
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "1.8"
-}
 
 kotlin {
 
@@ -33,8 +31,10 @@ kotlin {
     }
 
     targets {
+        android()
         jvm()
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -70,4 +70,36 @@ kotlin {
 //            }
 //        }
     }
+}
+
+android {
+
+    namespace = "com.tap.synk"
+    compileSdk = libs.versions.compile.sdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    defaultConfig {
+        minSdk = libs.versions.min.sdk.get().toInt()
+        targetSdk = libs.versions.target.sdk.get().toInt()
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    androidComponents {
+        beforeVariants { builder ->
+            if(builder.buildType == "debug") {
+                builder.enable = false
+            } else {
+                builder.enableUnitTest = false
+                builder.enableAndroidTest = false
+            }
+        }
+    }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = libs.versions.java.bytecode.version.get()
 }

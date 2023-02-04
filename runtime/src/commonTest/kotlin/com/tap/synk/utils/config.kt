@@ -7,6 +7,7 @@ import com.tap.synk.IDCRDTAdapter
 import com.tap.synk.Synk
 import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.config.ClockStorageConfiguration
+import com.tap.synk.config.CustomClockStorageConfiguration
 import com.tap.synk.meta.store.InMemoryMetaStore
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStore
@@ -14,7 +15,7 @@ import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 
 internal fun storageConfig() =
-    ClockStorageConfiguration(
+    CustomClockStorageConfiguration(
         filePath = "/test".toPath(),
         fileSystem = FakeFileSystem()
     )
