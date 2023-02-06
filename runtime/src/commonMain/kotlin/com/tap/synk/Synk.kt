@@ -42,10 +42,14 @@ class Synk internal constructor(
     }
 
     data class Builder(private val storageConfiguration: ClockStorageConfiguration) {
-        private var factory: MetaStoreFactory? = null
-        private var synkAdapterStore = SynkAdapterStore()
+        companion object Presets {}
 
-        fun <T : Any> registerSynkAdapter(clazz: KClass<T>, synkAdapter: SynkAdapter<T>)  = apply {
+        private var factory: MetaStoreFactory? = null
+        @PublishedApi
+        internal var synkAdapterStore = SynkAdapterStore()
+
+        inline fun <reified T : Any> registerSynkAdapter(synkAdapter: SynkAdapter<T>)  = apply {
+            val clazz = T::class
             if (clazz.isSealed) {
                 clazz.sealedSubclasses.forEach { sealedClazz ->
                     synkAdapterStore.register(sealedClazz as KClass<T>, synkAdapter)

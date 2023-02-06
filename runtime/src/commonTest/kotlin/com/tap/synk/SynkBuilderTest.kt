@@ -22,7 +22,7 @@ class SynkBuilderTest {
         val adapter = IDCRDTAdapter()
 
         val synk = Synk.Builder(storageConfiguration)
-            .registerSynkAdapter(IDCRDT::class, adapter)
+            .registerSynkAdapter(adapter)
             .metaStoreFactory(factory)
             .build()
 
@@ -61,7 +61,7 @@ class SynkBuilderTest {
         val adapter = SealedTestAdapter()
 
         val synk = Synk.Builder(storageConfiguration)
-            .registerSynkAdapter(SealedTest::class, adapter)
+            .registerSynkAdapter(adapter)
             .metaStoreFactory(factory)
             .build()
 
