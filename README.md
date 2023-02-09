@@ -88,6 +88,36 @@ graph TD;
 ---
 ## Setup
 
+### Gradle
+
+Synk currently uses Jitpack to distribute artifacts, you'll need to ensure that the jitpack maven repo is configured
+in you dependency resolution management block.
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        ...
+        maven(url = "https://jitpack.io" )
+```
+
+You'll need both Synk runtime and the delightful metastore artifacts to get started:
+
+```kotlin
+dependencies {
+    implementation("com.github.charlietap.synk:delight-metastore:xxx")
+    implementation("com.github.charlietap.synk:runtime:xxx")
+}
+```
+Alternatively if you're working with a KMP project you can pull the specialised dependencies for the different targets:
+
+```kotlin
+dependencies {
+implementation("com.github.charlietap.synk:runtime-android:xxx")
+//or
+implementation("com.github.charlietap.synk:runtime-jvm:xxx")
+}
+```
+
 ### State
 
 Synk maintains two pieces of state in order to function:
@@ -108,15 +138,24 @@ val synk = Synk.Builder(clockStorageConfig)
     .build()
 ```
 
+If you're on Android a preset extension function exists for the builder which configures the clock storage configuration for you:
+
+```kotlin
+val synk = Synk.Builder.Presets.Android(context)
+.metaStoreFactory(metastoreFactory)
+.build()
+```
+
+
 ### Synk Adapters
 
 Synk adapters tell synk how to serialize and deserialize types into generic maps it can perform conflict resolution on. For 
 every type T you intend to use with Synk you must provide a SynkAdapter<T> when constructing your synk instance.
 
 ```kotlin
-val synk = Synk.Builder(storageConfig())
-    .registerSynkAdapter(CRDT::class, adapter)
-    .registerSynkAdapter(CRDT2::class, adapter2)
+val synk = Synk.Builder(...)
+    .registerSynkAdapter(adapter)
+    .registerSynkAdapter(adapter2)
     .build()
 ```
 
