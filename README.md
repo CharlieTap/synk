@@ -112,9 +112,9 @@ Alternatively if you're working with a KMP project you can pull the specialised 
 
 ```kotlin
 dependencies {
-implementation("com.github.charlietap.synk:runtime-android:xxx")
-//or
-implementation("com.github.charlietap.synk:runtime-jvm:xxx")
+    implementation("com.github.charlietap.synk:runtime-android:xxx")
+    //or
+    implementation("com.github.charlietap.synk:runtime-jvm:xxx")
 }
 ```
 
