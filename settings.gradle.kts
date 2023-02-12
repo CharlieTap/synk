@@ -33,9 +33,10 @@ dependencyResolutionManagement {
 //}
 
 include(":concurrent-map")
-include(":runtime")
+include(":synk")
+include(":extension:kotlin-serialization")
 include(":delight-metastore")
 
-rootProject.name = "synk"
+rootProject.name = "synk-multiplatform"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

@@ -105,16 +105,16 @@ You'll need both Synk runtime and the delightful metastore artifacts to get star
 ```kotlin
 dependencies {
     implementation("com.github.charlietap.synk:delight-metastore:xxx")
-    implementation("com.github.charlietap.synk:runtime:xxx")
+    implementation("com.github.charlietap.synk:synk:xxx")
 }
 ```
 Alternatively if you're working with a KMP project you can pull the specialised dependencies for the different targets:
 
 ```kotlin
 dependencies {
-    implementation("com.github.charlietap.synk:runtime-android:xxx")
+    implementation("com.github.charlietap.synk:synk-android:xxx")
     //or
-    implementation("com.github.charlietap.synk:runtime-jvm:xxx")
+    implementation("com.github.charlietap.synk:synk-jvm:xxx")
 }
 ```
 

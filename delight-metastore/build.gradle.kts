@@ -32,7 +32,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.runtime)
+//                implementation(projects.synk)
                 implementation(projects.concurrentMap)
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
