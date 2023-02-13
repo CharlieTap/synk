@@ -15,12 +15,12 @@ import kotlinx.serialization.encoding.encodeStructure
 
 object MetaSerializer : KSerializer<Meta> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("meta") {
-        element<String>("clazz")
+        element<String>("namespace")
         element<Map<String, String>>("timestamp_meta")
     }
 
     override fun serialize(encoder: Encoder, value: Meta) = encoder.encodeStructure(descriptor) {
-        encodeStringElement(descriptor, 0, value.clazz)
+        encodeStringElement(descriptor, 0, value.namespace)
         encodeSerializableElement(descriptor, 1, MapSerializer(String.serializer(), String.serializer()), value.timestampMeta)
     }
 

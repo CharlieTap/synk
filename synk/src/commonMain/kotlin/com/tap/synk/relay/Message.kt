@@ -20,7 +20,7 @@ internal fun <T : Any> Message<T>.encodeAsJsonObject(synkAdapter: SynkAdapter<T>
             "crdt" to synkAdapter.encode(crdt).encodeAsJsonObject(),
             "meta" to JsonObject(
                 mapOf(
-                    "clazz" to JsonPrimitive(meta.clazz),
+                    "clazz" to JsonPrimitive(meta.namespace),
                     "timestamp_meta" to meta.timestampMeta.encodeAsJsonObject()
                 )
             )

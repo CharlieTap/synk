@@ -8,7 +8,7 @@ import com.tap.synk.adapter.SynkAdapter
  *
  * Meta will track two properties
  *
- * @property clazz The FQCN of the CRDT it belongs to.
+ * @property namespace The FQCN of the CRDT it belongs to.
  * @property timestampMeta A HashMap<String, String> where:
  * The key is a property belonging to the CRDT
  * The value is a HLC representing the "updated_at" for the property inside the key
@@ -19,7 +19,7 @@ import com.tap.synk.adapter.SynkAdapter
  * nodes in the system are operating the same version.
  */
 data class Meta(
-    val clazz: String,
+    val namespace: String,
     val timestampMeta: Map<String, String>
 ) {
     operator fun plus(meta: Meta) : Meta {
