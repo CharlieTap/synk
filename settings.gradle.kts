@@ -26,16 +26,10 @@ dependencyResolutionManagement {
 //    }
 //}
 
-//rootDir.listFiles()?.filter {
-//    File(it, "build.gradle.kts").exists()
-//}?.forEach {
-//    include(it.name)
-//}
-
 include(":libs:concurrent-map")
 include(":synk")
 include(":extension:kotlin-serialization")
-include(":delight-metastore")
+include(":metastores:delightful-metastore")
 
 rootProject.name = "synk-multiplatform"
 
