@@ -33,7 +33,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(projects.synk)
-                implementation(projects.concurrentMap)
+                implementation(projects.libs.concurrentMap)
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
                 implementation(libs.uuid)

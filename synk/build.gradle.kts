@@ -42,7 +42,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.concurrentMap)
+                implementation(projects.libs.concurrentMap)
                 implementation(libs.kotlin.reflection)
                 implementation(libs.kotlinx.atomic.fu)
                 implementation(libs.kotlinx.datetime)

@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 //    include(it.name)
 //}
 
-include(":concurrent-map")
+include(":libs:concurrent-map")
 include(":synk")
 include(":extension:kotlin-serialization")
 include(":delight-metastore")
