@@ -2,9 +2,9 @@ package com.tap.synk.extension
 
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.serialization.json.Json
 
 class MessageSerializerTest {
 

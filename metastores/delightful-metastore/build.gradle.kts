@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -20,7 +21,7 @@ sqldelight {
 kotlin {
 
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.build.version.get().toInt()))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
@@ -79,6 +80,14 @@ android {
     }
 }
 
+kotlinter {
+    disabledRules = arrayOf("filename")
+}
+
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = libs.versions.java.bytecode.version.get()
+}
+
+tasks.withType<LintTask>().configureEach {
+    exclude { it.file.path.contains("/build/".toRegex()) }
 }

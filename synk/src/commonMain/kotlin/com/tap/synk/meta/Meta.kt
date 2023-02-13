@@ -22,7 +22,7 @@ data class Meta(
     val namespace: String,
     val timestampMeta: Map<String, String>
 ) {
-    operator fun plus(meta: Meta) : Meta {
+    operator fun plus(meta: Meta): Meta {
         return MetaSemigroup.combine(this, meta)
     }
 }

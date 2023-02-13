@@ -1,19 +1,17 @@
 package com.tap.synk
 
 import com.tap.synk.adapter.SynkAdapter
-import com.tap.synk.config.ClockStorageConfiguration
 import com.tap.synk.config.CustomClockStorageConfiguration
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class SynkBuilderTest {
 
     @Test
     fun `calling build on synk builder produces a valid synk instance`() {
-
         val storageConfiguration = CustomClockStorageConfiguration(
             filePath = "/test".toPath(),
             fileSystem = FakeFileSystem()
@@ -49,10 +47,8 @@ class SynkBuilderTest {
         }
     }
 
-
     @Test
     fun `registering an adapter for a sealed class registers the adapter for all the nested subclasses`() {
-
         val storageConfiguration = CustomClockStorageConfiguration(
             filePath = "/test".toPath(),
             fileSystem = FakeFileSystem()
@@ -70,5 +66,4 @@ class SynkBuilderTest {
         assertEquals(adapter, synk.synkAdapterStore.resolve(SealedTest.Test1::class) as SealedTestAdapter)
         assertEquals(adapter, synk.synkAdapterStore.resolve(SealedTest.Test2::class) as SealedTestAdapter)
     }
-
 }

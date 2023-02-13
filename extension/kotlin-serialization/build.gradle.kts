@@ -13,7 +13,7 @@ version = libs.versions.version.name.get()
 kotlin {
 
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.build.version.get().toInt()))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 

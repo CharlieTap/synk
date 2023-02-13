@@ -10,5 +10,4 @@ interface ClockStorageConfiguration {
     val fileSystem: FileSystem
     val filePath: Path
     val clockFileName: String
-
 }

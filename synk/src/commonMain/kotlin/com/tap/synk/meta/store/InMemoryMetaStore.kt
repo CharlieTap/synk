@@ -4,7 +4,6 @@ import com.tap.synk.CMap
 import com.tap.synk.serialize.decodeToHashmap
 import com.tap.synk.serialize.encodeToString
 
-
 internal class InMemoryMetaStore(
     private val store: CMap<String, String> = CMap()
 ) : MetaStore {

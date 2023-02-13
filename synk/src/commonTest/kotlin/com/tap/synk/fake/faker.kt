@@ -6,7 +6,7 @@ import io.github.serpro69.kfaker.Faker
 
 val faker = Faker()
 
-internal fun crdt(id: String = Uuid.randomUUID().toString()) : IDCRDT = IDCRDT(
+internal fun crdt(id: String = Uuid.randomUUID().toString()): IDCRDT = IDCRDT(
     id,
     faker.name.firstName(),
     faker.name.lastName(),

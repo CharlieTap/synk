@@ -1,7 +1,6 @@
 package com.tap.synk.adapter
 
 import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.cache.ReflectionsCache
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

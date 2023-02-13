@@ -7,9 +7,9 @@ import com.tap.synk.relay.Message
 import com.tap.synk.relay.MessageEncodingTest
 import com.tap.synk.utils.setupSynk
 import com.tap.synk.utils.storageConfig
+import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.datetime.Clock
 
 class EncodeTest {
 
@@ -41,7 +41,6 @@ class EncodeTest {
         val message1 = Message(crdt1, meta1)
         val message2 = Message(crdt2, meta2)
 
-
         val result = synk.encode(listOf(message1, message2))
         val expected = "[" + MessageEncodingTest.json(crdt1, hlc) + "," + MessageEncodingTest.json(crdt2, hlc) + "]"
 
@@ -67,7 +66,6 @@ class EncodeTest {
         val hlc = HybridLogicalClock()
         val meta1 = meta(crdt1, adapter, hlc)
         val message1 = Message(crdt1, meta1)
-
 
         val result = synk.encodeOne(message1)
         val expected = MessageEncodingTest.json(crdt1, hlc)

@@ -25,8 +25,8 @@ class MessageSerializer<T>(
     }
 
     override fun deserialize(decoder: Decoder): Message<T> = decoder.decodeStructure(descriptor) {
-        var crdt : T? = null
-        var meta : Meta? = null
+        var crdt: T? = null
+        var meta: Meta? = null
         while (true) {
             when (val index = decodeElementIndex(descriptor)) {
                 0 -> crdt = decodeSerializableElement(descriptor, 0, innerSerializer)
@@ -37,5 +37,4 @@ class MessageSerializer<T>(
         }
         Message(crdt!!, meta!!)
     }
-
 }

@@ -8,6 +8,7 @@ fun ClockStorageConfiguration.Presets.Android(
     context: Context
 ): ClockStorageConfiguration {
     return CustomClockStorageConfiguration(
-        FileSystem.SYSTEM, context.filesDir.absolutePath.toPath()
+        FileSystem.SYSTEM,
+        context.filesDir.absolutePath.toPath()
     )
 }
