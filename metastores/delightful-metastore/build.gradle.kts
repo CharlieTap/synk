@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
     alias(libs.plugins.sqldelight.legacy)
-    alias(libs.plugins.kotlinter)
+    id("kotlinter-conventions")
     id("maven-publish")
 }
 group = "com.tap.synk"
@@ -80,14 +80,6 @@ android {
     }
 }
 
-kotlinter {
-    disabledRules = arrayOf("filename")
-}
-
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = libs.versions.java.bytecode.version.get()
-}
-
-tasks.withType<LintTask>().configureEach {
-    exclude { it.file.path.contains("/build/".toRegex()) }
 }

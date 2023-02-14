@@ -44,7 +44,9 @@ internal fun <T : Any> synkOutbound(
 
             val value = if (diff.contains(entry.key)) {
                 hlc.value.toString()
-            } else entry.value
+            } else {
+                entry.value
+            }
 
             newMetaMap[entry.key] = value
         }

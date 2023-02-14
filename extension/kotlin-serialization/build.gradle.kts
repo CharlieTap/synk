@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlinter)
+    id("kotlinter-conventions")
     id("maven-publish")
 }
 group = "com.tap.synk.extension"

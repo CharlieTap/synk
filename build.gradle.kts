@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.kotlinter) apply false
 
+    id("versions-conventions")
+
 //    alias(libs.plugins.dependency.analysis)
 }
 

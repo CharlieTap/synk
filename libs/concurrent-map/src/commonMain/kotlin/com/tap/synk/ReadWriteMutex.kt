@@ -25,7 +25,7 @@ interface ReadWriteMutex {
         WRITE_LOCKED,
 
         // no lock is acquired
-        UNLOCKED,
+        UNLOCKED
     }
 
     fun ensure(targetState: LockState)

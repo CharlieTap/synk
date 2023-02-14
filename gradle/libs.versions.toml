@@ -12,6 +12,8 @@ java-compiler-version = "19"
 java-bytecode-version = "11"
 
 android-build-tools-plugin = "7.4.0-beta02"
+versions-plugin = "0.45.0"
+
 
 androidx-core = "1.8.0-alpha05"
 androidx-appcompat = "1.4.1"
@@ -38,18 +40,18 @@ dependency-analysis="1.18.0"
 
 faker = "1.11.0"
 
-hilt-core = "2.42"
+hilt-core = "2.45"
 hilt-integrations = "1.0.0"
 hilt-compose="1.0.0"
 hlc = "1.1.0"
 
 kotlin = "1.8.10"
-ksp = "1.8.0-1.0.9"
-kotlinter = "3.11.1"
+ksp = "1.8.10-1.0.9"
+kotlinter = "3.13.0"
 
-kotlinx-atomic-fu = "0.18.5"
-kotlinx-coroutines = "1.6.1"
-kotlinx-datetime = "0.3.3"
+kotlinx-atomic-fu = "0.19.0"
+kotlinx-coroutines = "1.6.4"
+kotlinx-datetime = "0.4.0"
 kotlinx-serialization = "1.5.0-RC"
 
 ktor = "2.0.3"
@@ -58,13 +60,13 @@ logback = "1.2.3"
 murmurhash = "0.4.0"
 
 okhttp-logging-interceptor = "4.9.3"
-okio="3.1.0"
+okio="3.3.0"
 retrofit-core="2.9.0"
 retrofit-serialization = "0.8.0"
 
 result = "1.1.16"
 sqldelight = "1.5.5"
-uuid = "0.5.0"
+uuid = "0.6.0"
 
 [plugins]
 
@@ -163,6 +165,9 @@ sqldelight-android-driver-legacy = { module = "com.squareup.sqldelight:android-d
 sqldelight-jvm-driver-legacy = { module = "com.squareup.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-native-driver-legacy = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqldelight" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid"}
+
+gradle-versions-plugin = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versions-plugin" }
+kotlinter-plugin = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinter" }
 
 [bundles]
 

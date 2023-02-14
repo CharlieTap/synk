@@ -4,6 +4,8 @@ pluginManagement {
         google()
         mavenCentral()
     }
+    includeBuild("gradle/plugins/kotlinter-conventions")
+    includeBuild("gradle/plugins/versions-conventions")
 }
 
 dependencyResolutionManagement {
@@ -15,16 +17,6 @@ dependencyResolutionManagement {
 
     }
 }
-
-//toolchainManagement {
-//    jvm {
-//        javaRepositories {
-//            repository("adoptium") {
-//                resolverClass.set(AdoptiumResolver::class.java)
-//            }
-//        }
-//    }
-//}
 
 include(":libs:concurrent-map")
 include(":synk")
