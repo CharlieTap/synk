@@ -22,6 +22,7 @@ include(":libs:concurrent-map")
 include(":synk")
 include(":extension:kotlin-serialization")
 include(":metastores:delightful-metastore")
+include(":plugins:ksp-adapter-codegen")
 
 rootProject.name = "synk-multiplatform"
 

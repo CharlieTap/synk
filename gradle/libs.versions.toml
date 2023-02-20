@@ -14,7 +14,6 @@ java-bytecode-version = "11"
 android-build-tools-plugin = "7.4.0-beta02"
 versions-plugin = "0.45.0"
 
-
 androidx-core = "1.8.0-alpha05"
 androidx-appcompat = "1.4.1"
 androidx-cardview = "1.0.0"
@@ -27,6 +26,9 @@ androidx-profileinstaller = "1.2.0-beta01"
 androidx-recyclerview = "1.2.1"
 androidx-startup = "1.1.1"
 androidx-work = "2.8.0-alpha02"
+
+autoservice-annotations = "1.0.1"
+autoservice-ksp = "1.0.0"
 
 compose-compiler = "1.2.0"
 compose-core = "1.2.0"
@@ -46,6 +48,7 @@ hilt-compose="1.0.0"
 hlc = "1.1.0"
 
 kotlin = "1.8.10"
+kpoet = "1.12.0"
 ksp = "1.8.10-1.0.9"
 kotlinter = "3.13.0"
 
@@ -118,6 +121,9 @@ androidx-compose-constraint-layout = { module = "androidx.constraintlayout:const
 androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-viewmodel"}
 
+autoservice-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice-annotations"}
+autoservice-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoservice-ksp"}
+
 faker = { module = "io.github.serpro69:kotlin-faker", version.ref = "faker"}
 
 hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "hilt-core"}
@@ -129,7 +135,10 @@ hilt-integrations-compose = { module = "androidx.hilt:hilt-navigation-compose", 
 hlc = { module = "com.github.charlietap:hlc", version.ref = "hlc"}
 
 kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin"}
+kotlin-poet-core = { module = "com.squareup:kotlinpoet", version.ref = "kpoet"}
+kotlin-poet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kpoet"}
 kotlin-reflection = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin"}
+kotlin-symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp"}
 
 kotlinx-atomic-fu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomic-fu"}
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime"}
@@ -168,6 +177,7 @@ uuid = { module = "com.benasher44:uuid", version.ref = "uuid"}
 
 gradle-versions-plugin = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versions-plugin" }
 kotlinter-plugin = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinter" }
+
 
 [bundles]
 
