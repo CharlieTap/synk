@@ -1,6 +1,5 @@
 package com.tap.synk.adapter
 
-
 internal fun <T : Any> SynkAdapter<T>.diff(old: T, new: T): Set<String> {
     val encodedOld = encode(old)
     val encodedNew = encode(new)

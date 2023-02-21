@@ -35,7 +35,6 @@ internal val FOO_ID_RESOLVER = SourceFile.kotlin(
         
         @SynkAdapter
         class FooResolver : IDResolver<Foo> {
-    
             override fun resolveId(crdt: Foo): String {
                 return crdt.bar.toString()
             }

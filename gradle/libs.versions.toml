@@ -47,10 +47,13 @@ hilt-integrations = "1.0.0"
 hilt-compose="1.0.0"
 hlc = "1.1.0"
 
+junit = "4.13.2"
+
 kotlin = "1.8.10"
 kpoet = "1.12.0"
 ksp = "1.8.10-1.0.9"
 kotlinter = "3.13.0"
+kot-compile-testing = "1.4.9"
 
 kotlinx-atomic-fu = "0.19.0"
 kotlinx-coroutines = "1.6.4"
@@ -134,6 +137,10 @@ hilt-integrations-compose = { module = "androidx.hilt:hilt-navigation-compose", 
 
 hlc = { module = "com.github.charlietap:hlc", version.ref = "hlc"}
 
+junit = { module = "junit:junit", version.ref = "junit"}
+
+kotlin-compile-testing-core = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kot-compile-testing"}
+kotlin-compile-testing-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kot-compile-testing"}
 kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin"}
 kotlin-poet-core = { module = "com.squareup:kotlinpoet", version.ref = "kpoet"}
 kotlin-poet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kpoet"}

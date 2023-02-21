@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -18,17 +19,30 @@ dependencies {
     implementation(libs.kotlin.symbol.processing.api)
     implementation(libs.autoservice.annotations)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
     testImplementation(libs.kotlin.junit)
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.9")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.9")
+    testImplementation(libs.kotlin.compile.testing.core)
+    testImplementation(libs.kotlin.compile.testing.ksp)
 
     ksp(libs.autoservice.ksp)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(libs.versions.java.bytecode.version.get().toInt())
+}
+
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(libs.versions.java.bytecode.version.get()))
         freeCompilerArgs.addAll(
+            "-Xcontext-receivers"
         )
     }
 }
