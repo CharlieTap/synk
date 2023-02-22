@@ -8,14 +8,21 @@ plugins {
     id("maven-publish")
 }
 
-
-group = "com.tap.synk.plugins"
-version = libs.versions.version.name.get()
-
-
 ksp {
     arg("autoserviceKsp.verify", "true")
     arg("autoserviceKsp.verbose", "true")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.tap.synk.plugins"
+            artifactId = "adapter-codegen"
+            version = libs.versions.version.name.get()
+
+            from(components["java"])
+        }
+    }
 }
 
 dependencies {

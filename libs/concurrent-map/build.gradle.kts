@@ -7,7 +7,7 @@ plugins {
     id("kotlinter-conventions")
     id("maven-publish")
 }
-group = "com.tap.synk"
+group = "com.tap.synk.lib"
 version = libs.versions.version.name.get()
 
 kotlin {

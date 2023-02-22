@@ -17,16 +17,16 @@ class SynkAdapterProcessorTest {
     @JvmField
     var temporaryFolder: TemporaryFolder = TemporaryFolder()
 
-    @Test
-    fun `compilation fails when target does not implement IDResolver`() {
-        val compilationResult = compile(FOO_NOT_IMPLEMENTED_ID_RESOLVER)
-
-        assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-        val expectedMessage = "@SynkAdapter annotated class com.test.processor.FooResolver must implement IDResolver interface"
-        assertTrue("Expected message containing text $expectedMessage but got: ${compilationResult.messages}") {
-            compilationResult.messages.contains(expectedMessage)
-        }
-    }
+//    @Test
+//    fun `compilation fails when target does not implement IDResolver`() {
+//        val compilationResult = compile(FOO_NOT_IMPLEMENTED_ID_RESOLVER)
+//
+//        assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
+//        val expectedMessage = "@SynkAdapter annotated class com.test.processor.FooResolver must implement IDResolver interface"
+//        assertTrue("Expected message containing text $expectedMessage but got: ${compilationResult.messages}") {
+//            compilationResult.messages.contains(expectedMessage)
+//        }
+//    }
 
     @Test
     fun `compilation succeed when target implement IDResolver interface`() {

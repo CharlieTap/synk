@@ -9,7 +9,7 @@ plugins {
     id("kotlinter-conventions")
     id("maven-publish")
 }
-group = "com.tap.synk"
+group = "com.tap.delight.metastore"
 version = libs.versions.version.name.get()
 
 sqldelight {
@@ -60,12 +60,20 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
-        targetSdk = libs.versions.target.sdk.get().toInt()
+        aarMetadata {
+            minCompileSdk = libs.versions.compile.sdk.get().toInt()
+        }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 
     androidComponents {

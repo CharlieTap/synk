@@ -84,6 +84,9 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
+        aarMetadata {
+            minCompileSdk = libs.versions.compile.sdk.get().toInt()
+        }
     }
 
     compileOptions {
@@ -95,6 +98,12 @@ android {
         abortOnError = false
         checkReleaseBuilds = false
         warningsAsErrors = false
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 
     androidComponents {
