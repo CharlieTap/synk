@@ -88,7 +88,7 @@ internal fun encodeFunCodeBlock(properties: List<KSPropertyDeclaration>) : CodeB
 }
 
 context(ProcessorContext)
-internal fun decodeFunCodeBlock(classDeclaration: KSClassDeclaration, properties: List<KSPropertyDeclaration>) : CodeBlock {
+internal fun decodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock {
     val constructor = classDeclaration.primaryConstructor ?: run {
         logger.error("Failed to constructor for ${classDeclaration.simpleName.asString()}", classDeclaration)
         return CodeBlock.of("")

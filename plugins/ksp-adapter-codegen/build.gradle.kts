@@ -9,7 +9,7 @@ plugins {
 }
 
 
-group = "com.tap.synk"
+group = "com.tap.synk.plugins"
 version = libs.versions.version.name.get()
 
 
