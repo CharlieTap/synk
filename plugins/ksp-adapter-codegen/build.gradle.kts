@@ -5,7 +5,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.symbol.processing)
+    id("maven-publish")
 }
+
+
+group = "com.tap.synk"
+version = libs.versions.version.name.get()
+
 
 ksp {
     arg("autoserviceKsp.verify", "true")
