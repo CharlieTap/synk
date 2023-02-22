@@ -51,7 +51,7 @@ internal fun mapEncoderFileSpec(
                     .addModifiers(KModifier.OVERRIDE)
                     .addParameter("map", mapTypeName)
                     .returns(crdtTypeName)
-                    .addCode(decodeFunCodeBlock(crdtClassDeclaration, properties))
+                    .addCode(decodeFunCodeBlock(crdtClassDeclaration))
                     .build()
             )
             .addOriginatingKSFile(originatingFile)
