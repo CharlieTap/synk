@@ -3,10 +3,8 @@ package com.tap.synk.processor
 import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSType
-import com.google.devtools.ksp.symbol.KSTypeArgument
 import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.encode.MapEncoder
-
 import com.tap.synk.resolver.IDResolver
 
 internal class SynkSymbols(resolver: Resolver) {
@@ -26,7 +24,7 @@ internal class SynkSymbols(resolver: Resolver) {
     val mapEncoder = resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType()
     val synkAdapter = resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType()
 
-    val stringMap = resolver.getClassDeclarationByName<Map<String, String>>()!!.asType()
+
 
     fun isString(type: KSType) : Boolean {
         return type == stringType
@@ -44,6 +42,20 @@ internal class SynkSymbols(resolver: Resolver) {
             longType,
             byteType
         ).contains(type).not()
+    }
+
+    fun stringDecodeFunction(type: KSType) : String {
+        return when(type) {
+            intType -> ".toInt()"
+            boolType -> ".toBoolean()"
+            shortType -> ".toShort()"
+            floatType -> ".toFloat()"
+            doubleType -> ".toDouble()"
+            longType -> ".toLong()"
+            byteType -> ".toByte()"
+            charType -> ".toCharArray().first()"
+            else -> ""
+        }
     }
 
 

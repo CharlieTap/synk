@@ -6,12 +6,12 @@ compile-sdk = "32"
 
 target-sdk = "32"
 min-sdk = "24"
-version-name = "0.33"
+version-name = "0.34"
 
 java-compiler-version = "19"
 java-bytecode-version = "11"
 
-android-build-tools-plugin = "7.4.0"
+android-build-tools-plugin = "7.4.0-beta02"
 versions-plugin = "0.45.0"
 
 androidx-core = "1.8.0-alpha05"
