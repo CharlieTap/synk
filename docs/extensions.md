@@ -1,5 +1,7 @@
 # Synkx - Synk Extensions
 
+---
+
 Synk extensions are additional libraries which can make integration with other technologies/libraries easier 
 
 ## Kotlinx-coroutines
