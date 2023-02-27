@@ -6,7 +6,9 @@ import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.toTypeName
 import java.util.Locale
@@ -104,7 +106,8 @@ private fun compositeMapEncoder(
         encodeFunCodeBlock(subEncoders),
         decodeFunCodeBlock(subEncoders),
         originatingFile,
-        constructor(subEncoders)
+        constructor(subEncoders),
+        properties(subEncoders)
     )
 }
 
@@ -126,7 +129,7 @@ private fun constructor(subEncoders: List<KSClassDeclaration>) : FunSpec {
         val encoderType = parentName + name + "MapEncoder"
         val type = poetTypes.parameterizedMapEncoder(declaration.asType().toTypeName())
         ParameterSpec.builder(encoderVariableName, type).apply {
-            defaultValue(encoderType)
+            defaultValue("$encoderType()")
         }.build()
     }
 
@@ -135,6 +138,25 @@ private fun constructor(subEncoders: List<KSClassDeclaration>) : FunSpec {
            addParameter(parameterSpec)
        }
     }.build()
+}
+
+/**
+ * Adds the property modifiers [PRIVATE, VALUE] to the constructor params
+ * public class FooMapEncoder(
+ *     private val barEncoder: MapEncoder<Foo.Bar> = FooBarMapEncoder,
+ *     private val bazEncoder: MapEncoder<Foo.Baz> = FooBazMapEncoder,
+ * )
+ */
+context(ProcessorContext)
+private fun properties(subEncoders: List<KSClassDeclaration>) : List<PropertySpec> {
+    return subEncoders.map { declaration ->
+        val encoderVariableName = "${declaration.simpleName.asString()}Encoder".replaceFirstChar { it.lowercase(Locale.getDefault()) }
+        val type = poetTypes.parameterizedMapEncoder(declaration.asType().toTypeName())
+        PropertySpec.builder(encoderVariableName, type).apply {
+            initializer(encoderVariableName)
+            addModifiers(KModifier.PRIVATE)
+        }.build()
+    }
 }
 
 /**
@@ -172,14 +194,14 @@ private fun encodeFunCodeBlock(subEncoders: List<KSClassDeclaration>) : CodeBloc
     return CodeBlock.builder().apply {
 
         beginControlFlow("val map = when(crdt)")
-        encoderStatements.forEach { statementPair ->
-            addStatement(statementPair.first, *statementPair.second.toTypedArray())
+        encoderStatements.forEach { (statement, replacements) ->
+            addStatement(statement, *replacements.toTypedArray())
         }
         endControlFlow()
 
         beginControlFlow("val type = when(crdt)")
-        typeStatements.forEach { statementPair ->
-            addStatement(statementPair.first, *statementPair.second.toTypedArray())
+        typeStatements.forEach { (statement, replacements) ->
+            addStatement(statement, *replacements.toTypedArray())
         }
         endControlFlow()
 

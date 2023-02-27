@@ -6,7 +6,7 @@ compile-sdk = "32"
 
 target-sdk = "32"
 min-sdk = "24"
-version-name = "0.34"
+version-name = "0.35"
 
 java-compiler-version = "19"
 java-bytecode-version = "11"

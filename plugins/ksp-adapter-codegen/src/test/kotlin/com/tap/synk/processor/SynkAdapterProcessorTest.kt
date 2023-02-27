@@ -121,7 +121,7 @@ class SynkAdapterProcessorTest {
                     }
 
                     public override fun decode(map: Map<String, String>): Foo.Bar {
-                        val crdt = Bar(map["bar"]!!, map["baz"]!!.toInt(), map["bim"]!!.toBoolean())
+                        val crdt = Foo.Bar(map["bar"]!!, map["baz"]!!.toInt(), map["bim"]!!.toBoolean())
                         return crdt
                     }
                 }
@@ -147,7 +147,7 @@ class SynkAdapterProcessorTest {
                     }
 
                     public override fun decode(map: Map<String, String>): Foo.Baz {
-                        val crdt = Baz(map["bing"]!!, map["bam"]!!)
+                        val crdt = Foo.Baz(map["bing"]!!, map["bam"]!!)
                         return crdt
                     }
                 }
@@ -170,8 +170,8 @@ class SynkAdapterProcessorTest {
                 }
 
                 public class FooMapEncoder(
-                    barEncoder: MapEncoder<Foo.Bar> = FooBarMapEncoder,
-                    bazEncoder: MapEncoder<Foo.Baz> = FooBazMapEncoder,
+                    private val barEncoder: MapEncoder<Foo.Bar> = FooBarMapEncoder(),
+                    private val bazEncoder: MapEncoder<Foo.Baz> = FooBazMapEncoder(),
                 ) : MapEncoder<Foo> {
                     public override fun encode(crdt: Foo): Map<String, String> {
                         val map = when(crdt) {

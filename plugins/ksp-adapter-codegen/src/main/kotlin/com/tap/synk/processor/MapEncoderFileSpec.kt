@@ -8,9 +8,11 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.addOriginatingKSFile
+import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 
 context(ProcessorContext)
@@ -42,6 +44,22 @@ internal fun mapEncoderFileSpec(
     )
 }.build()
 
+/**
+ * public class FooMapEncoder : MapEncoder<Foo> {
+ *      public override fun encode(crdt: Foo): Map<String, String> {
+ *              val map = mutableMapOf<String, String>()
+ *              map["bar"] = crdt.bar
+ *              map["baz"] = crdt.baz.toString()
+ *              map["bim"] = crdt.bim.toString()
+ *              return map
+ *      }
+ *
+ *      public override fun decode(map: Map<String, String>): Foo {
+ *              val crdt = Foo(map["bar"]!!, map["baz"]!!.toInt(), map["bim"]!!.toBoolean())
+ *              return crdt
+ *      }
+ * }
+ */
 context(ProcessorContext)
 internal fun mapEncoderTypeSpec(
     fileName: String,
@@ -49,11 +67,15 @@ internal fun mapEncoderTypeSpec(
     encodeFunCodeBlock: CodeBlock,
     decodeFunCodeBlock: CodeBlock,
     originatingFile: KSFile,
-    primaryConstructor: FunSpec? = null
+    primaryConstructor: FunSpec? = null,
+    properties: List<PropertySpec> = emptyList()
 ): TypeSpec {
     return TypeSpec.classBuilder(fileName).apply {
         primaryConstructor?.let { funSpec ->
             primaryConstructor(funSpec)
+        }
+        properties.forEach { propertySpec ->
+            addProperty(propertySpec)
         }
         addSuperinterface(poetTypes.parameterizedMapEncoder(genericTypeName))
         addFunction(
@@ -79,6 +101,15 @@ internal fun mapEncoderTypeSpec(
 
 }
 
+/**
+ * public override fun encode(crdt: Foo): Map<String, String> {
+ *      val map = mutableMapOf<String, String>()
+ *      map["bar"] = crdt.bar
+ *      map["baz"] = crdt.baz.toString()
+ *      map["bim"] = crdt.bim.toString()
+ *      return map
+ * }
+ */
 context(ProcessorContext)
 private fun encodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock {
     val constructor = classDeclaration.primaryConstructor ?: run {
@@ -87,11 +118,19 @@ private fun encodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock
     }
 
     val statements = constructor.parameters.map { param ->
-        val name = param.key()
+
+        val name = param.name?.asString() ?: run {
+            logger.error("Synk Adapter Plugin failed to get name of parameter", param)
+            ""
+        }
+        val key = param.key()
         val type = param.type.resolve()
 
-        val conversion = if(symbols.isComposite(type)) {
-            logger.warn("Synk Adapter Plugin does not currently support generating encoders for classes with nested classes or array properties", param)
+        val conversion = if(symbols.isCollectionOrArray(type)) {
+            logger.error("Synk Adapter Plugin does not currently support generating encoders for classes with nested classes or array properties", param)
+            ""
+        } else if(symbols.isUserDefinedType(type)) {
+            logger.error("Synk Adapter Plugin does not currently support generating encoders for classes with nested classes or array properties", param)
             ""
         } else {
             if(!symbols.isString(type)) {
@@ -99,7 +138,7 @@ private fun encodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock
             } else ""
         }
 
-        "map[\"$name\"] = crdt.$name$conversion"
+        "map[\"$key\"] = crdt.$name$conversion"
     }
 
     return CodeBlock.builder().apply {
@@ -111,6 +150,12 @@ private fun encodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock
     }.build()
 }
 
+/**
+ * public override fun decode(map: Map<String, String>): Foo {
+ *      val crdt = Foo(map["bar"]!!, map["baz"]!!.toInt(), map["bim"]!!.toBoolean())
+ *      return crdt
+ * }
+ */
 context(ProcessorContext)
 private fun decodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock {
     val constructor = classDeclaration.primaryConstructor ?: run {
@@ -124,11 +169,11 @@ private fun decodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock
             "\"]!!$conversion"
         } else "\"]!!$conversion, map[\""
 
-        acc + param.name?.asString() + postfix
+        acc + param.key() + postfix
     }
 
     return CodeBlock.builder().apply {
-        addStatement("val crdt = %L(%L)", classDeclaration.simpleName.asString(), statement)
+        addStatement("val crdt = %L(%L)", classDeclaration.asType().toClassName().simpleNames.joinToString("."), statement)
         addStatement("return crdt")
     }.build()
 }
@@ -136,7 +181,7 @@ private fun decodeFunCodeBlock(classDeclaration: KSClassDeclaration) : CodeBlock
 
 context(ProcessorContext)
 private fun KSValueParameter.key() : String {
-    return if(symbols.isComposite(type.resolve())) {
+    return if(symbols.isCollectionOrArray(type.resolve())) {
         logger.warn("Map key serialization of Composite structs unavailable")
         ""
     } else {
