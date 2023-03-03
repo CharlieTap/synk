@@ -1,4 +1,4 @@
-package com.tap.synk.processor
+package com.tap.synk.processor.visitor
 
 import com.google.devtools.ksp.getAllSuperTypes
 import com.google.devtools.ksp.innerArguments
@@ -6,13 +6,16 @@ import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
-import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
+import com.tap.synk.processor.context.ProcessorContext
+import com.tap.synk.processor.context.SynkPoetTypes
+import com.tap.synk.processor.context.SynkSymbols
+import com.tap.synk.processor.filespec.adapter.synkAdapterFileSpec
 
-internal class SynkAnnotationVisitor(
+internal class IDResolverVisitor(
     private val synkSymbols: SynkSymbols,
     private val synkPoetTypes: SynkPoetTypes,
     private val codeGenerator: CodeGenerator,
@@ -23,7 +26,6 @@ internal class SynkAnnotationVisitor(
 
         val customIdResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
         val crdtType = customIdResolverType.innerArguments.first().type?.resolve() ?: return
-        val crdtClassDeclaration = (crdtType.declaration as? KSClassDeclaration) ?: return
 
         val synkPackageName = synkSymbols.synkAdapter.declaration.packageName.asString()
         val mapEncoderPackageName = synkSymbols.mapEncoder.declaration.packageName.asString()
@@ -51,27 +53,6 @@ internal class SynkAnnotationVisitor(
             )
 
             synkAdapterFileSpec.writeTo(codeGenerator = codeGenerator, aggregating = false)
-
-            if(crdtClassDeclaration.modifiers.contains(Modifier.SEALED)) {
-                val fileSpecs = sealedMapEncoderFileSpec(
-                    customPackageName,
-                    crdtClassDeclaration,
-                    classDeclaration.containingFile ?: return
-                )
-
-                fileSpecs.forEach { fileSpec ->
-                   fileSpec.writeTo(codeGenerator = codeGenerator, aggregating = false)
-                }
-
-            } else {
-                val mapEncoderFileSpec = mapEncoderFileSpec(
-                    customPackageName,
-                    mapEncoderFileName,
-                    crdtType,
-                    classDeclaration.containingFile ?: return
-                )
-                mapEncoderFileSpec.writeTo(codeGenerator = codeGenerator, aggregating = false)
-            }
         }
     }
 }

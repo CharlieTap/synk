@@ -81,3 +81,30 @@ internal val FOO_SEALED_ID_RESOLVER = SourceFile.kotlin(
         }
     """
 )
+
+internal val FOO_COLLECTION_CLASS = SourceFile.kotlin(
+    "Foo.kt", """
+        package com.test.processor
+        data class Foo(
+            private val bar: List<String>,
+            private val baz: String,
+            private val bim: Set<Boolean>,
+        )
+    """
+)
+
+internal val FOO_COLLECTION_ID_RESOLVER = SourceFile.kotlin(
+    "FooResolver.kt", """
+        package com.test.processor
+
+        import com.tap.synk.annotation.SynkAdapter
+        import com.tap.synk.resolver.IDResolver
+        
+        @SynkAdapter
+        class FooResolver : IDResolver<Foo> {
+            override fun resolveId(crdt: Foo): String {
+                return crdt.baz
+            }
+        }
+    """
+)

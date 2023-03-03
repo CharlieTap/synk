@@ -1,4 +1,4 @@
-package com.tap.synk.processor
+package com.tap.synk.processor.ext
 
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSAnnotated

@@ -1,4 +1,4 @@
-package com.tap.synk.processor
+package com.tap.synk.processor.filespec.adapter
 
 import com.google.devtools.ksp.symbol.KSFile
 import com.squareup.kotlinpoet.FileSpec
@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.addOriginatingKSFile
+import com.tap.synk.processor.context.ProcessorContext
 
 context(ProcessorContext)
 internal fun synkAdapterFileSpec(

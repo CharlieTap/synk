@@ -1,4 +1,4 @@
-package com.tap.synk.processor
+package com.tap.synk.processor.context
 
 import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.processing.Resolver
@@ -7,6 +7,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.Modifier
 import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.encode.MapEncoder
+import com.tap.synk.processor.ext.asType
 import com.tap.synk.resolver.IDResolver
 
 internal class SynkSymbols(resolver: Resolver) {
@@ -23,12 +24,26 @@ internal class SynkSymbols(resolver: Resolver) {
     val arrayType = resolver.builtIns.arrayType
     val iterableType = resolver.builtIns.iterableType
 
-    val idResolver = resolver.getClassDeclarationByName<IDResolver<*>>()!!.asType()
-    val mapEncoder = resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType()
-    val synkAdapter = resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType()
+
+    private val primitiveTypes by lazy {
+        setOf(charType, stringType, boolType, intType, shortType, floatType, doubleType, longType, byteType)
+    }
+
+    val setType by lazy { resolver.getClassDeclarationByName<Set<*>>()!!.asType() }
+    val listType by lazy {resolver.getClassDeclarationByName<List<*>>()!!.asType()}
+
+    val idResolver by lazy {resolver.getClassDeclarationByName<IDResolver<*>>()!!.asType()}
+    val mapEncoder by lazy {resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType()}
+    val synkAdapter by lazy {resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType()}
+
+
 
     fun isString(type: KSType) : Boolean {
         return type == stringType
+    }
+
+    fun isPrimitive(type: KSType) : Boolean {
+        return primitiveTypes.contains(type)
     }
 
     fun isUserDefinedType(type: KSType) : Boolean {
@@ -54,6 +69,8 @@ internal class SynkSymbols(resolver: Resolver) {
     fun isCollectionOrArray(type: KSType) : Boolean {
         return isCollection(type) || isArray(type)
     }
+
+
 
     fun stringDecodeFunction(type: KSType) : String {
         return when(type) {
