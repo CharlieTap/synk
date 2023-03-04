@@ -6,10 +6,11 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.squareup.kotlinpoet.ksp.addOriginatingKSFile
 import com.squareup.kotlinpoet.ksp.writeTo
+import com.tap.synk.processor.context.EncoderContext
 import com.tap.synk.processor.context.ProcessorContext
 import com.tap.synk.processor.context.SynkPoetTypes
 import com.tap.synk.processor.context.SynkSymbols
-import com.tap.synk.processor.filespec.encoder.classDeclarationConverter
+import com.tap.synk.processor.filespec.encoder.mapEncoder
 import com.tap.synk.processor.filespec.encoder.mapEncoderFileSpec
 
 internal class MapEncoderVisitor(
@@ -20,22 +21,17 @@ internal class MapEncoderVisitor(
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-
-        val customPackageName = classDeclaration.packageName.asString()
-        val crdtClassName = classDeclaration.simpleName.asString()
-        val mapEncoderFileName = crdtClassName + "MapEncoder"
         val processorContext = ProcessorContext(synkSymbols, synkPoetTypes, logger)
+        val encoderContext = EncoderContext(processorContext, classDeclaration)
 
-
-        with(processorContext) {
-
+        with(encoderContext) {
             val containingFile = classDeclaration.containingFile ?: return
-            val mapEncoder = classDeclarationConverter(classDeclaration)
+            val mapEncoder = mapEncoder()
 
             val mapEncoderFileSpec = mapEncoderFileSpec(
-                customPackageName,
-                mapEncoderFileName,
-                mapEncoder,
+                packageName,
+                fileName,
+                mapEncoder
             ) { addOriginatingKSFile(containingFile) }
             mapEncoderFileSpec.writeTo(codeGenerator = codeGenerator, aggregating = false)
         }

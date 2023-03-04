@@ -21,7 +21,6 @@ internal class SynkAdapterProcessor(
     private val logger: KSPLogger
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-
         val synkSymbols = SynkSymbols(resolver)
         val synkPoetTypes = SynkPoetTypes(synkSymbols)
 
@@ -33,11 +32,10 @@ internal class SynkAdapterProcessor(
             .filter { symbolValidator.validate(it) }
 
         val mapEncoderDeclarations = idResolverDeclarations.mapNotNull { classDeclaration ->
-                val idResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
-                val crdtType = idResolverType.innerArguments.first().type?.resolve()
-                (crdtType?.declaration as? KSClassDeclaration)
-        }.flatMap (::classDeclarationExpansion)
-
+            val idResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
+            val crdtType = idResolverType.innerArguments.first().type?.resolve()
+            (crdtType?.declaration as? KSClassDeclaration)
+        }.flatMap(::classDeclarationExpansion)
 
         idResolverDeclarations.forEach { it.accept(IDResolverVisitor(synkSymbols, synkPoetTypes, codeGenerator, logger), Unit) }
         mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(synkSymbols, synkPoetTypes, codeGenerator, logger), Unit) }
@@ -50,7 +48,7 @@ internal class SynkAdapterProcessor(
      * If it's a SealedClass
      * If the KSClassDeclaration properties contains 3rd party types
      */
-    private fun classDeclarationExpansion(classDeclaration: KSClassDeclaration) : List<KSClassDeclaration> {
+    private fun classDeclarationExpansion(classDeclaration: KSClassDeclaration): List<KSClassDeclaration> {
         return when {
             classDeclaration.isSealed() -> {
                 val childDeclarations = classDeclaration.declarations.filterIsInstance<KSClassDeclaration>().toList()

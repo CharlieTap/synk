@@ -3,7 +3,8 @@ package com.tap.synk.processor
 import com.tschuchort.compiletesting.SourceFile
 
 internal val FOO_DATA_CLASS = SourceFile.kotlin(
-    "Foo.kt", """
+    "Foo.kt",
+    """
         package com.test.processor
         
         data class Foo(
@@ -14,9 +15,9 @@ internal val FOO_DATA_CLASS = SourceFile.kotlin(
     """
 )
 
-
 internal val FOO_NOT_IMPLEMENTED_ID_RESOLVER = SourceFile.kotlin(
-    "FooResolver.kt", """
+    "FooResolver.kt",
+    """
         package com.test.processor
 
         import com.tap.synk.annotation.SynkAdapter
@@ -28,7 +29,8 @@ internal val FOO_NOT_IMPLEMENTED_ID_RESOLVER = SourceFile.kotlin(
 )
 
 internal val FOO_ID_RESOLVER = SourceFile.kotlin(
-    "FooResolver.kt", """
+    "FooResolver.kt",
+    """
         package com.test.processor
 
         import com.tap.synk.annotation.SynkAdapter
@@ -44,7 +46,8 @@ internal val FOO_ID_RESOLVER = SourceFile.kotlin(
 )
 
 internal val FOO_SEALED_CLASS = SourceFile.kotlin(
-    "Foo.kt", """
+    "Foo.kt",
+    """
         package com.test.processor
         
         sealed interface Foo {
@@ -63,7 +66,8 @@ internal val FOO_SEALED_CLASS = SourceFile.kotlin(
 )
 
 internal val FOO_SEALED_ID_RESOLVER = SourceFile.kotlin(
-    "FooResolver.kt", """
+    "FooResolver.kt",
+    """
         package com.test.processor
 
         import com.tap.synk.annotation.SynkAdapter
@@ -83,7 +87,8 @@ internal val FOO_SEALED_ID_RESOLVER = SourceFile.kotlin(
 )
 
 internal val FOO_COLLECTION_CLASS = SourceFile.kotlin(
-    "Foo.kt", """
+    "Foo.kt",
+    """
         package com.test.processor
         data class Foo(
             private val bar: List<String>,
@@ -94,7 +99,8 @@ internal val FOO_COLLECTION_CLASS = SourceFile.kotlin(
 )
 
 internal val FOO_COLLECTION_ID_RESOLVER = SourceFile.kotlin(
-    "FooResolver.kt", """
+    "FooResolver.kt",
+    """
         package com.test.processor
 
         import com.tap.synk.annotation.SynkAdapter

@@ -49,12 +49,12 @@ internal class SynkPoetTypes(
         symbols.mapEncoder.toClassName()
     }
 
-    fun parameterizedMapEncoder(genericTypeName: TypeName) : ParameterizedTypeName {
+    fun parameterizedMapEncoder(genericTypeName: TypeName): ParameterizedTypeName {
         return mapEncoderTypeName.parameterizedBy(genericTypeName)
     }
 
-    fun primitiveEncoder(type: KSType) : TypeName {
-        return when(type) {
+    fun primitiveEncoder(type: KSType): TypeName {
+        return when (type) {
             symbols.boolType -> booleanEncoderTypeName
             symbols.intType -> intEncoderTypeName
             symbols.stringType -> stringEncoderTypeName
@@ -62,8 +62,8 @@ internal class SynkPoetTypes(
         }
     }
 
-    fun collectionEncoder(type: KSType) : ParameterizedTypeName? {
-        return when(type.declaration) {
+    fun collectionEncoder(type: KSType): ParameterizedTypeName? {
+        return when (type.declaration) {
             symbols.setType.declaration -> {
                 setEncoderTypeName.parameterizedBy(type.innerArguments.first().toTypeName())
             }

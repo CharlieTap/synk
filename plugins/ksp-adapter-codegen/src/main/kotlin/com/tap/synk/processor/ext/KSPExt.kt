@@ -15,8 +15,6 @@ internal fun Resolver.getClassDeclarationByName(fqcn: String): KSClassDeclaratio
         ?: error("Class '$fqcn' not found on the classpath. Are you missing this dependency?")
 }
 
-internal fun KSClassDeclaration.asType() = asType(emptyList())
-
 internal fun KSAnnotated.hasAnnotation(target: KSType): Boolean {
     return findAnnotationWithType(target) != null
 }

@@ -24,56 +24,47 @@ internal class SynkSymbols(resolver: Resolver) {
     val arrayType = resolver.builtIns.arrayType
     val iterableType = resolver.builtIns.iterableType
 
-
     private val primitiveTypes by lazy {
         setOf(charType, stringType, boolType, intType, shortType, floatType, doubleType, longType, byteType)
     }
 
     val setType by lazy { resolver.getClassDeclarationByName<Set<*>>()!!.asType() }
-    val listType by lazy {resolver.getClassDeclarationByName<List<*>>()!!.asType()}
+    val listType by lazy { resolver.getClassDeclarationByName<List<*>>()!!.asType() }
 
-    val idResolver by lazy {resolver.getClassDeclarationByName<IDResolver<*>>()!!.asType()}
-    val mapEncoder by lazy {resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType()}
-    val synkAdapter by lazy {resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType()}
+    val idResolver by lazy { resolver.getClassDeclarationByName<IDResolver<*>>()!!.asType() }
+    val mapEncoder by lazy { resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType() }
+    val synkAdapter by lazy { resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType() }
 
-
-
-    fun isString(type: KSType) : Boolean {
+    fun isString(type: KSType): Boolean {
         return type == stringType
     }
 
-    fun isPrimitive(type: KSType) : Boolean {
+    fun isPrimitive(type: KSType): Boolean {
         return primitiveTypes.contains(type)
     }
 
-    fun isUserDefinedType(type: KSType) : Boolean {
+    fun isUserDefinedType(type: KSType): Boolean {
         return type is KSClassDeclaration && type.declaration.packageName != boolType.declaration.packageName
     }
 
-    fun isDataClass(type: KSType) : Boolean {
-        return type is KSClassDeclaration && type.declaration.modifiers.any { modifier -> modifier == Modifier.DATA  }
+    fun isDataClass(type: KSType): Boolean {
+        return type is KSClassDeclaration && type.declaration.modifiers.any { modifier -> modifier == Modifier.DATA }
     }
 
-    fun isSealedClass(type: KSType) : Boolean {
-        return type is KSClassDeclaration && type.declaration.modifiers.any { modifier -> modifier == Modifier.SEALED  }
+    fun isSealedClass(type: KSType): Boolean {
+        return type is KSClassDeclaration && type.declaration.modifiers.any { modifier -> modifier == Modifier.SEALED }
     }
 
-    fun isCollection(type: KSType) : Boolean {
+    fun isCollection(type: KSType): Boolean {
         return type.declaration.packageName == iterableType.declaration.packageName
     }
 
-    fun isArray(type: KSType) : Boolean {
+    fun isArray(type: KSType): Boolean {
         return type == arrayType
     }
 
-    fun isCollectionOrArray(type: KSType) : Boolean {
-        return isCollection(type) || isArray(type)
-    }
-
-
-
-    fun stringDecodeFunction(type: KSType) : String {
-        return when(type) {
+    fun stringDecodeFunction(type: KSType): String {
+        return when (type) {
             intType -> ".toInt()"
             boolType -> ".toBoolean()"
             shortType -> ".toShort()"
@@ -85,6 +76,4 @@ internal class SynkSymbols(resolver: Resolver) {
             else -> ""
         }
     }
-
-
 }

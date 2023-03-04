@@ -9,7 +9,7 @@ internal data class MapEncoder(
     val parameters: List<EncoderParameter>,
     val extends: EncoderInterface,
     val encodeFunction: EncoderFunction,
-    val decodeFunction: EncoderFunction,
+    val decodeFunction: EncoderFunction
 )
 
 @JvmInline
@@ -26,25 +26,25 @@ internal sealed class EncoderParameter {
     data class ParameterizedCollectionEncoder(
         val parameterName: String,
         val collectionEncoderVariableName: String,
-        val collectionEncoderTypeName : ParameterizedTypeName,
-        val genericMapEncoderTypeName : ParameterizedTypeName,
-        val genericTypeName : TypeName,
-        val genericEncoderTypeName : TypeName,
+        val collectionEncoderTypeName: ParameterizedTypeName,
+        val genericMapEncoderTypeName: ParameterizedTypeName,
+        val genericTypeName: TypeName,
+        val genericEncoderTypeName: TypeName
     ) : EncoderParameter()
 
     data class SubEncoder(
         val parameterName: String,
         val customEncoderVariableName: String,
-        val typeName : TypeName
+        val typeName: TypeName
     ) : EncoderParameter()
 
-    fun type() : TypeName = when(this) {
+    fun type(): TypeName = when (this) {
         is CompositeSubEncoder -> genericType
         is ParameterizedCollectionEncoder -> genericMapEncoderTypeName
         is SubEncoder -> typeName
     }
 
-    fun variableName() : String = when(this) {
+    fun variableName(): String = when (this) {
         is CompositeSubEncoder -> name
         is ParameterizedCollectionEncoder -> collectionEncoderVariableName
         is SubEncoder -> customEncoderVariableName
@@ -56,7 +56,7 @@ internal data class EncoderFunction(
     val functionParameterName: String,
     val functionParameterTypeName: TypeName,
     val functionReturnTypeName: TypeName,
-    val encoderFunctionCodeBlock: EncoderFunctionCodeBlock,
+    val encoderFunctionCodeBlock: EncoderFunctionCodeBlock
 ) {
     enum class Type {
         Encode,
@@ -64,7 +64,7 @@ internal data class EncoderFunction(
     }
 }
 
-internal fun EncoderFunction.Type.name() : String {
+internal fun EncoderFunction.Type.name(): String {
     return name.decapitalise()
 }
 
@@ -76,7 +76,7 @@ internal sealed class EncoderFunctionCodeBlock {
     ) : EncoderFunctionCodeBlock()
 
     data class Delegate(
-        val subEncoders: List<EncoderFunctionCodeBlockDelegateEncoder>,
+        val subEncoders: List<EncoderFunctionCodeBlockDelegateEncoder>
     ) : EncoderFunctionCodeBlock()
 }
 
@@ -95,7 +95,7 @@ internal sealed class EncoderFunctionCodeBlockStandardEncodable {
 
     data class ParameterizedCollection(
         val encodedKey: String,
-        val collectionEncoderVariableName: String,
+        val collectionEncoderVariableName: String
     ) : EncoderFunctionCodeBlockStandardEncodable()
 }
 

@@ -23,7 +23,6 @@ internal class IDResolverVisitor(
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-
         val customIdResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
         val crdtType = customIdResolverType.innerArguments.first().type?.resolve() ?: return
 
@@ -40,7 +39,6 @@ internal class IDResolverVisitor(
         val customSynkAdapterTypeName = ClassName(synkPackageName, "SynkAdapter").parameterizedBy(crdtType.toTypeName())
 
         with(ProcessorContext(synkSymbols, synkPoetTypes, logger)) {
-
             val synkAdapterFileSpec = synkAdapterFileSpec(
                 customPackageName,
                 idResolverClassName,

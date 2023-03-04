@@ -1,6 +1,5 @@
 package com.tap.synk.processor
 
-
 import com.google.auto.service.AutoService
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment

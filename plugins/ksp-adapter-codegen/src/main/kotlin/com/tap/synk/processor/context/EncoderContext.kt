@@ -11,20 +11,20 @@ import com.tap.synk.processor.ext.asType
  */
 internal data class EncoderContext(
     private val processorContext: ProcessorContext,
-    private val classDeclaration: KSClassDeclaration,
+    private val classDeclaration: KSClassDeclaration
 ) {
     val symbols = processorContext.symbols
     val poetTypes = processorContext.poetTypes
     val logger = processorContext.logger
 
-    val type = classDeclaration.asType()
-    val typeName = type.toClassName()
+    val type by lazy { classDeclaration.asType() }
+    val typeName by lazy { type.toClassName() }
 
-    val packageName = classDeclaration.packageName.asString()
-    val simpleName = classDeclaration.simpleName.asString()
+    val packageName by lazy { classDeclaration.packageName.asString() }
+    val declarationName by lazy { classDeclaration.simpleName.asString() }
+    val fileName by lazy { declarationName + "MapEncoder" }
 
-    val isSealed = classDeclaration.modifiers.contains(Modifier.SEALED)
-    val sealedSubClasses = classDeclaration.getSealedSubclasses().toList()
-    val parameters = classDeclaration.primaryConstructor?.parameters ?: emptyList()
-
+    val isSealed by lazy { classDeclaration.modifiers.contains(Modifier.SEALED) }
+    val sealedSubClasses by lazy { classDeclaration.getSealedSubclasses().toList() }
+    val parameters by lazy { classDeclaration.primaryConstructor?.parameters ?: emptyList() }
 }

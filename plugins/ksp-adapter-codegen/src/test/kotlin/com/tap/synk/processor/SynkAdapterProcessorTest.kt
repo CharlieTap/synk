@@ -3,15 +3,15 @@ package com.tap.synk.processor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.symbolProcessorProviders
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class SynkAdapterProcessorTest {
+internal class SynkAdapterProcessorTest {
 
     @Rule
     @JvmField
@@ -30,7 +30,6 @@ class SynkAdapterProcessorTest {
 
     @Test
     fun `compilation succeeds when target implement IDResolver interface`() {
-
         val compilationResult = compile(FOO_DATA_CLASS, FOO_ID_RESOLVER)
 
         assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
@@ -85,7 +84,6 @@ class SynkAdapterProcessorTest {
 
     @Test
     fun `compilation succeeds when sealed target implement IDResolver interface`() {
-
         val compilationResult = compile(FOO_SEALED_CLASS, FOO_SEALED_ID_RESOLVER)
 
         assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
@@ -213,7 +211,6 @@ class SynkAdapterProcessorTest {
 
     @Test
     fun `compilation succeeds when collection subtype target implements IDResolver interface`() {
-
         val compilationResult = compile(FOO_COLLECTION_CLASS, FOO_COLLECTION_ID_RESOLVER)
 
         assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
@@ -274,7 +271,6 @@ class SynkAdapterProcessorTest {
             """.trimIndent(),
             compilationResult.sourceFor("FooMapEncoder.kt")
         )
-
     }
 
     private fun compile(vararg source: SourceFile) = KotlinCompilation().apply {
@@ -284,7 +280,6 @@ class SynkAdapterProcessorTest {
         inheritClassPath = true
         verbose = false
     }.compile()
-
 
     private fun assertSourceEquals(@Language("kotlin") expected: String, actual: String) {
         assertEquals(
@@ -306,7 +301,7 @@ class SynkAdapterProcessorTest {
         val kotlinGeneratedDir = kspGeneratedDir.resolve("kotlin")
         val javaGeneratedDir = kspGeneratedDir.resolve("java")
         return kotlinGeneratedDir.walk().toList() +
-                javaGeneratedDir.walk().toList()
+            javaGeneratedDir.walk().toList()
     }
 
     private val KotlinCompilation.Result.workingDir: File
