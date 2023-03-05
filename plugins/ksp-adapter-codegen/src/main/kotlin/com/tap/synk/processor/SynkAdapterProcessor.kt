@@ -9,6 +9,7 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.tap.synk.annotation.SynkAdapter
+import com.tap.synk.processor.context.ProcessorContext
 import com.tap.synk.processor.context.SynkPoetTypes
 import com.tap.synk.processor.context.SynkSymbols
 import com.tap.synk.processor.ext.isSealed
@@ -17,15 +18,22 @@ import com.tap.synk.processor.visitor.MapEncoderVisitor
 
 internal class SynkAdapterProcessor(
     private val options: Map<String, String>,
-    private val codeGenerator: CodeGenerator,
-    private val logger: KSPLogger
+    private val kspCodeGenerator: CodeGenerator,
+    private val kspLogger: KSPLogger
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val synkSymbols = SynkSymbols(resolver)
         val synkPoetTypes = SynkPoetTypes(synkSymbols)
 
+        val processorContext = object : ProcessorContext {
+            override val codeGenerator: CodeGenerator = kspCodeGenerator
+            override val logger: KSPLogger = kspLogger
+            override val poetTypes: SynkPoetTypes = synkPoetTypes
+            override val symbols: SynkSymbols = synkSymbols
+        }
+
         val annotatedSymbols = resolver.getSymbolsWithAnnotation(SynkAdapter::class.qualifiedName!!)
-        val symbolValidator = SynkSymbolValidator(synkSymbols, logger)
+        val symbolValidator = SynkSymbolValidator(synkSymbols, kspLogger)
 
         val idResolverDeclarations = annotatedSymbols
             .filterIsInstance<KSClassDeclaration>()
@@ -37,8 +45,8 @@ internal class SynkAdapterProcessor(
             (crdtType?.declaration as? KSClassDeclaration)
         }.flatMap(::classDeclarationExpansion)
 
-        idResolverDeclarations.forEach { it.accept(IDResolverVisitor(synkSymbols, synkPoetTypes, codeGenerator, logger), Unit) }
-        mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(synkSymbols, synkPoetTypes, codeGenerator, logger), Unit) }
+        idResolverDeclarations.forEach { it.accept(IDResolverVisitor(processorContext), Unit) }
+        mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(processorContext), Unit) }
 
         return emptyList()
     }

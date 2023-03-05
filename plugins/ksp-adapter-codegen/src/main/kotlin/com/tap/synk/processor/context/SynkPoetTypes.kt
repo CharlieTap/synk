@@ -45,8 +45,16 @@ internal class SynkPoetTypes(
         SetEncoder::class.asTypeName()
     }
 
+    val idResolverTypeName by lazy {
+        symbols.idResolver.toClassName()
+    }
+
     val mapEncoderTypeName by lazy {
         symbols.mapEncoder.toClassName()
+    }
+
+    val synkAdapterTypeName by lazy {
+        symbols.synkAdapter.toClassName()
     }
 
     fun parameterizedMapEncoder(genericTypeName: TypeName): ParameterizedTypeName {

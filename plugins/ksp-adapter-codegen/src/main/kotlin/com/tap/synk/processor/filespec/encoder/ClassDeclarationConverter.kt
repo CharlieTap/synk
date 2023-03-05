@@ -12,6 +12,7 @@ import com.tap.synk.processor.ext.decapitalise
 context(EncoderContext)
 internal fun mapEncoder(): MapEncoder {
     return MapEncoder(
+        className,
         deriveEnums(),
         deriveParameters(),
         deriveEncoderInterface(),
@@ -71,7 +72,7 @@ private fun deriveParameters(): List<EncoderParameter> {
             val encoderType = name + "MapEncoder"
             val concreteType = ClassName(packageName, encoderType)
             val type = poetTypes.parameterizedMapEncoder(subClassDeclaration.asType().toTypeName())
-            println(type)
+
             EncoderParameter.CompositeSubEncoder(encoderVariableName, type, concreteType)
         }
     } else emptyList()

@@ -11,8 +11,8 @@ class SynkAdapterProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return SynkAdapterProcessor(
             options = environment.options,
-            codeGenerator = environment.codeGenerator,
-            logger = environment.logger
+            kspCodeGenerator = environment.codeGenerator,
+            kspLogger = environment.logger
         )
     }
 }

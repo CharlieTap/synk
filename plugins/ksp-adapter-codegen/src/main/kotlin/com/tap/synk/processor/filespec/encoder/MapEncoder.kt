@@ -1,10 +1,12 @@
 package com.tap.synk.processor.filespec.encoder
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import com.tap.synk.processor.ext.decapitalise
 
 internal data class MapEncoder(
+    val className: ClassName,
     val enum: EncoderEnum?,
     val parameters: List<EncoderParameter>,
     val extends: EncoderInterface,
@@ -15,13 +17,13 @@ internal data class MapEncoder(
 @JvmInline
 internal value class EncoderInterface(val typeName: ParameterizedTypeName)
 
-internal sealed class EncoderParameter {
+internal sealed interface EncoderParameter {
 
     data class CompositeSubEncoder(
         val name: String,
         val genericType: ParameterizedTypeName,
         val encoderType: TypeName
-    ) : EncoderParameter()
+    ) : EncoderParameter
 
     data class ParameterizedCollectionEncoder(
         val parameterName: String,
@@ -30,24 +32,24 @@ internal sealed class EncoderParameter {
         val genericMapEncoderTypeName: ParameterizedTypeName,
         val genericTypeName: TypeName,
         val genericEncoderTypeName: TypeName
-    ) : EncoderParameter()
+    ) : EncoderParameter
 
     data class SubEncoder(
         val parameterName: String,
         val customEncoderVariableName: String,
         val typeName: TypeName
-    ) : EncoderParameter()
-
-    fun type(): TypeName = when (this) {
-        is CompositeSubEncoder -> genericType
-        is ParameterizedCollectionEncoder -> genericMapEncoderTypeName
-        is SubEncoder -> typeName
-    }
+    ) : EncoderParameter
 
     fun variableName(): String = when (this) {
         is CompositeSubEncoder -> name
         is ParameterizedCollectionEncoder -> collectionEncoderVariableName
         is SubEncoder -> customEncoderVariableName
+    }
+
+    fun variableType(): TypeName = when (this) {
+        is CompositeSubEncoder -> genericType
+        is ParameterizedCollectionEncoder -> genericMapEncoderTypeName
+        is SubEncoder -> typeName
     }
 }
 
@@ -68,16 +70,16 @@ internal fun EncoderFunction.Type.name(): String {
     return name.decapitalise()
 }
 
-internal sealed class EncoderFunctionCodeBlock {
+internal sealed interface EncoderFunctionCodeBlock {
 
     data class Standard(
         val encodables: List<EncoderFunctionCodeBlockStandardEncodable>,
         val type: TypeName? = null
-    ) : EncoderFunctionCodeBlock()
+    ) : EncoderFunctionCodeBlock
 
     data class Delegate(
         val subEncoders: List<EncoderFunctionCodeBlockDelegateEncoder>
-    ) : EncoderFunctionCodeBlock()
+    ) : EncoderFunctionCodeBlock
 }
 
 internal class EncoderFunctionCodeBlockDelegateEncoder(
@@ -86,17 +88,17 @@ internal class EncoderFunctionCodeBlockDelegateEncoder(
     val enumName: String
 )
 
-internal sealed class EncoderFunctionCodeBlockStandardEncodable {
+internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
 
     data class Primitive(
         val encodedKey: String,
         val conversion: String = ""
-    ) : EncoderFunctionCodeBlockStandardEncodable()
+    ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class ParameterizedCollection(
         val encodedKey: String,
         val collectionEncoderVariableName: String
-    ) : EncoderFunctionCodeBlockStandardEncodable()
+    ) : EncoderFunctionCodeBlockStandardEncodable
 }
 
 internal data class EncoderEnum(
