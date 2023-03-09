@@ -8,10 +8,12 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.Modifier
 import com.tap.synk.annotation.SynkAdapter
 import com.tap.synk.processor.context.ProcessorContext
 import com.tap.synk.processor.context.SynkPoetTypes
 import com.tap.synk.processor.context.SynkSymbols
+import com.tap.synk.processor.ext.containsNestedClasses
 import com.tap.synk.processor.ext.isSealed
 import com.tap.synk.processor.visitor.IDResolverVisitor
 import com.tap.synk.processor.visitor.MapEncoderVisitor
@@ -43,7 +45,7 @@ internal class SynkAdapterProcessor(
             val idResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
             val crdtType = idResolverType.innerArguments.first().type?.resolve()
             (crdtType?.declaration as? KSClassDeclaration)
-        }.flatMap(::classDeclarationExpansion)
+        }.flatMap(::classDeclarationExpansion).toSet()
 
         idResolverDeclarations.forEach { it.accept(IDResolverVisitor(processorContext), Unit) }
         mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(processorContext), Unit) }
@@ -51,18 +53,40 @@ internal class SynkAdapterProcessor(
         return emptyList()
     }
 
-    /**
-     * One KSClassDeclaration can actually result in the creation of multiple MapEncoders
-     * If it's a SealedClass
-     * If the KSClassDeclaration properties contains 3rd party types
-     */
     private fun classDeclarationExpansion(classDeclaration: KSClassDeclaration): List<KSClassDeclaration> {
         return when {
-            classDeclaration.isSealed() -> {
-                val childDeclarations = classDeclaration.declarations.filterIsInstance<KSClassDeclaration>().toList()
-                listOf(classDeclaration, *childDeclarations.toTypedArray())
+            classDeclaration.isSealed() || classDeclaration.containsNestedClasses() -> {
+               recursiveClassDeclarationExpansion(setOf(classDeclaration)).toList()
             }
             else -> listOf(classDeclaration)
+        }
+    }
+
+    private fun childSubClassDeclarations(classDeclaration: KSClassDeclaration) : Set<KSClassDeclaration> {
+        // When the class declaration is a sealed class
+        val sealedChildDeclarations = if (classDeclaration.isSealed()) {
+            classDeclaration.getSealedSubclasses().toSet()
+        } else emptySet()
+
+        val childClassDeclarations = classDeclaration.primaryConstructor?.parameters?.map { param ->
+            param.type.resolve().declaration
+        }?.filterIsInstance<KSClassDeclaration>() ?: emptySet()
+
+        // When the class declaration contains a constructor param which is a date class
+        val childDataClassDeclarations = childClassDeclarations.filter { it.modifiers.contains(Modifier.DATA) }.toSet()
+        // When the class declaration contains a constructor param which is a sealed class
+        val childSealedClassDeclarations = childClassDeclarations.filter { it.modifiers.contains(Modifier.SEALED) }.toSet()
+
+        return sealedChildDeclarations + childDataClassDeclarations + childSealedClassDeclarations
+    }
+
+    private tailrec fun recursiveClassDeclarationExpansion(classDeclarations: Set<KSClassDeclaration>, originClassDeclarations: Set<KSClassDeclaration> = emptySet()) : Set<KSClassDeclaration> {
+        val subClassDeclarations = classDeclarations.flatMap { childSubClassDeclarations(it) }.toSet()
+
+        return if(subClassDeclarations.isEmpty()) {
+            classDeclarations + originClassDeclarations
+        } else {
+            recursiveClassDeclarationExpansion(subClassDeclarations, originClassDeclarations + classDeclarations)
         }
     }
 }

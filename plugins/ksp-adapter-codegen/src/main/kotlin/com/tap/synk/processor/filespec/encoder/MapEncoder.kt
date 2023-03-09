@@ -37,7 +37,8 @@ internal sealed interface EncoderParameter {
     data class SubEncoder(
         val parameterName: String,
         val customEncoderVariableName: String,
-        val typeName: TypeName
+        val genericTypeName: ParameterizedTypeName,
+        val concreteTypeName: TypeName
     ) : EncoderParameter
 
     fun variableName(): String = when (this) {
@@ -49,7 +50,7 @@ internal sealed interface EncoderParameter {
     fun variableType(): TypeName = when (this) {
         is CompositeSubEncoder -> genericType
         is ParameterizedCollectionEncoder -> genericMapEncoderTypeName
-        is SubEncoder -> typeName
+        is SubEncoder -> genericTypeName
     }
 }
 
@@ -95,9 +96,9 @@ internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
         val conversion: String = ""
     ) : EncoderFunctionCodeBlockStandardEncodable
 
-    data class ParameterizedCollection(
+    data class NestedClass(
         val encodedKey: String,
-        val collectionEncoderVariableName: String
+        val encoderVariableName: String
     ) : EncoderFunctionCodeBlockStandardEncodable
 }
 

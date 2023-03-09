@@ -62,6 +62,24 @@ private fun deriveParameters(): List<EncoderParameter> {
                 genericTypeName,
                 primitiveEncoder
             )
+        } else if (symbols.isDataClass(parameterType)) {
+
+            val paramName = param.name?.asString() ?: run {
+                logger.error("Failed to derive name from parameter", param)
+                return emptyList()
+            }
+
+            val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameterType.toClassName())
+            val concreteMapEncoderName = parameterType.toClassName().simpleName + "MapEncoder"
+            val concreteMapEncoderTypeName = ClassName(packageName, concreteMapEncoderName)
+
+            EncoderParameter.SubEncoder(
+                paramName,
+                paramName + "MapEncoder",
+                genericMapEncoderTypeName,
+                concreteMapEncoderTypeName
+            )
+
         } else null
     }
 
@@ -117,7 +135,9 @@ private fun deriveEncodeFunction(): EncoderFunction {
                 }
                 val collectionEncoderVariableName = parameterName + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
 
-                EncoderFunctionCodeBlockStandardEncodable.ParameterizedCollection(parameterName, collectionEncoderVariableName)
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, collectionEncoderVariableName)
+            } else if(symbols.isDataClass(parameterType)) {
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, parameterName + "MapEncoder")
             } else {
                 val conversion = if (!symbols.isString(parameterType)) {
                     ".toString()"
@@ -169,7 +189,9 @@ private fun deriveDecodeFunction(): EncoderFunction {
                 }
                 val collectionEncoderVariableName = parameterName + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
 
-                EncoderFunctionCodeBlockStandardEncodable.ParameterizedCollection(parameterName, collectionEncoderVariableName)
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, collectionEncoderVariableName)
+            }  else if(symbols.isDataClass(parameterType)) {
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, parameterName + "MapEncoder")
             } else {
                 val conversion = if (!symbols.isString(parameterType)) {
                     symbols.stringDecodeFunction(parameterType)

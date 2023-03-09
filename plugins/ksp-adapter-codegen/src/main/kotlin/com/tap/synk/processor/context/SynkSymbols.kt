@@ -48,7 +48,7 @@ internal class SynkSymbols(resolver: Resolver) {
     }
 
     fun isDataClass(type: KSType): Boolean {
-        return type is KSClassDeclaration && type.declaration.modifiers.any { modifier -> modifier == Modifier.DATA }
+        return type.declaration.modifiers.any { modifier -> modifier == Modifier.DATA }
     }
 
     fun isSealedClass(type: KSType): Boolean {

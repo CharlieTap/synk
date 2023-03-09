@@ -117,7 +117,7 @@ class FooEncoder : MapEncoder<Foo> {
     override fun decode(map: Map<String, String>) : Foo {
         return Foo(
             map["id"]!!,
-            map.keys.filter { it.contains("bar") }.sorted()
+            map.keys.filter { it.contains("bar") }
         )
     }
 }

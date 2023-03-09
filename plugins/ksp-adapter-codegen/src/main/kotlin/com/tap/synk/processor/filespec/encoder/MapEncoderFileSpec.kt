@@ -112,7 +112,11 @@ private fun encoderParameters(paramEncoders: List<EncoderParameter>): List<Param
                     defaultValue(encoderDefaultType(encoderData))
                 }.build()
             }
-            is EncoderParameter.SubEncoder -> null
+            is EncoderParameter.SubEncoder -> {
+                ParameterSpec.builder(encoderData.variableName(), encoderData.variableType()).apply {
+                    defaultValue(encoderDefaultType(encoderData))
+                }.build()
+            }
         }
     }
 }
@@ -141,6 +145,15 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.ParameterizedColle
 private fun encoderDefaultType(paramEncoder: EncoderParameter.CompositeSubEncoder): CodeBlock {
     return CodeBlock.builder().apply {
         add("%T()", paramEncoder.encoderType)
+    }.build()
+}
+
+/**
+ * FooBarMapEncoder()
+ */
+private fun encoderDefaultType(paramEncoder: EncoderParameter.SubEncoder): CodeBlock {
+    return CodeBlock.builder().apply {
+        add("%T()", paramEncoder.concreteTypeName)
     }.build()
 }
 
@@ -199,14 +212,14 @@ private fun encoderFunCodeBlock(type: EncoderFunction.Type, encodeFunCodeBlock: 
  */
 private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBlock.Standard): CodeBlock {
     val primitives = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.Primitive>()
-    val collections = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.ParameterizedCollection>()
+    val collections = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.NestedClass>()
 
     val statements = primitives.map { param ->
         "map[\"${param.encodedKey}\"] = crdt.${param.encodedKey}${param.conversion}"
     }
 
     val aggregate = collections.fold("return map") { acc, param ->
-        acc + " + " + param.collectionEncoderVariableName + ".encode(crdt." + param.encodedKey + ")"
+        acc + " + " + param.encoderVariableName + ".encode(crdt." + param.encodedKey + ")"
     }
 
     return CodeBlock.builder().apply {
@@ -259,7 +272,7 @@ private fun encodeFunDelegateCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
  * public override fun decode(map: Map<String, String>): Foo {
  *      return Foo(
  *          map["bar"]!!,
- *          bazListEncoder.decode(map.filter { it.contains("baz") }.sorted()),
+ *          bazListEncoder.decode(map.filter { it.contains("baz") }.toSortedMap()),
  *          map["bim"]!!.toBoolean()
  *      )
  * }
@@ -272,9 +285,9 @@ private fun decodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
                     add("map[%S]!!%L,\n", encodable.encodedKey, encodable.conversion)
                 }.build()
             }
-            is EncoderFunctionCodeBlockStandardEncodable.ParameterizedCollection -> {
+            is EncoderFunctionCodeBlockStandardEncodable.NestedClass -> {
                 CodeBlock.builder().apply {
-                    add("%L.decode(map.filter { it.key.contains(%S) }.sorted()),\n", encodable.encodedKey, encodable.encodedKey + "|")
+                    add("%L.decode(map.filter { it.key.contains(%S) }),\n", encodable.encoderVariableName, encodable.encodedKey + "|")
                 }.build()
             }
         }

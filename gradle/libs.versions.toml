@@ -11,7 +11,7 @@ version-name = "0.35"
 java-compiler-version = "19"
 java-bytecode-version = "11"
 
-android-build-tools-plugin = "7.4.0-beta02"
+android-build-tools-plugin = "7.4.2"
 versions-plugin = "0.45.0"
 
 androidx-core = "1.8.0-alpha05"
@@ -87,7 +87,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-atomic-fu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin"  }
-kotlin-symbol-processing = { id = "com.google.devtools.ksp", version.ref = "ksp"  }
+kotlin-symbol-processing = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter"  }
 sqldelight-new = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 sqldelight-legacy = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
