@@ -164,3 +164,40 @@ internal val FOO_BAR_SUB_CLASS_RESOLVER = SourceFile.kotlin(
         }
     """
 )
+
+internal val FOO_COLLECTION_DATA_CLASS = SourceFile.kotlin(
+    "Foo.kt",
+    """
+        package com.test.processor
+        data class Foo(
+            private val bar: List<Bar>,
+        )
+    """
+)
+
+internal val BAR_COLLECTION_DATA_CLASS = SourceFile.kotlin(
+    "Bar.kt",
+    """
+        package com.test.processor
+        data class Bar(
+            private val bim: String,
+        )
+    """
+)
+
+internal val FOO_COLLECTION_DATA_CLASS_RESOLVER = SourceFile.kotlin(
+    "FooResolver.kt",
+    """
+        package com.test.processor
+
+        import com.tap.synk.annotation.SynkAdapter
+        import com.tap.synk.resolver.IDResolver
+        
+        @SynkAdapter
+        class FooResolver : IDResolver<Foo> {
+            override fun resolveId(crdt: Foo): String {
+                return crdt.baz
+            }
+        }
+    """
+)

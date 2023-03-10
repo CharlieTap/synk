@@ -35,12 +35,16 @@ private fun deriveParameters(): List<EncoderParameter> {
             }
             // Inner type of collection, String or Int or Custom
             val genericType = parameterType.innerArguments.first().type?.resolve() ?: run {
-                logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
+                logger.error("Synk Adapter Plugin could not determine generic type of collection param", param)
                 return emptyList()
             }
-            // StringEncoder or IntEncoder
-            val primitiveEncoder = if (symbols.isPrimitive(genericType)) { poetTypes.primitiveEncoder(genericType) } else {
-                logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
+            // StringEncoder or BarEncoder
+            val concreteEncoderPair = if (symbols.isPrimitive(genericType)) {
+                poetTypes.primitiveEncoder(genericType) to false
+            } else if(symbols.isDataClass(genericType)) {
+                ClassName(packageName, genericType.declaration.simpleName.asString() + "MapEncoder") to true
+            } else {
+                logger.error("Synk Adapter Plugin can only encode collections of primitive types or data classes", param)
                 return emptyList()
             }
             // SetEncoder or ListEncoder
@@ -60,7 +64,8 @@ private fun deriveParameters(): List<EncoderParameter> {
                 collectionEncoderTypeName,
                 genericMapEncoderTypeName,
                 genericTypeName,
-                primitiveEncoder
+                concreteEncoderPair.first,
+                concreteEncoderPair.second
             )
         } else if (symbols.isDataClass(parameterType)) {
 

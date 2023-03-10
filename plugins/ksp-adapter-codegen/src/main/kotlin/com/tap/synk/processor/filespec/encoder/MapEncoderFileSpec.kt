@@ -135,7 +135,11 @@ private fun encoderProperties(paramEncoders: List<EncoderParameter>): List<Prope
  */
 private fun encoderDefaultType(paramEncoder: EncoderParameter.ParameterizedCollectionEncoder): CodeBlock {
     return CodeBlock.builder().apply {
-        add("%T(%S,·%T)", paramEncoder.collectionEncoderTypeName, paramEncoder.parameterName, paramEncoder.genericEncoderTypeName)
+        if(paramEncoder.instantiateNestedEncoder) {
+            add("%T(%S,·%T())", paramEncoder.collectionEncoderTypeName, paramEncoder.parameterName, paramEncoder.genericEncoderTypeName)
+        } else {
+            add("%T(%S,·%T)", paramEncoder.collectionEncoderTypeName, paramEncoder.parameterName, paramEncoder.genericEncoderTypeName)
+        }
     }.build()
 }
 

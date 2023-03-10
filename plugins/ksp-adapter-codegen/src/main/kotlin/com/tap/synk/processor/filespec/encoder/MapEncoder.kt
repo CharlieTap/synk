@@ -31,7 +31,8 @@ internal sealed interface EncoderParameter {
         val collectionEncoderTypeName: ParameterizedTypeName,
         val genericMapEncoderTypeName: ParameterizedTypeName,
         val genericTypeName: TypeName,
-        val genericEncoderTypeName: TypeName
+        val genericEncoderTypeName: TypeName,
+        val instantiateNestedEncoder: Boolean = false,
     ) : EncoderParameter
 
     data class SubEncoder(
