@@ -6,8 +6,12 @@ import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.Modifier
 import com.tap.synk.processor.context.SynkSymbols
 
-internal fun KSClassDeclaration.isSealed(): Boolean {
+internal fun KSClassDeclaration.isSealedClass(): Boolean {
     return modifiers.contains(Modifier.SEALED)
+}
+
+internal fun KSClassDeclaration.isDataClass(): Boolean {
+    return modifiers.contains(Modifier.DATA)
 }
 
 internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols) : Boolean {

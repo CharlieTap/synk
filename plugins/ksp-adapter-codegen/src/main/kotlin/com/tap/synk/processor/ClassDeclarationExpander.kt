@@ -3,10 +3,10 @@ package com.tap.synk.processor
 import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
-import com.google.devtools.ksp.symbol.Modifier
 import com.tap.synk.processor.context.SynkSymbols
 import com.tap.synk.processor.ext.containsNestedClasses
-import com.tap.synk.processor.ext.isSealed
+import com.tap.synk.processor.ext.isDataClass
+import com.tap.synk.processor.ext.isSealedClass
 
 internal class ClassDeclarationExpander(
     private val symbols: SynkSymbols
@@ -14,7 +14,7 @@ internal class ClassDeclarationExpander(
 
     fun expand(classDeclaration: KSClassDeclaration): List<KSClassDeclaration> {
         return when {
-            classDeclaration.isSealed() || classDeclaration.containsNestedClasses(symbols) -> {
+            classDeclaration.isSealedClass() || classDeclaration.containsNestedClasses(symbols) -> {
                 recursiveClassDeclarationExpansion(setOf(classDeclaration)).toList()
             }
             else -> listOf(classDeclaration)
@@ -23,7 +23,7 @@ internal class ClassDeclarationExpander(
 
     private fun childSubClassDeclarations(classDeclaration: KSClassDeclaration) : Set<KSClassDeclaration> {
         // When the class declaration is a sealed class
-        val sealedChildDeclarations = if (classDeclaration.isSealed()) {
+        val sealedChildDeclarations = if (classDeclaration.isSealedClass()) {
             classDeclaration.getSealedSubclasses().toSet()
         } else emptySet()
 
@@ -45,9 +45,9 @@ internal class ClassDeclarationExpander(
         // constructor param declarations and constructor param collection inner type declarations
         val candidateClassDeclarations = childClassDeclarations + childCollectionClassDeclarations
         // When the class declaration contains a constructor param which is a data class
-        val childDataClassDeclarations = candidateClassDeclarations.filter { it.modifiers.contains(Modifier.DATA) }.toSet()
+        val childDataClassDeclarations = candidateClassDeclarations.filter(KSClassDeclaration::isDataClass).toSet()
         // When the class declaration contains a constructor param which is a sealed class
-        val childSealedClassDeclarations = candidateClassDeclarations.filter { it.modifiers.contains(Modifier.SEALED) }.toSet()
+        val childSealedClassDeclarations = candidateClassDeclarations.filter(KSClassDeclaration::isSealedClass).toSet()
 
         return sealedChildDeclarations + childDataClassDeclarations + childSealedClassDeclarations
     }

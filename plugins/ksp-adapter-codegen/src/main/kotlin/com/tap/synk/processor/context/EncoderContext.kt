@@ -1,9 +1,13 @@
 package com.tap.synk.processor.context
 
+import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.KSValueParameter
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ksp.toClassName
+import com.squareup.kotlinpoet.ksp.toTypeName
 import com.tap.synk.processor.ext.asType
 
 internal data class EncoderContext(
@@ -22,5 +26,43 @@ internal data class EncoderContext(
 
     val isSealed by lazy { classDeclaration.modifiers.contains(Modifier.SEALED) }
     val sealedSubClasses by lazy { classDeclaration.getSealedSubclasses().toList() }
-    val parameters by lazy { classDeclaration.primaryConstructor?.parameters ?: emptyList() }
+    private val parameters by lazy { classDeclaration.primaryConstructor?.parameters ?: emptyList() }
+
+    val derivedParameters by lazy {
+        parameters.map { param ->
+
+            DerivedParameter(
+                param,
+                param.name?.asString() ?: "",
+                param.type.resolve(),
+            )
+        }
+    }
+
+    inner class DerivedParameter(
+        val parameter: KSValueParameter,
+        val name: String,
+        val type: KSType
+    ) {
+        val isInstanceOfCollection by lazy {
+            symbols.isCollection(type)
+        }
+
+        val isInstanceOfDataClass by lazy {
+            symbols.isDataClass(type)
+        }
+
+        val innerType by lazy {
+            type.innerArguments.first().type?.resolve() ?: run {
+                throw IllegalStateException("Inner type was not resolved for parameter $name")
+            }
+        }
+
+        val innerTypeName by lazy {
+            innerType.toTypeName()
+        }
+    }
 }
+
+
+

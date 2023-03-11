@@ -1,6 +1,6 @@
 package com.tap.synk.processor.filespec.encoder
 
-import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -22,81 +22,79 @@ internal fun mapEncoder(): MapEncoder {
 }
 
 context(EncoderContext)
+private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.ParameterizedCollectionEncoder? {
+    // Inner type of collection, String or Int or Custom
+    val genericType = parameter.innerType
+    // StringEncoder or BarEncoder
+    val concreteEncoderPair = if (symbols.isPrimitive(genericType)) {
+        poetTypes.primitiveEncoder(genericType) to false
+    } else if(symbols.isDataClass(genericType)) {
+        ClassName(packageName, genericType.declaration.simpleName.asString() + "MapEncoder") to true
+    } else {
+        logger.error("Synk Adapter Plugin can only encode collections of primitive types or data classes", parameter.parameter)
+        return null
+    }
+    // SetEncoder or ListEncoder
+    val collectionEncoderTypeName = poetTypes.collectionEncoder(parameter.type) ?: run {
+        logger.error("Synk Adapter Plugin can only encode collections of primitive types", parameter.parameter)
+        return null
+    }
+
+    val genericTypeName = parameter.innerTypeName
+    // MapEncoder<List<T>> or MapEncoder<Set<T>>
+    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameter.type.toClassName().parameterizedBy(genericTypeName))
+    val collectionEncoderVariableName = parameter.name + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
+
+    return EncoderParameter.ParameterizedCollectionEncoder(
+        parameter.name,
+        collectionEncoderVariableName,
+        collectionEncoderTypeName,
+        genericMapEncoderTypeName,
+        genericTypeName,
+        concreteEncoderPair.first,
+        concreteEncoderPair.second
+    )
+}
+
+context(EncoderContext)
+private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.SubEncoder {
+    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameter.type.toClassName())
+    val concreteMapEncoderName = parameter.type.toClassName().simpleName + "MapEncoder"
+    val concreteMapEncoderTypeName = ClassName(packageName, concreteMapEncoderName)
+
+    return EncoderParameter.SubEncoder(
+        parameter.name,
+        parameter.name + "MapEncoder",
+        genericMapEncoderTypeName,
+        concreteMapEncoderTypeName
+    )
+}
+
+context(EncoderContext)
+private fun deriveCompositeSubEncoderParameter(subClassDeclaration: KSClassDeclaration): EncoderParameter.CompositeSubEncoder {
+    val name = subClassDeclaration.simpleName.asString()
+    val encoderVariableName = "${subClassDeclaration.simpleName.asString()}Encoder".decapitalise()
+    val encoderType = name + "MapEncoder"
+    val concreteType = ClassName(packageName, encoderType)
+    val type = poetTypes.parameterizedMapEncoder(subClassDeclaration.asType().toTypeName())
+
+    return EncoderParameter.CompositeSubEncoder(encoderVariableName, type, concreteType)
+}
+
+context(EncoderContext)
 private fun deriveParameters(): List<EncoderParameter> {
-    val paramEncoders = parameters.mapNotNull { param ->
 
-        // List<String> or Any
-        val parameterType = param.type.resolve()
-
-        if (symbols.isCollection(parameterType)) {
-            val paramName = param.name?.asString() ?: run {
-                logger.error("Failed to derive name from parameter", param)
-                return emptyList()
-            }
-            // Inner type of collection, String or Int or Custom
-            val genericType = parameterType.innerArguments.first().type?.resolve() ?: run {
-                logger.error("Synk Adapter Plugin could not determine generic type of collection param", param)
-                return emptyList()
-            }
-            // StringEncoder or BarEncoder
-            val concreteEncoderPair = if (symbols.isPrimitive(genericType)) {
-                poetTypes.primitiveEncoder(genericType) to false
-            } else if(symbols.isDataClass(genericType)) {
-                ClassName(packageName, genericType.declaration.simpleName.asString() + "MapEncoder") to true
-            } else {
-                logger.error("Synk Adapter Plugin can only encode collections of primitive types or data classes", param)
-                return emptyList()
-            }
-            // SetEncoder or ListEncoder
-            val collectionEncoderTypeName = poetTypes.collectionEncoder(parameterType) ?: run {
-                logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
-                return emptyList()
-            }
-
-            val genericTypeName = genericType.toTypeName()
-            // MapEncoder<List<T>> or MapEncoder<Set<T>>
-            val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameterType.toClassName().parameterizedBy(genericTypeName))
-            val collectionEncoderVariableName = paramName + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
-
-            EncoderParameter.ParameterizedCollectionEncoder(
-                paramName,
-                collectionEncoderVariableName,
-                collectionEncoderTypeName,
-                genericMapEncoderTypeName,
-                genericTypeName,
-                concreteEncoderPair.first,
-                concreteEncoderPair.second
-            )
-        } else if (symbols.isDataClass(parameterType)) {
-
-            val paramName = param.name?.asString() ?: run {
-                logger.error("Failed to derive name from parameter", param)
-                return emptyList()
-            }
-
-            val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameterType.toClassName())
-            val concreteMapEncoderName = parameterType.toClassName().simpleName + "MapEncoder"
-            val concreteMapEncoderTypeName = ClassName(packageName, concreteMapEncoderName)
-
-            EncoderParameter.SubEncoder(
-                paramName,
-                paramName + "MapEncoder",
-                genericMapEncoderTypeName,
-                concreteMapEncoderTypeName
-            )
-
+    val paramEncoders = derivedParameters.mapNotNull { param ->
+        if (param.isInstanceOfCollection) {
+            deriveParameterizedCollectionParameter(param)
+        } else if (param.isInstanceOfDataClass) {
+            deriveSubEncoderParameter(param)
         } else null
     }
 
     val subClassEncoders = if (isSealed) {
         sealedSubClasses.map { subClassDeclaration ->
-            val name = subClassDeclaration.simpleName.asString()
-            val encoderVariableName = "${subClassDeclaration.simpleName.asString()}Encoder".decapitalise()
-            val encoderType = name + "MapEncoder"
-            val concreteType = ClassName(packageName, encoderType)
-            val type = poetTypes.parameterizedMapEncoder(subClassDeclaration.asType().toTypeName())
-
-            EncoderParameter.CompositeSubEncoder(encoderVariableName, type, concreteType)
+            deriveCompositeSubEncoderParameter(subClassDeclaration)
         }
     } else emptyList()
 
@@ -109,45 +107,54 @@ private fun deriveEncoderInterface(): EncoderInterface {
 }
 
 context(EncoderContext)
+private fun deriveDelegateEncoderFunctionCodeBlock(): EncoderFunctionCodeBlock {
+    val delegates = sealedSubClasses.map { declaration ->
+
+        val sealedClassName = declaration.simpleName.asString()
+        val sealedClassType = declaration.toClassName()
+        val sealedClassEncoderVariableName = "${sealedClassName}Encoder".decapitalise()
+        val enumName = declarationName + "MapEncoderType." + sealedClassName
+
+        EncoderFunctionCodeBlockDelegateEncoder(sealedClassType, sealedClassEncoderVariableName, enumName)
+    }
+
+    return EncoderFunctionCodeBlock.Delegate(delegates)
+}
+
+context(EncoderContext)
+private fun deriveStandardEncodablePrimitive(parameter: EncoderContext.DerivedParameter): EncoderFunctionCodeBlockStandardEncodable.Primitive {
+    val conversion = if (!symbols.isString(parameter.type)) {
+        ".toString()"
+    } else { "" }
+    return EncoderFunctionCodeBlockStandardEncodable.Primitive(parameter.name, conversion)
+}
+
+context(EncoderContext)
+private fun deriveStandardEncodableCollectionNestedClass(parameter: EncoderContext.DerivedParameter): EncoderFunctionCodeBlockStandardEncodable.NestedClass {
+    val collectionEncoderTypeName = poetTypes.collectionEncoder(parameter.type) ?: run {
+        logger.error("Synk Adapter Plugin can only encode collections of primitive types", parameter.parameter)
+        throw IllegalStateException()
+    }
+    // Inner type of collection, String or Int or Custom
+    val genericType = parameter.innerType
+    val collectionEncoderVariableName = parameter.name + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
+
+    return EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameter.name, collectionEncoderVariableName)
+}
+
+context(EncoderContext)
 private fun deriveEncodeFunction(): EncoderFunction {
     val codeBlock = if (isSealed) {
-        val delegates = sealedSubClasses.map { declaration ->
-
-            val sealedClassName = declaration.simpleName.asString()
-            val sealedClassType = declaration.toClassName()
-            val sealedClassEncoderVariableName = "${sealedClassName}Encoder".decapitalise()
-            val enumName = declarationName + "MapEncoderType." + sealedClassName
-
-            EncoderFunctionCodeBlockDelegateEncoder(sealedClassType, sealedClassEncoderVariableName, enumName)
-        }
-
-        EncoderFunctionCodeBlock.Delegate(delegates)
+        deriveDelegateEncoderFunctionCodeBlock()
     } else {
-        val encodables = parameters.map { param ->
+        val encodables = derivedParameters.map { param ->
 
-            val parameterName = param.name?.asString() ?: ""
-            val parameterType = param.type.resolve()
-
-            if (symbols.isCollection(parameterType)) {
-                val collectionEncoderTypeName = poetTypes.collectionEncoder(parameterType) ?: run {
-                    logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
-                    throw IllegalStateException()
-                }
-                // Inner type of collection, String or Int or Custom
-                val genericType = parameterType.innerArguments.first().type?.resolve() ?: run {
-                    logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
-                    throw IllegalStateException()
-                }
-                val collectionEncoderVariableName = parameterName + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
-
-                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, collectionEncoderVariableName)
-            } else if(symbols.isDataClass(parameterType)) {
-                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, parameterName + "MapEncoder")
+            if (param.isInstanceOfCollection) {
+                deriveStandardEncodableCollectionNestedClass(param)
+            } else if(param.isInstanceOfDataClass) {
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
             } else {
-                val conversion = if (!symbols.isString(parameterType)) {
-                    ".toString()"
-                } else { "" }
-                EncoderFunctionCodeBlockStandardEncodable.Primitive(parameterName, conversion)
+                deriveStandardEncodablePrimitive(param)
             }
         }
         EncoderFunctionCodeBlock.Standard(encodables)
@@ -165,43 +172,19 @@ private fun deriveEncodeFunction(): EncoderFunction {
 context(EncoderContext)
 private fun deriveDecodeFunction(): EncoderFunction {
     val codeBlock = if (isSealed) {
-        val delegates = sealedSubClasses.map { declaration ->
-
-            val sealedClassName = declaration.simpleName.asString()
-            val sealedClassType = declaration.toClassName()
-            val sealedClassEncoderVariableName = "${sealedClassName}Encoder".decapitalise()
-            val enumName = declarationName + "MapEncoderType." + sealedClassName
-
-            EncoderFunctionCodeBlockDelegateEncoder(sealedClassType, sealedClassEncoderVariableName, enumName)
-        }
-
-        EncoderFunctionCodeBlock.Delegate(delegates)
+       deriveDelegateEncoderFunctionCodeBlock()
     } else {
-        val encodables = parameters.map { param ->
+        val encodables = derivedParameters.map { param ->
 
-            val parameterName = param.name?.asString() ?: ""
-            val parameterType = param.type.resolve()
-
-            if (symbols.isCollection(parameterType)) {
-                val collectionEncoderTypeName = poetTypes.collectionEncoder(parameterType) ?: run {
-                    logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
-                    throw IllegalStateException()
-                }
-                // Inner type of collection, String or Int or Custom
-                val genericType = parameterType.innerArguments.first().type?.resolve() ?: run {
-                    logger.error("Synk Adapter Plugin can only encode collections of primitive types", param)
-                    throw IllegalStateException()
-                }
-                val collectionEncoderVariableName = parameterName + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
-
-                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, collectionEncoderVariableName)
-            }  else if(symbols.isDataClass(parameterType)) {
-                EncoderFunctionCodeBlockStandardEncodable.NestedClass(parameterName, parameterName + "MapEncoder")
+            if (param.isInstanceOfCollection) {
+               deriveStandardEncodableCollectionNestedClass(param)
+            }  else if(param.isInstanceOfDataClass) {
+                EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
             } else {
-                val conversion = if (!symbols.isString(parameterType)) {
-                    symbols.stringDecodeFunction(parameterType)
+                val conversion = if (!symbols.isString(param.type)) {
+                    symbols.stringDecodeFunction(param.type)
                 } else { "" }
-                EncoderFunctionCodeBlockStandardEncodable.Primitive(parameterName, conversion)
+                EncoderFunctionCodeBlockStandardEncodable.Primitive(param.name, conversion)
             }
         }
         EncoderFunctionCodeBlock.Standard(encodables, typeName)

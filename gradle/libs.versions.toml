@@ -11,7 +11,7 @@ version-name = "0.35"
 java-compiler-version = "19"
 java-bytecode-version = "11"
 
-android-build-tools-plugin = "7.4.2"
+android-build-tools-plugin = "7.4.0-beta02"
 versions-plugin = "0.45.0"
 
 androidx-core = "1.8.0-alpha05"
