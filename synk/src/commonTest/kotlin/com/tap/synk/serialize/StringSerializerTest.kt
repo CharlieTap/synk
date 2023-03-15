@@ -3,59 +3,80 @@ package com.tap.synk.serialize
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+// TODO Could compress the the numeric primitives
 class StringSerializerTest {
+
 
     @Test
     fun `can serialize and deserialize a Bool`() {
-        val bool = true
-        val serialized = serialize(bool)
-        val deserialized = deserialize(Boolean::class, serialized)
+        val serializer = BooleanStringSerializer
+        val input = false
 
-        assertEquals(bool, deserialized)
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("false", serialized)
+        assertEquals(input, deserialized)
     }
 
     @Test
     fun `can serialize and deserialize a Byte`() {
-        val byte: Byte = 30
-        val serialized = serialize(byte)
-        val deserialized = deserialize(Byte::class, serialized)
+        val serializer = ByteStringSerializer
+        val input : Byte = 30
 
-        assertEquals(byte, deserialized)
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("30", serialized)
+        assertEquals(input, deserialized)
+    }
+
+    @Test
+    fun `can serialize and deserialize an Int`() {
+        val serializer = IntStringSerializer
+        val input = 4
+
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("4", serialized)
+        assertEquals(input, deserialized)
     }
 
     @Test
     fun `can serialize and deserialize a Short`() {
-        val short: Short = 4
-        val serialized = serialize(short)
-        val deserialized = deserialize(Short::class, serialized)
+        val serializer = ShortStringSerializer
+        val input : Short = 4
 
-        assertEquals(short, deserialized)
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("4", serialized)
+        assertEquals(input, deserialized)
     }
 
     @Test
     fun `can serialize and deserialize a Double`() {
-        val double = 22.8e5
-        val serialized = serialize(double)
-        val deserialized = deserialize(Double::class, serialized)
+        val serializer = DoubleStringSerializer
+        val input = 22.8e5
 
-        assertEquals(double, deserialized)
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("2280000.0", serialized)
+        assertEquals(input, deserialized)
     }
 
     @Test
     fun `can serialize and deserialize a Char`() {
-        val char = 'c'
-        val serialized = serialize(char)
-        val deserialized = deserialize(Char::class, serialized)
+        val serializer = CharStringSerializer
+        val input = 'c'
 
-        assertEquals(char, deserialized)
+        val serialized = serializer.serialize(input)
+        val deserialized = serializer.deserialize(serialized)
+
+        assertEquals("c", serialized)
+        assertEquals(input, deserialized)
     }
 
-    @Test
-    fun `can serialize and deserialize a null`() {
-        val nully = null
-        val serialized = serialize(nully)
-        val deserialized = deserialize(String::class, serialized)
-
-        assertEquals(nully, deserialized)
-    }
 }

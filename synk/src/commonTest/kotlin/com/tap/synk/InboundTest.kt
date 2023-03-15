@@ -2,16 +2,16 @@ package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
+import com.tap.synk.ext.decodeToHashmap
+import com.tap.synk.ext.encodeToString
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
-import com.tap.synk.serialize.decodeToHashmap
-import com.tap.synk.serialize.encodeToString
 import com.tap.synk.utils.setupSynk
 import com.tap.synk.utils.storageConfig
-import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.datetime.Clock
 
 class InboundTest {
 

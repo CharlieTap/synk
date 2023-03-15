@@ -2,9 +2,10 @@ package com.tap.delight.metastore
 
 import com.tap.delight.metastore.cache.MemCache
 import com.tap.delight.metastore.hash.Hasher
+import com.tap.synk.ext.decodeToHashmap
+import com.tap.synk.ext.encodeToString
 import com.tap.synk.meta.store.MetaStore
-import com.tap.synk.serialize.decodeToHashmap
-import com.tap.synk.serialize.encodeToString
+
 
 class DelightfulMetastore internal constructor(
     private val database: DelightfulDatabase,

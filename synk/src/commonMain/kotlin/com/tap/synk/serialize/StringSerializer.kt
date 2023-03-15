@@ -1,37 +1,32 @@
 package com.tap.synk.serialize
 
-import java.lang.Exception
-import kotlin.reflect.KClass
+import com.tap.synk.ext.decodeToHashmap
+import com.tap.synk.ext.encodeToString
 
-internal fun serialize(value: Any?): String {
-    return when (value) {
-        is Boolean -> if (value) "1" else "0"
-        is Byte -> value.toString()
-        is Short -> value.toString()
-        is Int -> value.toString()
-        is Long -> value.toString()
-        is Float -> value.toString()
-        is Double -> value.toString()
-        is Char -> value.toString()
-        is String -> value
-        null -> "null"
-        else -> throw Exception("Failed to serialize CRDT for type " + value::class.qualifiedName + ", please provide a synk adapter")
+interface StringSerializer<T> : Serializer<T, String> {
+    companion object {
+        fun <T> factory(serialize: (T) -> String, deserialize: (String) -> T): StringSerializer<T> {
+            return object : StringSerializer<T> {
+                override fun serialize(serializable: T): String {
+                    return serialize(serializable) 
+                }
+
+                override fun deserialize(serialized: String): T {
+                    return deserialize(serialized)
+                }
+
+            }
+        }
     }
 }
 
-internal fun <T : Any> deserialize(clazz: KClass<T>, serialized: String): T? {
-    if (serialized == "null") return null
+object BooleanStringSerializer: StringSerializer<Boolean> by StringSerializer.factory(Boolean::toString, String::toBoolean)
+object ByteStringSerializer : StringSerializer<Byte> by StringSerializer.factory(Byte::toString, String::toByte)
+object IntStringSerializer : StringSerializer<Int> by StringSerializer.factory(Int::toString, String::toInt)
+object ShortStringSerializer : StringSerializer<Short> by StringSerializer.factory(Short::toString, String::toShort)
+object FloatStringSerializer : StringSerializer<Float> by StringSerializer.factory(Float::toString, String::toFloat)
+object DoubleStringSerializer : StringSerializer<Double> by StringSerializer.factory(Double::toString, String::toDouble)
+object LongStringSerializer : StringSerializer<Long> by StringSerializer.factory(Long::toString, String::toLong)
+object CharStringSerializer : StringSerializer<Char> by StringSerializer.factory(Char::toString, { str -> str.toCharArray().first() })
 
-    return when (clazz) {
-        Boolean::class -> serialized == "1"
-        Byte::class -> serialized.toByte()
-        Short::class -> serialized.toShort()
-        Int::class -> serialized.toInt()
-        Long::class -> serialized.toLong()
-        Float::class -> serialized.toFloat()
-        Double::class -> serialized.toDouble()
-        Char::class -> serialized.toCharArray().first()
-        String::class -> serialized
-        else -> throw Exception("Failed to deserialize CRDT for type " + clazz.qualifiedName + ", please provide a synk adapter")
-    } as T
-}
+object StringMapStringSerializer : StringSerializer<Map<String, String>> by StringSerializer.factory(Map<String, String>::encodeToString, String::decodeToHashmap)

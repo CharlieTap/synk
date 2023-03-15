@@ -8,9 +8,9 @@ import com.tap.synk.meta.meta
 import com.tap.synk.relay.Message
 import com.tap.synk.utils.setupSynk
 import com.tap.synk.utils.storageConfig
-import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.datetime.Clock
 
 class CompressTest {
 
@@ -28,7 +28,7 @@ class CompressTest {
         val id1 = "123344553343"
         val id2 = "199887853343"
 
-        val range = 1..10
+        val range = 0..9
         val crdtList1 = (range).map { crdt(id1) }
         val crdtList2 = (range).map { crdt(id2) }
 

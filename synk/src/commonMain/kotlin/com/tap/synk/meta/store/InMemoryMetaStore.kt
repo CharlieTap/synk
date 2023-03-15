@@ -1,8 +1,8 @@
 package com.tap.synk.meta.store
 
 import com.tap.synk.CMap
-import com.tap.synk.serialize.decodeToHashmap
-import com.tap.synk.serialize.encodeToString
+import com.tap.synk.ext.decodeToHashmap
+import com.tap.synk.ext.encodeToString
 
 internal class InMemoryMetaStore(
     private val store: CMap<String, String> = CMap()
