@@ -238,6 +238,7 @@ internal val FOO_VALUE_CLASS = SourceFile.kotlin(
         package com.test.processor
         data class Foo(
             private val bar: Bar,
+            private val barNull: Bar?,
         )
     """
 )

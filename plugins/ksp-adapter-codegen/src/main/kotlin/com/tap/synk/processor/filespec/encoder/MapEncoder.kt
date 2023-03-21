@@ -113,7 +113,8 @@ internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
 
     data class Serializable(
         val encodedKey: String,
-        val serializerVariableName: String
+        val serializerVariableName: String,
+        val nullable: Boolean
     ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class NestedClass(

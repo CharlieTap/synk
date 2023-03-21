@@ -500,16 +500,19 @@ internal class SynkAdapterProcessorTest {
 
             public class FooMapEncoder(
                 private val barSerializer: StringSerializer<Bar> = BarSerializer,
+                private val barNullSerializer: StringSerializer<Bar> = BarSerializer,
             ) : MapEncoder<Foo> {
                 public override fun encode(crdt: Foo): Map<String, String> {
                     val map = mutableMapOf<String, String>()
                     map["bar"] = barSerializer.serialize(crdt.bar)
+                    crdt.barNull?.let { map["barNull"] = barNullSerializer.serialize(crdt.barNull) }
                     return map
                 }
 
                 public override fun decode(map: Map<String, String>): Foo {
                     val crdt = Foo(
                         barSerializer.deserialize(map["bar"]!!),
+                        map["barNull"]?.let { barNullSerializer.deserialize(map["barNull"]!!) },
                     )
                     return crdt
                 }

@@ -73,8 +73,8 @@ private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter
 context(EncoderContext)
 private fun deriveSerializerParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.Serializer {
 
-    val genericType = parameter.type
-    val parameterizedStringSerializer = poetTypes.parameterizedStringSerializer(parameter.type.toTypeName())
+    val genericType = parameter.type.makeNotNullable()
+    val parameterizedStringSerializer = poetTypes.parameterizedStringSerializer(genericType.toTypeName())
 
     val (concreteType, requiresInstantiation) = serializerMap[genericType]!!
 
@@ -173,7 +173,7 @@ private fun deriveEncodeFunction(): EncoderFunction {
             } else if(param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
             } else if(param.hasProvidedSerializer) {
-                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer")
+                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
             } else {
                 deriveStandardEncodablePrimitive(param)
             }
@@ -202,7 +202,7 @@ private fun deriveDecodeFunction(): EncoderFunction {
             }  else if(param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
             }  else if(param.hasProvidedSerializer) {
-                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer")
+                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
             } else {
                 val conversion = if (!symbols.isString(param.type)) {
                     symbols.stringDecodeFunction(param.type)

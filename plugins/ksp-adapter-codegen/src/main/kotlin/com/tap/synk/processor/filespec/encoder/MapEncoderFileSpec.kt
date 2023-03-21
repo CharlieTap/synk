@@ -243,7 +243,18 @@ private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
     }
 
     val serializableStatements = serializables.map { param ->
-         "map[\"${param.encodedKey}\"] = ${param.serializerVariableName}.serialize(crdt.${param.encodedKey})"
+        val target = "crdt.${param.encodedKey}"
+        val statement = CodeBlock.builder().apply {
+            add("map[%S] = %L.serialize(%L)", param.encodedKey, param.serializerVariableName, target)
+        }.build()
+
+        if(param.nullable) {
+            nullableAction(CodeBlock.of(target), statement, true)
+        } else {
+            CodeBlock.builder().apply {
+                addStatement("%L", statement)
+            }.build()
+        }
     }
 
     val aggregate = collections.fold("return map") { acc, param ->
@@ -256,7 +267,7 @@ private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
             addStatement(statement)
         }
         serializableStatements.forEach { statement ->
-            addStatement(statement)
+            add(statement)
         }
         addStatement(aggregate)
     }.build()
@@ -322,8 +333,23 @@ private fun decodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
                 }.build()
             }
             is EncoderFunctionCodeBlockStandardEncodable.Serializable -> {
+
+                val target = CodeBlock.builder().apply {
+                    add("map[%S]", encodable.encodedKey)
+                }.build()
+
+                val action = CodeBlock.builder().apply {
+                    add("%L.deserialize(%L!!)", encodable.serializerVariableName, target)
+                }.build()
+
+                val wrappedAction = if(encodable.nullable) {
+                    nullableAction(target, action)
+                } else {
+                    action
+                }
+
                 CodeBlock.builder().apply {
-                    add("%L.deserialize(map[%S]!!),\n", encodable.serializerVariableName, encodable.encodedKey)
+                    add("%L,\n", wrappedAction)
                 }.build()
             }
         }
@@ -365,5 +391,28 @@ private fun decodeFunDelegateCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
         addStatement("else -> throw Exception(\"Unknown encoded sealed class type\")")
         endControlFlow()
         addStatement("return crdt")
+    }.build()
+}
+
+private fun nullableAction(target: CodeBlock, action: CodeBlock, statement: Boolean = false) : CodeBlock {
+    return CodeBlock.builder().apply {
+        if(statement) {
+            addStatement("%L?.let { %L }", target, action)
+        } else {
+            add("%L?.let { %L }", target, action)
+        }
+    }.build()
+}
+
+/**
+ * target?.let { action(target) }
+ */
+private fun nullableAction(target: String, action: String, statement: Boolean = false) : CodeBlock {
+    return CodeBlock.builder().apply {
+        if(statement) {
+            addStatement("%L?.let { %L }", target, action)
+        } else {
+            add("%L?.let { %L }", target, action)
+        }
     }.build()
 }

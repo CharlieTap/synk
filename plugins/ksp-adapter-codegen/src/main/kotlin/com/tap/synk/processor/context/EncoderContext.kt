@@ -67,7 +67,7 @@ internal data class EncoderContext(
         }
 
         val hasProvidedSerializer by lazy {
-            serializerMap.contains(type)
+            serializerMap.contains(type.makeNotNullable())
         }
 
         val innerType by lazy {
