@@ -22,7 +22,7 @@ internal class SynkAdapterProcessorTest {
         val compilationResult = compile(FOO_NOT_IMPLEMENTED_ID_RESOLVER)
 
         assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-        val expectedMessage = "@SynkAdapter annotated class com.test.processor.FooResolver must implement IDResolver interface"
+        val expectedMessage = "@SynkAdapter annotated class must implement IDResolver interface"
         assertTrue("Expected message containing text $expectedMessage but got: ${compilationResult.messages}") {
             compilationResult.messages.contains(expectedMessage)
         }
