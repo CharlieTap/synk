@@ -1,18 +1,21 @@
 package com.tap.synk.processor.context
 
 import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSValueParameter
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.tap.synk.processor.ext.asType
 
 internal data class EncoderContext(
     private val processorContext: ProcessorContext,
-    private val classDeclaration: KSClassDeclaration
+    private val classDeclaration: KSClassDeclaration,
+    private val serializers: List<KSClassDeclaration>
 ) : ProcessorContext by processorContext {
 
     val type by lazy { classDeclaration.asType() }
@@ -30,12 +33,23 @@ internal data class EncoderContext(
 
     val derivedParameters by lazy {
         parameters.map { param ->
-
             DerivedParameter(
                 param,
                 param.name?.asString() ?: "",
                 param.type.resolve(),
             )
+        }
+    }
+
+    val serializerMap by lazy {
+        serializers.fold(mutableMapOf<KSType, Pair<TypeName, Boolean>>()) { acc, serializerDeclaration ->
+
+            val requiresInstantiation = serializerDeclaration.classKind != ClassKind.OBJECT
+
+            acc.apply {
+                val genericType = serializerDeclaration.superTypes.first().resolve().innerArguments.first().type!!.resolve()
+                put(genericType, serializerDeclaration.asType().toClassName() to requiresInstantiation)
+            }
         }
     }
 
@@ -50,6 +64,10 @@ internal data class EncoderContext(
 
         val isInstanceOfDataClass by lazy {
             symbols.isDataClass(type)
+        }
+
+        val hasProvidedSerializer by lazy {
+            serializerMap.contains(type)
         }
 
         val innerType by lazy {

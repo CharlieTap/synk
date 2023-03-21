@@ -9,6 +9,7 @@ import com.tap.synk.adapter.SynkAdapter
 import com.tap.synk.encode.MapEncoder
 import com.tap.synk.processor.ext.asType
 import com.tap.synk.resolver.IDResolver
+import com.tap.synk.serialize.StringSerializer
 
 internal class SynkSymbols(resolver: Resolver) {
 
@@ -34,6 +35,19 @@ internal class SynkSymbols(resolver: Resolver) {
     val idResolver by lazy { resolver.getClassDeclarationByName<IDResolver<*>>()!!.asType() }
     val mapEncoder by lazy { resolver.getClassDeclarationByName<MapEncoder<*>>()!!.asType() }
     val synkAdapter by lazy { resolver.getClassDeclarationByName<SynkAdapter<*>>()!!.asType() }
+    val stringSerializer by lazy { resolver.getClassDeclarationByName<StringSerializer<*>>()!!.asType() }
+
+    val availableSerializers by lazy {
+//        val annotated = resolver.getSymbolsWithAnnotation(SynkSerializer::class.qualifiedName!!)
+//        annotated.fold(mutableMapOf()) { acc, annotated ->
+//
+//            //verify extends string serializer
+//            annotated.
+//
+//            // map T to concrete type knowing concrete = StringSerializer<T>
+//
+//        }
+    }
 
     fun isString(type: KSType): Boolean {
         return type == stringType

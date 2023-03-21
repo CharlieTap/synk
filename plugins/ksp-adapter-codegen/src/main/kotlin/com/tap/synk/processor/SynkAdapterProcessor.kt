@@ -9,9 +9,12 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.tap.synk.annotation.SynkAdapter
+import com.tap.synk.annotation.SynkSerializer
 import com.tap.synk.processor.context.ProcessorContext
 import com.tap.synk.processor.context.SynkPoetTypes
 import com.tap.synk.processor.context.SynkSymbols
+import com.tap.synk.processor.validator.SynkAdapterValidator
+import com.tap.synk.processor.validator.SynkSerializerValidator
 import com.tap.synk.processor.visitor.IDResolverVisitor
 import com.tap.synk.processor.visitor.MapEncoderVisitor
 
@@ -24,20 +27,22 @@ internal class SynkAdapterProcessor(
         val synkSymbols = SynkSymbols(resolver)
         val synkPoetTypes = SynkPoetTypes(synkSymbols)
 
-        val processorContext = object : ProcessorContext {
-            override val codeGenerator: CodeGenerator = kspCodeGenerator
-            override val logger: KSPLogger = kspLogger
-            override val poetTypes: SynkPoetTypes = synkPoetTypes
-            override val symbols: SynkSymbols = synkSymbols
-        }
+        val adapterSymbols = resolver.getSymbolsWithAnnotation(SynkAdapter::class.qualifiedName!!)
+        val serializerSymbols = resolver.getSymbolsWithAnnotation(SynkSerializer::class.qualifiedName!!)
 
-        val annotatedSymbols = resolver.getSymbolsWithAnnotation(SynkAdapter::class.qualifiedName!!)
-        val symbolValidator = SynkSymbolValidator(synkSymbols, kspLogger)
+        val synkAdapterValidator = SynkAdapterValidator(synkSymbols, kspLogger)
+        val synkSerializerValidator = SynkSerializerValidator(synkSymbols, kspLogger)
         val declarationExpander = ClassDeclarationExpander(synkSymbols)
 
-        val idResolverDeclarations = annotatedSymbols
+        val idResolverDeclarations = adapterSymbols
             .filterIsInstance<KSClassDeclaration>()
-            .filter { symbolValidator.validate(it) }
+            .filter { synkAdapterValidator.validate(it) }
+            .toList()
+
+        val stringSerializerDeclarations = serializerSymbols
+            .filterIsInstance<KSClassDeclaration>()
+            .filter { synkSerializerValidator.validate(it) }
+            .toList()
 
         val mapEncoderDeclarations = idResolverDeclarations.mapNotNull { classDeclaration ->
             val idResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
@@ -45,8 +50,15 @@ internal class SynkAdapterProcessor(
             (crdtType?.declaration as? KSClassDeclaration)
         }.flatMap{ declarationExpander.expand(it) }.toSet()
 
+        val processorContext = object : ProcessorContext {
+            override val codeGenerator: CodeGenerator = kspCodeGenerator
+            override val logger: KSPLogger = kspLogger
+            override val poetTypes: SynkPoetTypes = synkPoetTypes
+            override val symbols: SynkSymbols = synkSymbols
+        }
+
         idResolverDeclarations.forEach { it.accept(IDResolverVisitor(processorContext), Unit) }
-        mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(processorContext), Unit) }
+        mapEncoderDeclarations.forEach { it.accept(MapEncoderVisitor(processorContext, stringSerializerDeclarations), Unit) }
 
         return emptyList()
     }

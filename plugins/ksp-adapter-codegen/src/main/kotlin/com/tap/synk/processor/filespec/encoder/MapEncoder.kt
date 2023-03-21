@@ -19,12 +19,14 @@ internal value class EncoderInterface(val typeName: ParameterizedTypeName)
 
 internal sealed interface EncoderParameter {
 
+    // Sealed Class Encoder
     data class CompositeSubEncoder(
         val name: String,
         val genericType: ParameterizedTypeName,
         val encoderType: TypeName
     ) : EncoderParameter
 
+    // Collections Encoder
     data class ParameterizedCollectionEncoder(
         val parameterName: String,
         val collectionEncoderVariableName: String,
@@ -35,6 +37,7 @@ internal sealed interface EncoderParameter {
         val instantiateNestedEncoder: Boolean = false,
     ) : EncoderParameter
 
+    // Data class Encoder
     data class SubEncoder(
         val parameterName: String,
         val customEncoderVariableName: String,
@@ -42,16 +45,27 @@ internal sealed interface EncoderParameter {
         val concreteTypeName: TypeName
     ) : EncoderParameter
 
+    // Value class and Custom Class serializer
+    data class Serializer(
+        val parameterName: String,
+        val serializerVariableName: String,
+        val genericTypeName: ParameterizedTypeName,
+        val concreteTypeName: TypeName,
+        val instantiateSerializer: Boolean = false,
+    ) : EncoderParameter
+
     fun variableName(): String = when (this) {
         is CompositeSubEncoder -> name
         is ParameterizedCollectionEncoder -> collectionEncoderVariableName
         is SubEncoder -> customEncoderVariableName
+        is Serializer -> serializerVariableName
     }
 
     fun variableType(): TypeName = when (this) {
         is CompositeSubEncoder -> genericType
         is ParameterizedCollectionEncoder -> genericMapEncoderTypeName
         is SubEncoder -> genericTypeName
+        is Serializer -> genericTypeName
     }
 }
 
@@ -95,6 +109,11 @@ internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
     data class Primitive(
         val encodedKey: String,
         val conversion: String = ""
+    ) : EncoderFunctionCodeBlockStandardEncodable
+
+    data class Serializable(
+        val encodedKey: String,
+        val serializerVariableName: String
     ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class NestedClass(

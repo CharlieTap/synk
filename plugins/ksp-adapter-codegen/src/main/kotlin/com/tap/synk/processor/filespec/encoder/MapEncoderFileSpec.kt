@@ -117,6 +117,11 @@ private fun encoderParameters(paramEncoders: List<EncoderParameter>): List<Param
                     defaultValue(encoderDefaultType(encoderData))
                 }.build()
             }
+            is EncoderParameter.Serializer -> {
+                ParameterSpec.builder(encoderData.variableName(), encoderData.variableType()).apply {
+                    defaultValue(encoderDefaultType(encoderData))
+                }.build()
+            }
         }
     }
 }
@@ -160,6 +165,20 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.SubEncoder): CodeB
         add("%T()", paramEncoder.concreteTypeName)
     }.build()
 }
+
+/**
+ * FooBarMapEncoder()
+ */
+private fun encoderDefaultType(paramEncoder: EncoderParameter.Serializer): CodeBlock {
+    return CodeBlock.builder().apply {
+        if(paramEncoder.instantiateSerializer) {
+            add("%T()", paramEncoder.concreteTypeName)
+        } else {
+            add("%T", paramEncoder.concreteTypeName)
+        }
+    }.build()
+}
+
 
 private fun constructor(parameterSpecs: List<ParameterSpec>): FunSpec? {
     return if (parameterSpecs.isNotEmpty()) {
@@ -216,10 +235,15 @@ private fun encoderFunCodeBlock(type: EncoderFunction.Type, encodeFunCodeBlock: 
  */
 private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBlock.Standard): CodeBlock {
     val primitives = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.Primitive>()
+    val serializables = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.Serializable>()
     val collections = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.NestedClass>()
 
-    val statements = primitives.map { param ->
+    val primitiveStatements = primitives.map { param ->
         "map[\"${param.encodedKey}\"] = crdt.${param.encodedKey}${param.conversion}"
+    }
+
+    val serializableStatements = serializables.map { param ->
+         "map[\"${param.encodedKey}\"] = ${param.serializerVariableName}.serialize(crdt.${param.encodedKey})"
     }
 
     val aggregate = collections.fold("return map") { acc, param ->
@@ -228,7 +252,10 @@ private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
 
     return CodeBlock.builder().apply {
         addStatement("val map = mutableMapOf<String, String>()")
-        statements.forEach { statement ->
+        primitiveStatements.forEach { statement ->
+            addStatement(statement)
+        }
+        serializableStatements.forEach { statement ->
             addStatement(statement)
         }
         addStatement(aggregate)
@@ -276,7 +303,7 @@ private fun encodeFunDelegateCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
  * public override fun decode(map: Map<String, String>): Foo {
  *      return Foo(
  *          map["bar"]!!,
- *          bazListEncoder.decode(map.filter { it.contains("baz") }.toSortedMap()),
+ *          bazListEncoder.decode(map.filter { it.contains("baz") }),
  *          map["bim"]!!.toBoolean()
  *      )
  * }
@@ -292,6 +319,11 @@ private fun decodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
             is EncoderFunctionCodeBlockStandardEncodable.NestedClass -> {
                 CodeBlock.builder().apply {
                     add("%L.decode(map.filter { it.key.contains(%S) }),\n", encodable.encoderVariableName, encodable.encodedKey + "|")
+                }.build()
+            }
+            is EncoderFunctionCodeBlockStandardEncodable.Serializable -> {
+                CodeBlock.builder().apply {
+                    add("%L.deserialize(map[%S]!!),\n", encodable.serializerVariableName, encodable.encodedKey)
                 }.build()
             }
         }

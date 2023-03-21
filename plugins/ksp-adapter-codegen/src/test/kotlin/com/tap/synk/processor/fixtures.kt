@@ -201,3 +201,61 @@ internal val FOO_COLLECTION_DATA_CLASS_RESOLVER = SourceFile.kotlin(
         }
     """
 )
+
+internal val BAR_VALUE_CLASS = SourceFile.kotlin(
+    "Bar.kt",
+    """
+        package com.test.processor
+        @JvmInline
+        value class Bar(val test: Int)
+    """
+)
+
+internal val BAR_VALUE_CLASS_SERIALIZER = SourceFile.kotlin(
+    "BarSerializer.kt",
+    """
+        package com.test.processor
+        
+        import com.tap.synk.annotation.SynkSerializer
+        import com.tap.synk.serialize.StringSerializer
+
+        @SynkSerializer
+        object BarSerializer: StringSerializer<Bar> {
+            override fun serialize(serializable: Bar): String {
+                return serializable.test.toString() 
+            }
+
+            override fun deserialize(serialized: String): Bar {
+                return Bar(serialized.toInt())
+            }
+        }
+    """
+)
+
+internal val FOO_VALUE_CLASS = SourceFile.kotlin(
+    "Foo.kt",
+    """
+        package com.test.processor
+        data class Foo(
+            private val bar: Bar,
+        )
+    """
+)
+
+internal val FOO_RESOLVER = SourceFile.kotlin(
+    "FooResolver.kt",
+    """
+        package com.test.processor
+
+        import com.tap.synk.annotation.SynkAdapter
+        import com.tap.synk.resolver.IDResolver
+        
+        @SynkAdapter
+        class FooResolver : IDResolver<Foo> {
+            override fun resolveId(crdt: Foo): String {
+                return crdt.baz
+            }
+        }
+    """
+)
+

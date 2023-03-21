@@ -10,12 +10,13 @@ import com.tap.synk.processor.filespec.encoder.mapEncoder
 import com.tap.synk.processor.filespec.encoder.mapEncoderFileSpec
 
 internal class MapEncoderVisitor(
-    private val processorContext: ProcessorContext
+    private val processorContext: ProcessorContext,
+    private val serializers: List<KSClassDeclaration>
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
 
-        val encoderContext = EncoderContext(processorContext, classDeclaration)
+        val encoderContext = EncoderContext(processorContext, classDeclaration, serializers)
         val containingFile = classDeclaration.containingFile ?: run {
             processorContext.logger.error("Failed to find annotation containing file")
             return

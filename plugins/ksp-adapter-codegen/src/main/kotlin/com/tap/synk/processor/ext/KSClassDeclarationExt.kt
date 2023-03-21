@@ -14,6 +14,10 @@ internal fun KSClassDeclaration.isDataClass(): Boolean {
     return modifiers.contains(Modifier.DATA)
 }
 
+internal fun KSClassDeclaration.isValueClass(): Boolean {
+    return modifiers.contains(Modifier.VALUE)
+}
+
 internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols) : Boolean {
     return primaryConstructor?.parameters?.any { param ->
         val parameterType = param.type.resolve()

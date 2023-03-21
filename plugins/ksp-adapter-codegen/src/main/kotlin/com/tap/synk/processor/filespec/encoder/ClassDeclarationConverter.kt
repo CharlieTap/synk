@@ -71,6 +71,23 @@ private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter
 }
 
 context(EncoderContext)
+private fun deriveSerializerParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.Serializer {
+
+    val genericType = parameter.type
+    val parameterizedStringSerializer = poetTypes.parameterizedStringSerializer(parameter.type.toTypeName())
+
+    val (concreteType, requiresInstantiation) = serializerMap[genericType]!!
+
+    return EncoderParameter.Serializer(
+        parameter.name,
+        parameter.name + "Serializer",
+        parameterizedStringSerializer,
+        concreteType,
+        requiresInstantiation
+    )
+}
+
+context(EncoderContext)
 private fun deriveCompositeSubEncoderParameter(subClassDeclaration: KSClassDeclaration): EncoderParameter.CompositeSubEncoder {
     val name = subClassDeclaration.simpleName.asString()
     val encoderVariableName = "${subClassDeclaration.simpleName.asString()}Encoder".decapitalise()
@@ -89,6 +106,8 @@ private fun deriveParameters(): List<EncoderParameter> {
             deriveParameterizedCollectionParameter(param)
         } else if (param.isInstanceOfDataClass) {
             deriveSubEncoderParameter(param)
+        } else if (param.hasProvidedSerializer) {
+            deriveSerializerParameter(param)
         } else null
     }
 
@@ -153,6 +172,8 @@ private fun deriveEncodeFunction(): EncoderFunction {
                 deriveStandardEncodableCollectionNestedClass(param)
             } else if(param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
+            } else if(param.hasProvidedSerializer) {
+                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer")
             } else {
                 deriveStandardEncodablePrimitive(param)
             }
@@ -180,6 +201,8 @@ private fun deriveDecodeFunction(): EncoderFunction {
                deriveStandardEncodableCollectionNestedClass(param)
             }  else if(param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
+            }  else if(param.hasProvidedSerializer) {
+                EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer")
             } else {
                 val conversion = if (!symbols.isString(param.type)) {
                     symbols.stringDecodeFunction(param.type)
