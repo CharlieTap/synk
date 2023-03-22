@@ -61,12 +61,20 @@ internal class SynkPoetTypes(
         symbols.stringSerializer.toClassName()
     }
 
+    val enumSerializer by lazy {
+        symbols.enumStringSerializer.toClassName()
+    }
+
     fun parameterizedMapEncoder(genericTypeName: TypeName): ParameterizedTypeName {
         return mapEncoderTypeName.parameterizedBy(genericTypeName)
     }
 
     fun parameterizedStringSerializer(genericTypeName: TypeName) : ParameterizedTypeName {
         return stringSerializer.parameterizedBy(genericTypeName)
+    }
+
+    fun parameterizedEnumStringSerializer(genericTypeName: TypeName) : ParameterizedTypeName {
+        return enumSerializer.parameterizedBy(genericTypeName)
     }
 
     fun primitiveEncoder(type: KSType): TypeName {

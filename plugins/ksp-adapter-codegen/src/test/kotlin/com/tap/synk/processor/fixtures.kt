@@ -232,6 +232,17 @@ internal val BAR_VALUE_CLASS_SERIALIZER = SourceFile.kotlin(
     """
 )
 
+internal val BAZ_ENUM_CLASS = SourceFile.kotlin(
+    "Baz.kt",
+    """
+        package com.test.processor
+        enum class Baz {
+            BIM,
+            BAM,
+        }
+    """
+)
+
 internal val FOO_VALUE_CLASS = SourceFile.kotlin(
     "Foo.kt",
     """
@@ -239,6 +250,7 @@ internal val FOO_VALUE_CLASS = SourceFile.kotlin(
         data class Foo(
             private val bar: Bar,
             private val barNull: Bar?,
+            private val baz: Baz,
         )
     """
 )

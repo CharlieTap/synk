@@ -117,7 +117,12 @@ private fun encoderParameters(paramEncoders: List<EncoderParameter>): List<Param
                     defaultValue(encoderDefaultType(encoderData))
                 }.build()
             }
-            is EncoderParameter.Serializer -> {
+            is EncoderParameter.CustomSerializer -> {
+                ParameterSpec.builder(encoderData.variableName(), encoderData.variableType()).apply {
+                    defaultValue(encoderDefaultType(encoderData))
+                }.build()
+            }
+            is EncoderParameter.EnumSerializer -> {
                 ParameterSpec.builder(encoderData.variableName(), encoderData.variableType()).apply {
                     defaultValue(encoderDefaultType(encoderData))
                 }.build()
@@ -169,7 +174,7 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.SubEncoder): CodeB
 /**
  * FooBarMapEncoder()
  */
-private fun encoderDefaultType(paramEncoder: EncoderParameter.Serializer): CodeBlock {
+private fun encoderDefaultType(paramEncoder: EncoderParameter.CustomSerializer): CodeBlock {
     return CodeBlock.builder().apply {
         if(paramEncoder.instantiateSerializer) {
             add("%T()", paramEncoder.concreteTypeName)
@@ -179,6 +184,14 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.Serializer): CodeB
     }.build()
 }
 
+/**
+ * EnumStringSerializer<Enum>()
+ */
+private fun encoderDefaultType(paramEncoder: EncoderParameter.EnumSerializer): CodeBlock {
+    return CodeBlock.builder().apply {
+        add("EnumStringSerializer<%T>()", paramEncoder.enumType)
+    }.build()
+}
 
 private fun constructor(parameterSpecs: List<ParameterSpec>): FunSpec? {
     return if (parameterSpecs.isNotEmpty()) {

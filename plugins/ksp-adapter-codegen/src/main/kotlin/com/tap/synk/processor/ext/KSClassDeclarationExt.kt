@@ -1,6 +1,7 @@
 package com.tap.synk.processor.ext
 
 import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.Modifier
@@ -16,6 +17,14 @@ internal fun KSClassDeclaration.isDataClass(): Boolean {
 
 internal fun KSClassDeclaration.isValueClass(): Boolean {
     return modifiers.contains(Modifier.VALUE)
+}
+
+internal fun KSClassDeclaration.isObject(): Boolean {
+    return classKind == ClassKind.OBJECT
+}
+
+internal fun KSClassDeclaration.isEnum(): Boolean {
+    return classKind == ClassKind.ENUM_CLASS
 }
 
 internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols) : Boolean {

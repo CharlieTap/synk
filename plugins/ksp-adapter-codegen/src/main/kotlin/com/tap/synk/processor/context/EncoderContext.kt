@@ -1,7 +1,6 @@
 package com.tap.synk.processor.context
 
 import com.google.devtools.ksp.innerArguments
-import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.google.devtools.ksp.symbol.KSValueParameter
@@ -11,6 +10,8 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.tap.synk.processor.ext.asType
+import com.tap.synk.processor.ext.isEnum
+import com.tap.synk.processor.ext.isObject
 
 internal data class EncoderContext(
     private val processorContext: ProcessorContext,
@@ -44,7 +45,7 @@ internal data class EncoderContext(
     val serializerMap by lazy {
         serializers.fold(mutableMapOf<KSType, Pair<TypeName, Boolean>>()) { acc, serializerDeclaration ->
 
-            val requiresInstantiation = serializerDeclaration.classKind != ClassKind.OBJECT
+            val requiresInstantiation = serializerDeclaration.isObject().not()
 
             acc.apply {
                 val genericType = serializerDeclaration.superTypes.first().resolve().innerArguments.first().type!!.resolve()
@@ -68,6 +69,10 @@ internal data class EncoderContext(
 
         val hasProvidedSerializer by lazy {
             serializerMap.contains(type.makeNotNullable())
+        }
+
+        val isEnum by lazy {
+            (type.declaration as KSClassDeclaration).isEnum()
         }
 
         val innerType by lazy {

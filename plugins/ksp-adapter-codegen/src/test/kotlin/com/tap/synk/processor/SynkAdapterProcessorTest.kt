@@ -468,7 +468,7 @@ internal class SynkAdapterProcessorTest {
     @Test
     fun `compilation succeeds when target has a serializable property`() {
 
-        val compilationResult = compile(BAR_VALUE_CLASS, BAR_VALUE_CLASS_SERIALIZER, FOO_VALUE_CLASS, FOO_RESOLVER)
+        val compilationResult = compile(BAR_VALUE_CLASS, BAR_VALUE_CLASS_SERIALIZER, BAZ_ENUM_CLASS, FOO_VALUE_CLASS, FOO_RESOLVER)
         assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
 
         assertSourceEquals(
@@ -494,6 +494,7 @@ internal class SynkAdapterProcessorTest {
             package com.test.processor
 
             import com.tap.synk.encode.MapEncoder
+            import com.tap.synk.serialize.EnumStringSerializer
             import com.tap.synk.serialize.StringSerializer
             import kotlin.String
             import kotlin.collections.Map
@@ -501,11 +502,13 @@ internal class SynkAdapterProcessorTest {
             public class FooMapEncoder(
                 private val barSerializer: StringSerializer<Bar> = BarSerializer,
                 private val barNullSerializer: StringSerializer<Bar> = BarSerializer,
+                private val bazSerializer: EnumStringSerializer<Baz> = EnumStringSerializer<Baz>(),
             ) : MapEncoder<Foo> {
                 public override fun encode(crdt: Foo): Map<String, String> {
                     val map = mutableMapOf<String, String>()
                     map["bar"] = barSerializer.serialize(crdt.bar)
                     crdt.barNull?.let { map["barNull"] = barNullSerializer.serialize(crdt.barNull) }
+                    map["baz"] = bazSerializer.serialize(crdt.baz)
                     return map
                 }
 
@@ -513,6 +516,7 @@ internal class SynkAdapterProcessorTest {
                     val crdt = Foo(
                         barSerializer.deserialize(map["bar"]!!),
                         map["barNull"]?.let { barNullSerializer.deserialize(map["barNull"]!!) },
+                        bazSerializer.deserialize(map["baz"]!!),
                     )
                     return crdt
                 }
