@@ -158,7 +158,7 @@ private fun deriveStandardEncodablePrimitive(parameter: EncoderContext.DerivedPa
     val conversion = if (!symbols.isString(parameter.type)) {
         ".toString()"
     } else { "" }
-    return EncoderFunctionCodeBlockStandardEncodable.Primitive(parameter.name, conversion)
+    return EncoderFunctionCodeBlockStandardEncodable.Primitive(parameter.name, conversion, parameter.type.isMarkedNullable)
 }
 
 context(EncoderContext)
@@ -220,10 +220,13 @@ private fun deriveDecodeFunction(): EncoderFunction {
             } else if (param.isEnum) {
                 EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
             } else {
-                val conversion = if (!symbols.isString(param.type)) {
-                    symbols.stringDecodeFunction(param.type)
+                val typeNotNull = param.type.makeNotNullable()
+                val conversion = if (!symbols.isString(typeNotNull)) {
+                    if(param.type.isMarkedNullable) {
+                        "?" + symbols.stringDecodeFunction(typeNotNull)
+                    } else symbols.stringDecodeFunction(typeNotNull)
                 } else { "" }
-                EncoderFunctionCodeBlockStandardEncodable.Primitive(param.name, conversion)
+                EncoderFunctionCodeBlockStandardEncodable.Primitive(param.name, conversion, param.type.isMarkedNullable)
             }
         }
         EncoderFunctionCodeBlock.Standard(encodables, typeName)

@@ -9,7 +9,7 @@ internal val FOO_DATA_CLASS = SourceFile.kotlin(
         
         data class Foo(
             private val bar: String,
-            private val baz: Int,
+            private val baz: Int?,
             private val bim: Boolean,
         )
     """

@@ -3,13 +3,13 @@ package com.tap.synk.processor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 internal class SynkAdapterProcessorTest {
 
@@ -63,7 +63,7 @@ internal class SynkAdapterProcessorTest {
                     public override fun encode(crdt: Foo): Map<String, String> {
                         val map = mutableMapOf<String, String>()
                         map["bar"] = crdt.bar
-                        map["baz"] = crdt.baz.toString()
+                        crdt.baz?.let { value -> map["baz"] = value.toString()  }
                         map["bim"] = crdt.bim.toString()
                         return map
                     }
@@ -71,7 +71,7 @@ internal class SynkAdapterProcessorTest {
                     public override fun decode(map: Map<String, String>): Foo {
                         val crdt = Foo(
                             map["bar"]!!,
-                            map["baz"]!!.toInt(),
+                            map["baz"]?.toInt(),
                             map["bim"]!!.toBoolean(),
                         )
                         return crdt

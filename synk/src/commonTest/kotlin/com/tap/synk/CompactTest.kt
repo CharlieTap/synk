@@ -8,11 +8,11 @@ import com.tap.synk.meta.meta
 import com.tap.synk.relay.Message
 import com.tap.synk.utils.setupSynk
 import com.tap.synk.utils.storageConfig
-import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.datetime.Clock
 
-class CompressTest {
+class CompactTest {
 
     @Test
     fun `can compress a list of messages to their latest states`() {
@@ -67,7 +67,7 @@ class CompressTest {
             }
         }
 
-        val result = synk.compress(messages1 + messages2)
+        val result = synk.compact(messages1 + messages2)
 
         assertEquals(2, result.size)
         assertEquals(message1Latest, result[0])

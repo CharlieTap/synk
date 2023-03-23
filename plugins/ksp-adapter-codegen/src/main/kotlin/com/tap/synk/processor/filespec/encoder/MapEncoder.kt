@@ -117,7 +117,8 @@ internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
 
     data class Primitive(
         val encodedKey: String,
-        val conversion: String = ""
+        val conversion: String = "",
+        val nullable: Boolean,
     ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class Serializable(

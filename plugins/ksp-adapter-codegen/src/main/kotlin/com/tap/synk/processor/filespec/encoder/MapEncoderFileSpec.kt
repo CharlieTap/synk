@@ -252,7 +252,11 @@ private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
     val collections = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.NestedClass>()
 
     val primitiveStatements = primitives.map { param ->
-        "map[\"${param.encodedKey}\"] = crdt.${param.encodedKey}${param.conversion}"
+        if(param.nullable) {
+            "crdt.${param.encodedKey}?.let { value -> map[\"${param.encodedKey}\"] = value${param.conversion}  }"
+        } else {
+            "map[\"${param.encodedKey}\"] = crdt.${param.encodedKey}${param.conversion}"
+        }
     }
 
     val serializableStatements = serializables.map { param ->
@@ -337,7 +341,11 @@ private fun decodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
         when (encodable) {
             is EncoderFunctionCodeBlockStandardEncodable.Primitive -> {
                 CodeBlock.builder().apply {
-                    add("map[%S]!!%L,\n", encodable.encodedKey, encodable.conversion)
+                    if(encodable.nullable) {
+                        add("map[%S]%L,\n", encodable.encodedKey, encodable.conversion)
+                    } else {
+                        add("map[%S]!!%L,\n", encodable.encodedKey, encodable.conversion)
+                    }
                 }.build()
             }
             is EncoderFunctionCodeBlockStandardEncodable.NestedClass -> {
