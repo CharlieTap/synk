@@ -21,7 +21,7 @@ internal class ClassDeclarationExpander(
         }
     }
 
-    private fun childSubClassDeclarations(classDeclaration: KSClassDeclaration) : Set<KSClassDeclaration> {
+    private fun childSubClassDeclarations(classDeclaration: KSClassDeclaration): Set<KSClassDeclaration> {
         // When the class declaration is a sealed class
         val sealedChildDeclarations = if (classDeclaration.isSealedClass()) {
             classDeclaration.getSealedSubclasses().toSet()
@@ -33,8 +33,8 @@ internal class ClassDeclarationExpander(
 
         val childClassDeclarations = childClassTypes.map(KSType::declaration).filterIsInstance<KSClassDeclaration>()
 
-        val childCollectionClassDeclarations = childClassTypes.fold(mutableSetOf<KSClassDeclaration>()){ acc, type ->
-            if(symbols.isCollection(type)) {
+        val childCollectionClassDeclarations = childClassTypes.fold(mutableSetOf<KSClassDeclaration>()) { acc, type ->
+            if (symbols.isCollection(type)) {
                 val innerTypeDeclaration = type.innerArguments.first().type?.resolve()?.declaration as? KSClassDeclaration
                 innerTypeDeclaration?.let {
                     acc.add(innerTypeDeclaration)
@@ -52,10 +52,10 @@ internal class ClassDeclarationExpander(
         return sealedChildDeclarations + childDataClassDeclarations + childSealedClassDeclarations
     }
 
-    private tailrec fun recursiveClassDeclarationExpansion(classDeclarations: Set<KSClassDeclaration>, originClassDeclarations: Set<KSClassDeclaration> = emptySet()) : Set<KSClassDeclaration> {
+    private tailrec fun recursiveClassDeclarationExpansion(classDeclarations: Set<KSClassDeclaration>, originClassDeclarations: Set<KSClassDeclaration> = emptySet()): Set<KSClassDeclaration> {
         val subClassDeclarations = classDeclarations.flatMap { childSubClassDeclarations(it) }.toSet()
 
-        return if(subClassDeclarations.isEmpty()) {
+        return if (subClassDeclarations.isEmpty()) {
             classDeclarations + originClassDeclarations
         } else {
             recursiveClassDeclarationExpansion(subClassDeclarations, originClassDeclarations + classDeclarations)

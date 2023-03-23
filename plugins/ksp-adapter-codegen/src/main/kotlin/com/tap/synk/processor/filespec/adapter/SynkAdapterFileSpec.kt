@@ -39,7 +39,7 @@ internal fun synkAdapterFileSpec(
                 )
             }
             synkAdapter.interfaces.forEach { adapterInterface ->
-                when(adapterInterface) {
+                when (adapterInterface) {
                     is Delegated -> {
                         addSuperinterface(adapterInterface.typeName, adapterInterface.delegate)
                     }

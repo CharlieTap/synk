@@ -11,7 +11,7 @@ import com.tap.synk.processor.validator.AnnotatedValidator.Invariant.factory
 internal class SynkAdapterValidator(
     private val synkSymbols: SynkSymbols,
     private val logger: KSPLogger
-): AnnotatedValidator {
+) : AnnotatedValidator {
     companion object Invariant {
         internal fun mustHaveQualifiedName(classDeclaration: KSClassDeclaration): Boolean {
             return classDeclaration.qualifiedName?.let { true } ?: false

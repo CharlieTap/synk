@@ -6,7 +6,6 @@ import com.tap.synk.ext.decodeToHashmap
 import com.tap.synk.ext.encodeToString
 import com.tap.synk.meta.store.MetaStore
 
-
 class DelightfulMetastore internal constructor(
     private val database: DelightfulDatabase,
     private val namespace: String,

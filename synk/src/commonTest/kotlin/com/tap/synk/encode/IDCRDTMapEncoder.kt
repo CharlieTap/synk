@@ -17,7 +17,7 @@ internal class IDCRDTMapEncoder : MapEncoder<IDCRDT> {
             map["id"]!!,
             map["name"]!!,
             map["last_name"]!!,
-            map["phone"]!!.toInt(),
+            map["phone"]!!.toInt()
         )
     }
 }

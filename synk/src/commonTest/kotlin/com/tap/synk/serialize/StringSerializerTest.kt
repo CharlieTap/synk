@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 // TODO Could compress the the numeric primitives
 class StringSerializerTest {
 
-
     @Test
     fun `can serialize and deserialize a Bool`() {
         val serializer = BooleanStringSerializer
@@ -22,7 +21,7 @@ class StringSerializerTest {
     @Test
     fun `can serialize and deserialize a Byte`() {
         val serializer = ByteStringSerializer
-        val input : Byte = 30
+        val input: Byte = 30
 
         val serialized = serializer.serialize(input)
         val deserialized = serializer.deserialize(serialized)
@@ -46,7 +45,7 @@ class StringSerializerTest {
     @Test
     fun `can serialize and deserialize a Short`() {
         val serializer = ShortStringSerializer
-        val input : Short = 4
+        val input: Short = 4
 
         val serialized = serializer.serialize(input)
         val deserialized = serializer.deserialize(serialized)
@@ -78,5 +77,4 @@ class StringSerializerTest {
         assertEquals("c", serialized)
         assertEquals(input, deserialized)
     }
-
 }

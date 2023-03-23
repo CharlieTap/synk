@@ -271,4 +271,3 @@ internal val FOO_RESOLVER = SourceFile.kotlin(
         }
     """
 )
-

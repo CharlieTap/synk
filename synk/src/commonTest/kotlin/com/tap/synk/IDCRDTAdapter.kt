@@ -13,7 +13,7 @@ internal class IDCRDTAdapter : SynkAdapter<IDCRDT> {
             put("id", crdt.id)
             put("name", crdt.name)
             put("last_name", crdt.last_name)
-            put("phone", crdt.phone.toString())
+            crdt.phone?.let { phone -> put("phone", phone.toString()) }
         }
     }
 
@@ -22,7 +22,7 @@ internal class IDCRDTAdapter : SynkAdapter<IDCRDT> {
             map["id"]!!,
             map["name"]!!,
             map["last_name"]!!,
-            map["phone"]!!.toInt()
+            map["phone"]?.toInt()
         )
     }
 }

@@ -14,7 +14,6 @@ internal class IDResolverVisitor(
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-
         val adapterContext = AdapterContext(processorContext, classDeclaration)
         val containingFile = classDeclaration.containingFile ?: run {
             processorContext.logger.error("Failed to find annotation containing file")

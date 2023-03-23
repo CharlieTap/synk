@@ -39,7 +39,6 @@ internal class SynkSymbols(resolver: Resolver) {
     val stringSerializer by lazy { resolver.getClassDeclarationByName<StringSerializer<*>>()!!.asType() }
     val enumStringSerializer by lazy { resolver.getClassDeclarationByName<EnumStringSerializer<*>>()!!.asType() }
 
-
     fun isString(type: KSType): Boolean {
         return type == stringType
     }

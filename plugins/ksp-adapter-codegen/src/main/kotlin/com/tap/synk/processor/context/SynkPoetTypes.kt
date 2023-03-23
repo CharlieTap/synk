@@ -69,11 +69,11 @@ internal class SynkPoetTypes(
         return mapEncoderTypeName.parameterizedBy(genericTypeName)
     }
 
-    fun parameterizedStringSerializer(genericTypeName: TypeName) : ParameterizedTypeName {
+    fun parameterizedStringSerializer(genericTypeName: TypeName): ParameterizedTypeName {
         return stringSerializer.parameterizedBy(genericTypeName)
     }
 
-    fun parameterizedEnumStringSerializer(genericTypeName: TypeName) : ParameterizedTypeName {
+    fun parameterizedEnumStringSerializer(genericTypeName: TypeName): ParameterizedTypeName {
         return enumSerializer.parameterizedBy(genericTypeName)
     }
 

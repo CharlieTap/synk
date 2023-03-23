@@ -28,7 +28,7 @@ private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.Der
     // StringEncoder or BarEncoder
     val concreteEncoderPair = if (symbols.isPrimitive(genericType)) {
         poetTypes.primitiveEncoder(genericType) to false
-    } else if(symbols.isDataClass(genericType)) {
+    } else if (symbols.isDataClass(genericType)) {
         ClassName(packageName, genericType.declaration.simpleName.asString() + "MapEncoder") to true
     } else {
         logger.error("Synk Adapter Plugin can only encode collections of primitive types or data classes", parameter.parameter)
@@ -72,7 +72,6 @@ private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter
 
 context(EncoderContext)
 private fun deriveSerializerParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.CustomSerializer {
-
     val genericType = parameter.type.makeNotNullable()
     val parameterizedStringSerializer = poetTypes.parameterizedStringSerializer(genericType.toTypeName())
 
@@ -89,7 +88,6 @@ private fun deriveSerializerParameter(parameter: EncoderContext.DerivedParameter
 
 context(EncoderContext)
 private fun deriveEnumSerializerParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.EnumSerializer {
-
     val genericType = parameter.type
     val parameterizedEnumSerializer = poetTypes.parameterizedEnumStringSerializer(genericType.toTypeName())
 
@@ -114,7 +112,6 @@ private fun deriveCompositeSubEncoderParameter(subClassDeclaration: KSClassDecla
 
 context(EncoderContext)
 private fun deriveParameters(): List<EncoderParameter> {
-
     val paramEncoders = derivedParameters.mapNotNull { param ->
         if (param.isInstanceOfCollection) {
             deriveParameterizedCollectionParameter(param)
@@ -122,7 +119,7 @@ private fun deriveParameters(): List<EncoderParameter> {
             deriveSubEncoderParameter(param)
         } else if (param.hasProvidedSerializer) {
             deriveSerializerParameter(param)
-        } else if(param.isEnum) {
+        } else if (param.isEnum) {
             deriveEnumSerializerParameter(param)
         } else null
     }
@@ -186,11 +183,11 @@ private fun deriveEncodeFunction(): EncoderFunction {
 
             if (param.isInstanceOfCollection) {
                 deriveStandardEncodableCollectionNestedClass(param)
-            } else if(param.isInstanceOfDataClass) {
+            } else if (param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
-            } else if(param.hasProvidedSerializer) {
+            } else if (param.hasProvidedSerializer) {
                 EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
-            } else if(param.isEnum) {
+            } else if (param.isEnum) {
                 EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
             } else {
                 deriveStandardEncodablePrimitive(param)
@@ -211,16 +208,16 @@ private fun deriveEncodeFunction(): EncoderFunction {
 context(EncoderContext)
 private fun deriveDecodeFunction(): EncoderFunction {
     val codeBlock = if (isSealed) {
-       deriveDelegateEncoderFunctionCodeBlock()
+        deriveDelegateEncoderFunctionCodeBlock()
     } else {
         val encodables = derivedParameters.map { param ->
             if (param.isInstanceOfCollection) {
-               deriveStandardEncodableCollectionNestedClass(param)
-            }  else if(param.isInstanceOfDataClass) {
+                deriveStandardEncodableCollectionNestedClass(param)
+            } else if (param.isInstanceOfDataClass) {
                 EncoderFunctionCodeBlockStandardEncodable.NestedClass(param.name, param.name + "MapEncoder")
-            }  else if(param.hasProvidedSerializer) {
+            } else if (param.hasProvidedSerializer) {
                 EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
-            } else if(param.isEnum) {
+            } else if (param.isEnum) {
                 EncoderFunctionCodeBlockStandardEncodable.Serializable(param.name, param.name + "Serializer", param.type.isMarkedNullable)
             } else {
                 val conversion = if (!symbols.isString(param.type)) {

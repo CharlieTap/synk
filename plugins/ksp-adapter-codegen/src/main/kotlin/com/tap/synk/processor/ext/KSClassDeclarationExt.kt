@@ -27,7 +27,7 @@ internal fun KSClassDeclaration.isEnum(): Boolean {
     return classKind == ClassKind.ENUM_CLASS
 }
 
-internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols) : Boolean {
+internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols): Boolean {
     return primaryConstructor?.parameters?.any { param ->
         val parameterType = param.type.resolve()
         val parameterDeclaration = parameterType.declaration as? KSDeclaration ?: return@any false
@@ -35,7 +35,7 @@ internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols) : Bo
         val includesDirectNestedClasses = parameterDeclaration.modifiers.any { it == Modifier.DATA || it == Modifier.SEALED }
         if (includesDirectNestedClasses) return@any true
 
-        if(symbols.isCollection(parameterType)) {
+        if (symbols.isCollection(parameterType)) {
             parameterType.innerArguments.first().type?.resolve()?.declaration?.modifiers?.any { it == Modifier.DATA || it == Modifier.SEALED } ?: false
         } else false
     } ?: false

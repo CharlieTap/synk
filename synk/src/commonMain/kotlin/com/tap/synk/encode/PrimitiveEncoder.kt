@@ -11,7 +11,7 @@ import com.tap.synk.serialize.LongStringSerializer
 import com.tap.synk.serialize.ShortStringSerializer
 import com.tap.synk.serialize.StringSerializer
 
-class PrimitiveEncoder<T: Any>(
+class PrimitiveEncoder<T : Any>(
     private val serializer: StringSerializer<T>
 ) : MapEncoder<T> {
     override fun encode(crdt: T): Map<String, String> {

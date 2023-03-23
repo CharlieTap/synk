@@ -10,8 +10,8 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 
 internal data class AdapterContext(
     private val processorContext: ProcessorContext,
-    private val classDeclaration: KSClassDeclaration,
-): ProcessorContext by processorContext {
+    private val classDeclaration: KSClassDeclaration
+) : ProcessorContext by processorContext {
 
     companion object {
         const val VARIABLE_NAME_ID_RESOLVER = "idResolver"
@@ -31,16 +31,19 @@ internal data class AdapterContext(
 
     // FooIDResolver
     val idResolverClassName by lazy { classDeclaration.toClassName() }
+
     // FooMapEncoder
     val mapEncoderClassName by lazy { ClassName(classDeclaration.packageName.asString(), crdtClassName + "MapEncoder") }
+
     // FooSynkAdapter
     val synkAdapterClassName by lazy { ClassName(classDeclaration.packageName.asString(), crdtClassName + "SynkAdapter") }
 
-   // IDResolver<Foo>
+    // IDResolver<Foo>
     val customIdResolverTypeName by lazy { poetTypes.idResolverTypeName.parameterizedBy(crdtTypeName) }
+
     // MapEncoder<Foo>
     val customMapEncoderTypeName by lazy { poetTypes.mapEncoderTypeName.parameterizedBy(crdtTypeName) }
+
     // SynkAdapter<Foo>
     val customSynkAdapterTypeName by lazy { poetTypes.synkAdapterTypeName.parameterizedBy(crdtTypeName) }
-
 }

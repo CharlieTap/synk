@@ -22,10 +22,9 @@ interface AnnotatedValidator {
         }
     }
 
-    fun invariants() : Set<(KSClassDeclaration) -> Boolean>
+    fun invariants(): Set<(KSClassDeclaration) -> Boolean>
 
     fun validate(declaration: KSClassDeclaration) = invariants().fold(true) { acc, invariant ->
         invariant(declaration) && acc
     }
-
 }

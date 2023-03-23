@@ -48,7 +48,7 @@ internal class SynkAdapterProcessor(
             val idResolverType = classDeclaration.getAllSuperTypes().first { it.declaration == synkSymbols.idResolver.declaration }
             val crdtType = idResolverType.innerArguments.first().type?.resolve()
             (crdtType?.declaration as? KSClassDeclaration)
-        }.flatMap{ declarationExpander.expand(it) }.toSet()
+        }.flatMap { declarationExpander.expand(it) }.toSet()
 
         val processorContext = object : ProcessorContext {
             override val codeGenerator: CodeGenerator = kspCodeGenerator
@@ -62,5 +62,4 @@ internal class SynkAdapterProcessor(
 
         return emptyList()
     }
-
 }

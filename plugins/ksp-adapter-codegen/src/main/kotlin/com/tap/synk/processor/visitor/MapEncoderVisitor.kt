@@ -15,7 +15,6 @@ internal class MapEncoderVisitor(
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-
         val encoderContext = EncoderContext(processorContext, classDeclaration, serializers)
         val containingFile = classDeclaration.containingFile ?: run {
             processorContext.logger.error("Failed to find annotation containing file")

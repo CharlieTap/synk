@@ -37,7 +37,7 @@ internal data class EncoderContext(
             DerivedParameter(
                 param,
                 param.name?.asString() ?: "",
-                param.type.resolve(),
+                param.type.resolve()
             )
         }
     }
@@ -86,6 +86,3 @@ internal data class EncoderContext(
         }
     }
 }
-
-
-

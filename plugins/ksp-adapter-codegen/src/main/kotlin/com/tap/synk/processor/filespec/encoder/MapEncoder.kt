@@ -34,7 +34,7 @@ internal sealed interface EncoderParameter {
         val genericMapEncoderTypeName: ParameterizedTypeName,
         val genericTypeName: TypeName,
         val genericEncoderTypeName: TypeName,
-        val instantiateNestedEncoder: Boolean = false,
+        val instantiateNestedEncoder: Boolean = false
     ) : EncoderParameter
 
     // Data class Encoder
@@ -51,7 +51,7 @@ internal sealed interface EncoderParameter {
         val serializerVariableName: String,
         val genericTypeName: ParameterizedTypeName,
         val concreteTypeName: TypeName,
-        val instantiateSerializer: Boolean = false,
+        val instantiateSerializer: Boolean = false
     ) : EncoderParameter
 
     data class EnumSerializer(
@@ -59,7 +59,7 @@ internal sealed interface EncoderParameter {
         val serializerVariableName: String,
         val enumType: TypeName,
         val parameterizedStringSerializer: ParameterizedTypeName
-    ): EncoderParameter
+    ) : EncoderParameter
 
     fun variableName(): String = when (this) {
         is CompositeSubEncoder -> name

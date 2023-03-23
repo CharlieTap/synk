@@ -3,13 +3,13 @@ package com.tap.synk.processor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.symbolProcessorProviders
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class SynkAdapterProcessorTest {
 
@@ -467,7 +467,6 @@ internal class SynkAdapterProcessorTest {
 
     @Test
     fun `compilation succeeds when target has a serializable property`() {
-
         val compilationResult = compile(BAR_VALUE_CLASS, BAR_VALUE_CLASS_SERIALIZER, BAZ_ENUM_CLASS, FOO_VALUE_CLASS, FOO_RESOLVER)
         assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
 
@@ -524,7 +523,6 @@ internal class SynkAdapterProcessorTest {
             """.trimIndent(),
             compilationResult.sourceFor("FooMapEncoder.kt")
         )
-
     }
 
     private fun compile(vararg source: SourceFile) = KotlinCompilation().apply {

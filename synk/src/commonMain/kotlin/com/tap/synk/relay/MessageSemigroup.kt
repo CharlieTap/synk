@@ -18,11 +18,13 @@ internal class MessageSemigroup<T : Any>(
                 aEncoded[entry.key]
             } else {
                 bEncoded[entry.key]
-            } ?: throw Exception("Failed to find key: " + entry.key + " in encoded hashmap, please check that you have implemented the encode function correctly")
-
-            acc.apply {
-                put(entry.key, value)
             }
+
+            value?.let {
+                acc.apply {
+                    put(entry.key, value)
+                }
+            } ?: acc
         }
 
         val crdt = synkAdapter.decode(newMap) as T

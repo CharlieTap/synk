@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 
 internal class ListEncoderTest {
 
-
     @Test
     fun `can encode a list of strings to a map and back again`() {
         val list = listOf(
@@ -22,7 +21,7 @@ internal class ListEncoderTest {
         val expected = mapOf(
             "0|list|" to "Jim",
             "1|list|" to "Bob",
-            "2|list|" to "Jake",
+            "2|list|" to "Jake"
         )
 
         assertEquals(expected, encoded)
@@ -33,7 +32,7 @@ internal class ListEncoderTest {
     fun `can encode a list of a user defined type to a map and back again`() {
         val list = listOf(
             IDCRDT("12323", "Jim", "Bob", 123456),
-            IDCRDT("12325", "Jake", "Smith", 123444),
+            IDCRDT("12325", "Jake", "Smith", 123444)
         )
 
         val encoder = ListEncoder("list", IDCRDTMapEncoder())
@@ -54,5 +53,4 @@ internal class ListEncoderTest {
         assertEquals(expected, encoded)
         assertEquals(list, decoded)
     }
-
 }
