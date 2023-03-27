@@ -64,7 +64,7 @@ internal data class EncoderContext(
         }
 
         val isInstanceOfDataClass by lazy {
-            symbols.isDataClass(type)
+            symbols.isDataClass(type.makeNotNullable())
         }
 
         val hasProvidedSerializer by lazy {

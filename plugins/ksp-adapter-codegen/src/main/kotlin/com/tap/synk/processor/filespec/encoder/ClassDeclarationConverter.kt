@@ -58,7 +58,7 @@ private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.Der
 
 context(EncoderContext)
 private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.SubEncoder {
-    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameter.type.toClassName())
+    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameter.type.toTypeName())
     val concreteMapEncoderName = parameter.type.toClassName().simpleName + "MapEncoder"
     val concreteMapEncoderTypeName = ClassName(packageName, concreteMapEncoderName)
 
@@ -66,7 +66,8 @@ private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter
         parameter.name,
         parameter.name + "MapEncoder",
         genericMapEncoderTypeName,
-        concreteMapEncoderTypeName
+        concreteMapEncoderTypeName,
+        poetTypes.nullableMapEncoder
     )
 }
 

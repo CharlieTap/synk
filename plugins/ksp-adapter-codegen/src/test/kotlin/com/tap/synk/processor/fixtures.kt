@@ -131,7 +131,7 @@ internal val FOO_BAR_SUB_CLASS = SourceFile.kotlin(
     """
         package com.test.processor
         data class Bar(
-            private val bim: Bim,
+            private val bim: Bim?,
             private val second: String,
         )
     """

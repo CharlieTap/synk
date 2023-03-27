@@ -167,7 +167,11 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.CompositeSubEncode
  */
 private fun encoderDefaultType(paramEncoder: EncoderParameter.SubEncoder): CodeBlock {
     return CodeBlock.builder().apply {
-        add("%T()", paramEncoder.concreteTypeName)
+        if(paramEncoder.genericTypeName.typeArguments.first().isNullable) {
+            add("%T(%T())", paramEncoder.nullableMapEncoder, paramEncoder.concreteTypeName)
+        } else {
+            add("%T()", paramEncoder.concreteTypeName)
+        }
     }.build()
 }
 

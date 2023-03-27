@@ -11,6 +11,7 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 import com.tap.synk.encode.BooleanEncoder
 import com.tap.synk.encode.IntEncoder
 import com.tap.synk.encode.ListEncoder
+import com.tap.synk.encode.NullableMapEncoder
 import com.tap.synk.encode.SetEncoder
 import com.tap.synk.encode.StringEncoder
 
@@ -23,6 +24,10 @@ internal class SynkPoetTypes(
 
     val stringMapTypeName by lazy {
         Map::class.asTypeName().parameterizedBy(stringTypeName, stringTypeName)
+    }
+
+    val nullableMapEncoder by lazy {
+        NullableMapEncoder::class.asTypeName()
     }
 
     val stringEncoderTypeName by lazy {

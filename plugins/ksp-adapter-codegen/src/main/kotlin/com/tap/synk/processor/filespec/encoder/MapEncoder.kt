@@ -42,7 +42,8 @@ internal sealed interface EncoderParameter {
         val parameterName: String,
         val customEncoderVariableName: String,
         val genericTypeName: ParameterizedTypeName,
-        val concreteTypeName: TypeName
+        val concreteTypeName: TypeName,
+        val nullableMapEncoder: TypeName
     ) : EncoderParameter
 
     // Value class and Custom Class serializer
