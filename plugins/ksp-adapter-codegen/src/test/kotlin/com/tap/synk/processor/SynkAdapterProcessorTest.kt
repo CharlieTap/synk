@@ -3,13 +3,13 @@ package com.tap.synk.processor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.symbolProcessorProviders
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import org.intellij.lang.annotations.Language
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class SynkAdapterProcessorTest {
 

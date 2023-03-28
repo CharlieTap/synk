@@ -30,5 +30,4 @@ internal class NullableEncoderTest {
         assertEquals(null, nullableEncoder.decode(emptyMap()))
         assertEquals(crdt, nullableEncoder.decode(nullableEncoder.encode(crdt)))
     }
-
 }

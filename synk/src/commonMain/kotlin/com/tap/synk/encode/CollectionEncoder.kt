@@ -3,7 +3,7 @@ package com.tap.synk.encode
 import com.tap.synk.ext.encodedItemCount
 import com.tap.synk.ext.groupedByEncodedIndex
 
-class CollectionEncoder<T : Any>(
+class CollectionEncoder<T>(
     private val key: String,
     private val encoder: MapEncoder<T>,
     private val container: MutableCollection<T>

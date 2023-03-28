@@ -1,6 +1,6 @@
 package com.tap.synk.encode
 
-class SetEncoder<T : Any>(
+class SetEncoder<T>(
     private val key: String,
     private val encoder: MapEncoder<T>,
     private val collectionEncoder: MapEncoder<Collection<T>> = CollectionEncoder(key, encoder, mutableSetOf())

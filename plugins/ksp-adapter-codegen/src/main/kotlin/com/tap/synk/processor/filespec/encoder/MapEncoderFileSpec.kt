@@ -167,7 +167,7 @@ private fun encoderDefaultType(paramEncoder: EncoderParameter.CompositeSubEncode
  */
 private fun encoderDefaultType(paramEncoder: EncoderParameter.SubEncoder): CodeBlock {
     return CodeBlock.builder().apply {
-        if(paramEncoder.genericTypeName.typeArguments.first().isNullable) {
+        if (paramEncoder.genericTypeName.typeArguments.first().isNullable) {
             add("%T(%T())", paramEncoder.nullableMapEncoder, paramEncoder.concreteTypeName)
         } else {
             add("%T()", paramEncoder.concreteTypeName)
@@ -256,7 +256,7 @@ private fun encodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
     val collections = encodeFunCodeBlock.encodables.filterIsInstance<EncoderFunctionCodeBlockStandardEncodable.NestedClass>()
 
     val primitiveStatements = primitives.map { param ->
-        if(param.nullable) {
+        if (param.nullable) {
             "crdt.${param.encodedKey}?.let { value -> map[\"${param.encodedKey}\"] = value${param.conversion}  }"
         } else {
             "map[\"${param.encodedKey}\"] = crdt.${param.encodedKey}${param.conversion}"
@@ -345,7 +345,7 @@ private fun decodeFunStandardCodeBlock(encodeFunCodeBlock: EncoderFunctionCodeBl
         when (encodable) {
             is EncoderFunctionCodeBlockStandardEncodable.Primitive -> {
                 CodeBlock.builder().apply {
-                    if(encodable.nullable) {
+                    if (encodable.nullable) {
                         add("map[%S]%L,\n", encodable.encodedKey, encodable.conversion)
                     } else {
                         add("map[%S]!!%L,\n", encodable.encodedKey, encodable.conversion)

@@ -223,7 +223,7 @@ private fun deriveDecodeFunction(): EncoderFunction {
             } else {
                 val typeNotNull = param.type.makeNotNullable()
                 val conversion = if (!symbols.isString(typeNotNull)) {
-                    if(param.type.isMarkedNullable) {
+                    if (param.type.isMarkedNullable) {
                         "?" + symbols.stringDecodeFunction(typeNotNull)
                     } else symbols.stringDecodeFunction(typeNotNull)
                 } else { "" }

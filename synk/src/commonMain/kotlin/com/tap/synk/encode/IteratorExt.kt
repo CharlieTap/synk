@@ -1,6 +1,6 @@
 package com.tap.synk.encode
 
-internal fun <T : Any> Iterator<T>.encode(key: String, encoder: MapEncoder<T>): Map<String, String> {
+internal fun <T> Iterator<T>.encode(key: String, encoder: MapEncoder<T>): Map<String, String> {
     return mutableMapOf<String, String>().apply {
         var idx = 0
         this@encode.forEach { value ->
