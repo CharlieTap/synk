@@ -6,8 +6,8 @@ import com.tap.synk.fake.crdt
 import com.tap.synk.fake.faker
 import com.tap.synk.meta.meta
 import com.tap.synk.relay.Message
-import com.tap.synk.utils.setupSynk
-import com.tap.synk.utils.storageConfig
+import com.tap.synk.config.setupSynk
+import com.tap.synk.config.storageConfig
 import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -22,7 +22,7 @@ class CompactTest {
         val later = Timestamp(now.epochMillis + (1000 * 60))
         val currentHlc = HybridLogicalClock(now)
         val laterHlc = HybridLogicalClock(later)
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
         val id1 = "123344553343"
@@ -32,8 +32,8 @@ class CompactTest {
         val crdtList1 = (range).map { crdt(id1) }
         val crdtList2 = (range).map { crdt(id2) }
 
-        var message1Latest: Message<IDCRDT>? = null
-        var message2Latest: Message<IDCRDT>? = null
+        var message1Latest: Message<CRDT>? = null
+        var message2Latest: Message<CRDT>? = null
 
         val randomMessageIndex = faker.random.nextInt(range)
 

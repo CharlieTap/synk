@@ -1,6 +1,6 @@
 package com.tap.synk.encode
 
-import com.tap.synk.IDCRDT
+import com.tap.synk.CRDT
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -31,8 +31,8 @@ internal class ListEncoderTest {
     @Test
     fun `can encode a list of a user defined type to a map and back again`() {
         val list = listOf(
-            IDCRDT("12323", "Jim", "Bob", 123456),
-            IDCRDT("12325", "Jake", "Smith", 123444)
+            CRDT("12323", "Jim", "Bob", 123456),
+            CRDT("12325", "Jake", "Smith", 123444)
         )
 
         val encoder = ListEncoder("list", IDCRDTMapEncoder())

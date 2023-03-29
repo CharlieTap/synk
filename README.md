@@ -5,10 +5,13 @@
 
 ---
 
-A Kotlin multiplatform CRDT library for offline first applications.  
-Synk is a library that seeks to have as little impact on your application architecture as possible, it's goal is to provide:
+A Kotlin multiplatform CRDT library for building offline/local first applications. 
 
-- Conflict Resolution
+
+Synk supercharges  client side databases to have distributed database properties such as:
+
+- Replication
+- Conflict Resolution/Consensus
 - Causal Ordering
 
 Allowing you to build offline first applications the way you want to, with the technologies you're familiar with.
@@ -18,7 +21,7 @@ Allowing you to build offline first applications the way you want to, with the t
 # How does it work?
 
 Synk is a state based CRDT library, it monitors state changes over time using a special type of [timestamp](https://github.com/CharlieTap/hlc)  which is capable 
-of tracking events in a distributed system (your application). Synk maintains this data in its own persistent key value storage database,
+of tracking events in a distributed system (your application). Synk maintains this data in its own persistent key value storage database locally on each client,
 it's important to understand synk does not store your data, merely it stores timestamps associated with it.
 
 In order for Synk to work, it needs to be informed of when state is created or updated in your application. It exposes two functions for this purpose:
@@ -40,14 +43,14 @@ be persisted.
 
 # How should I architect my application using Synk
 
-Synk is intentionally unopinionated in design, but there are of course some constraints that come from building an application with it.  
+Synk is intentionally minimal and unopinionated in design, but there are of course some constraints that come from building an application with it.  
 The two that stand out are the following:
 
 - Messages must be relayed to all nodes in order for state to be consistent 
-- Data can never be deleted, at least not in the short term, soft deletes using tombstone fields is the recommended solution. 
+- Data exposed to Synk can never be deleted, at least not in the short term, soft deletes using tombstone fields is the recommended solution. 
 
 
-Offline first applications that mutate state are distributed systems, there's no two ways about it. Synk is designed with this in mind, it has no concept of server like central storage.
+Offline first applications that mutate state are distributed systems, there's no two ways about it. For this reason Synk has no concept of server like central storage.
 Synk sees the world how any node in a distributed system would.
 
 ```mermaid
@@ -60,18 +63,6 @@ graph LR;
  NodeC--Message-->NodeA;
 ```
 
-But this doesn't mean you have to use it this way, unless you're working on a peer to peer application it's quite likely you're using a client/server 
-architecture. Servers in these architectures act 
-
-Compression on the backend
-
-You could architect an api in a RESTful fashion, where each distinct  T for `Message<T>` has its own endpoint. 
-
-
-
-
-
-Message T where T is the resource
 
 
 ```mermaid
@@ -181,19 +172,27 @@ Synk.outbound(new: T, old: T? = null): Message<T>
 Synk.inbound(message: Message<T>, old: T? = null): T 
 ```
 
-## Encoding
+## Change Detection
 
-To aid the relay of messages between applications Synk provides methods of encoding Messages to and from json.
-These encoders make use of the Synk adapters provided and tend to have better performance than reflections powered
-encoders like gson.
+Coming soon ...
+
+## Serialization
+
+To aid the relay of messages between applications Synk provides methods for serializing Messages to and from json.
+These serializers make use of the Synk adapters provided and tend to have better performance than reflections powered
+serializers like gson.
 
 ```kotlin
-Synk.encode(messages: List<Message<T>>): String
+Synk.serialize(messages: List<Message<T>>): String
 ```
 
 ```kotlin
-Synk.decode(encoded: String): List<Message<T>>
+Synk.deserialize(encoded: String): List<Message<T>>
 ```
+
+For those looking to serialize messages themselves, Synk exposes Message/Meta Serializers for popular libs:
+
+- [Kotlin Serialization](docs/extensions.md#kotlinx-serialization)
 
 ## Compaction
 

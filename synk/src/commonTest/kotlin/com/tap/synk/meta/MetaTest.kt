@@ -1,8 +1,8 @@
 package com.tap.synk.meta
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.IDCRDT
-import com.tap.synk.IDCRDTAdapter
+import com.tap.synk.CRDT
+import com.tap.synk.CRDTAdapter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,10 +10,10 @@ class MetaTest {
 
     @Test
     fun `can derive meta from crdt`() {
-        val synkAdapter = IDCRDTAdapter()
+        val synkAdapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
 
-        val crdt = IDCRDT(
+        val crdt = CRDT(
             "123",
             "test",
             "test",

@@ -1,6 +1,6 @@
 package com.tap.synk.encode
 
-import com.tap.synk.IDCRDT
+import com.tap.synk.CRDT
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -8,7 +8,7 @@ internal class NullableEncoderTest {
 
     @Test
     fun `can wrap an encoder and correctly return values from nullable inputs`() {
-        val crdt = IDCRDT(
+        val crdt = CRDT(
             "123",
             "Tom",
             "Smith",

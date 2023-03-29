@@ -1,7 +1,7 @@
 package com.tap.synk.adapter
 
-import com.tap.synk.IDCRDT
-import com.tap.synk.IDCRDTAdapter
+import com.tap.synk.CRDT
+import com.tap.synk.CRDTAdapter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -9,16 +9,16 @@ class SynkAdapterDiffTest {
 
     @Test
     fun `can turn object into meta`() {
-        val synkAdapter = IDCRDTAdapter()
+        val synkAdapter = CRDTAdapter()
 
-        val crdt1 = IDCRDT(
+        val crdt1 = CRDT(
             "123",
             "test",
             "test",
             1234
         )
 
-        val crdt2 = IDCRDT(
+        val crdt2 = CRDT(
             "123",
             "test",
             "test2",

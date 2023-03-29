@@ -1,4 +1,3 @@
-
 # Synk Adapters
 
 ---
@@ -12,6 +11,13 @@ val synk = Synk.Builder(...)
     .registerSynkAdapter(adapter2)
     .build()
 ```
+
+To create your SynkAdapters, you can either:
+
+- [Use the SynkAdapter plugin (Recommended)](plugins.md#synk-adapter-plugin)
+- Write them by hand 
+
+## What are SynkAdapters 
 
 A synk adapter is the intersection of two interfaces, an IDResolver and a MapEncoder.
 

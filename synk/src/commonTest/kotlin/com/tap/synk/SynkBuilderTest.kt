@@ -17,7 +17,7 @@ class SynkBuilderTest {
             fileSystem = FakeFileSystem()
         )
         val factory = InMemoryMetaStoreFactory()
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
 
         val synk = Synk.Builder(storageConfiguration)
             .registerSynkAdapter(adapter)
@@ -25,7 +25,7 @@ class SynkBuilderTest {
             .build()
 
         assertEquals(factory, synk.factory)
-        assertEquals(adapter, synk.synkAdapterStore.resolve(IDCRDT::class) as IDCRDTAdapter)
+        assertEquals(adapter, synk.synkAdapterStore.resolve(CRDT::class) as CRDTAdapter)
     }
 
     private sealed interface SealedTest {

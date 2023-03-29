@@ -2,8 +2,8 @@ package com.tap.synk.relay
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
-import com.tap.synk.IDCRDT
-import com.tap.synk.IDCRDTAdapter
+import com.tap.synk.CRDT
+import com.tap.synk.CRDTAdapter
 import com.tap.synk.adapter.store.SynkAdapterStore
 import com.tap.synk.meta.Meta
 import kotlinx.datetime.Clock
@@ -20,7 +20,7 @@ class MessageSemigroupTest {
         val hlc = HybridLogicalClock()
         val laterHlc = HybridLogicalClock(futureTimestamp)
         val synkAdapterStore = SynkAdapterStore().apply {
-            register(IDCRDT::class, IDCRDTAdapter())
+            register(CRDT::class, CRDTAdapter())
         }
         val monoid = MessageSemigroup<Any>(synkAdapterStore)
 
@@ -43,14 +43,14 @@ class MessageSemigroupTest {
             }
         )
 
-        val crdt1 = IDCRDT(
+        val crdt1 = CRDT(
             "123",
             "jim",
             "smith",
             12345678
         )
 
-        val crdt2 = IDCRDT(
+        val crdt2 = CRDT(
             "123",
             "bob",
             "jones",
@@ -61,7 +61,7 @@ class MessageSemigroupTest {
         val message2 = Message(crdt2, meta2)
 
         val result = monoid.combine(message1, message2)
-        val expectedCrdt = IDCRDT(
+        val expectedCrdt = CRDT(
             "123",
             "bob",
             "smith",
@@ -88,7 +88,7 @@ class MessageSemigroupTest {
         val hlc = HybridLogicalClock()
         val laterHlc = HybridLogicalClock(futureTimestamp)
         val synkAdapterStore = SynkAdapterStore().apply {
-            register(IDCRDT::class, IDCRDTAdapter())
+            register(CRDT::class, CRDTAdapter())
         }
         val monoid = MessageSemigroup<Any>(synkAdapterStore)
 
@@ -111,14 +111,14 @@ class MessageSemigroupTest {
             }
         )
 
-        val crdt1 = IDCRDT(
+        val crdt1 = CRDT(
             "123",
             "jim",
             "smith",
             null
         )
 
-        val crdt2 = IDCRDT(
+        val crdt2 = CRDT(
             "123",
             "bob",
             "jones",
@@ -129,7 +129,7 @@ class MessageSemigroupTest {
         val message2 = Message(crdt2, meta2)
 
         val result = monoid.combine(message1, message2)
-        val expectedCrdt = IDCRDT(
+        val expectedCrdt = CRDT(
             "123",
             "bob",
             "smith",

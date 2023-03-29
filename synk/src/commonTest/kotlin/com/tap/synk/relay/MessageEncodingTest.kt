@@ -1,8 +1,8 @@
 package com.tap.synk.relay
 
 import com.tap.hlc.HybridLogicalClock
-import com.tap.synk.IDCRDT
-import com.tap.synk.IDCRDTAdapter
+import com.tap.synk.CRDT
+import com.tap.synk.CRDTAdapter
 import com.tap.synk.meta.Meta
 import com.tap.synk.meta.meta
 import kotlin.test.Test
@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class MessageEncodingTest {
 
     companion object {
-        internal fun json(crdt: IDCRDT, hlc: HybridLogicalClock): String {
+        internal fun json(crdt: CRDT, hlc: HybridLogicalClock): String {
             return """
             {
                 "crdt":{
@@ -36,13 +36,13 @@ class MessageEncodingTest {
 
     @Test
     fun `can encode message to string`() {
-        val crdt = IDCRDT(
+        val crdt = CRDT(
             "123",
             "Chest",
             "Prah",
             1234567
         )
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
         val meta = meta(crdt, adapter, hlc)
 
@@ -56,18 +56,18 @@ class MessageEncodingTest {
 
     @Test
     fun `can decode message from a string`() {
-        val crdt = IDCRDT(
+        val crdt = CRDT(
             "123",
             "Chest",
             "Prah",
             1234567
         )
         val hlc = HybridLogicalClock()
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
 
         val result = json(crdt, hlc).decodeToMessage(adapter)
         val expectedMeta = Meta(
-            IDCRDT::class.qualifiedName ?: "",
+            CRDT::class.qualifiedName ?: "",
             mapOf(
                 "id" to hlc.toString(),
                 "name" to hlc.toString(),
@@ -82,19 +82,19 @@ class MessageEncodingTest {
 
     @Test
     fun `can encode a list of messages to string`() {
-        val crdt1 = IDCRDT(
+        val crdt1 = CRDT(
             "123",
             "Chest",
             "Prah",
             1234567
         )
-        val crdt2 = IDCRDT(
+        val crdt2 = CRDT(
             "234",
             "Yaboy",
             "Dave",
             1234567
         )
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
         val meta1 = meta(crdt1, adapter, hlc)
         val meta2 = meta(crdt2, adapter, hlc)
@@ -110,26 +110,26 @@ class MessageEncodingTest {
 
     @Test
     fun `can decode a list of messages from a string`() {
-        val crdt1 = IDCRDT(
+        val crdt1 = CRDT(
             "123",
             "Chest",
             "Prah",
             1234567
         )
-        val crdt2 = IDCRDT(
+        val crdt2 = CRDT(
             "234",
             "Yaboy",
             "Dave",
             1234567
         )
         val hlc = HybridLogicalClock()
-        val adapter = IDCRDTAdapter()
+        val adapter = CRDTAdapter()
 
         val json = "[" + json(crdt1, hlc) + "," + json(crdt2, hlc) + "]"
 
         val result = json.decodeToMessages(adapter)
         val expectedMeta = Meta(
-            IDCRDT::class.qualifiedName ?: "",
+            CRDT::class.qualifiedName ?: "",
             mapOf(
                 "id" to hlc.toString(),
                 "name" to hlc.toString(),

@@ -2,13 +2,13 @@ package com.tap.synk
 
 import com.tap.synk.adapter.SynkAdapter
 
-internal class IDCRDTAdapter : SynkAdapter<IDCRDT> {
+internal class CRDTAdapter : SynkAdapter<CRDT> {
 
-    override fun resolveId(crdt: IDCRDT): String {
+    override fun resolveId(crdt: CRDT): String {
         return crdt.id
     }
 
-    override fun encode(crdt: IDCRDT): Map<String, String> {
+    override fun encode(crdt: CRDT): Map<String, String> {
         return HashMap<String, String>().apply {
             put("id", crdt.id)
             put("name", crdt.name)
@@ -17,8 +17,8 @@ internal class IDCRDTAdapter : SynkAdapter<IDCRDT> {
         }
     }
 
-    override fun decode(map: Map<String, String>): IDCRDT {
-        return IDCRDT(
+    override fun decode(map: Map<String, String>): CRDT {
+        return CRDT(
             map["id"]!!,
             map["name"]!!,
             map["last_name"]!!,

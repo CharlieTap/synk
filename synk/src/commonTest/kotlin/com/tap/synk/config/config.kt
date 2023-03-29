@@ -1,13 +1,11 @@
-package com.tap.synk.utils
+package com.tap.synk.config
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.synk.CMap
-import com.tap.synk.IDCRDT
-import com.tap.synk.IDCRDTAdapter
+import com.tap.synk.CRDT
+import com.tap.synk.CRDTAdapter
 import com.tap.synk.Synk
 import com.tap.synk.adapter.store.SynkAdapterStore
-import com.tap.synk.config.ClockStorageConfiguration
-import com.tap.synk.config.CustomClockStorageConfiguration
 import com.tap.synk.meta.store.InMemoryMetaStore
 import com.tap.synk.meta.store.InMemoryMetaStoreFactory
 import com.tap.synk.meta.store.MetaStore
@@ -29,11 +27,11 @@ internal fun setupSynk(
 
     val metaStore = InMemoryMetaStore(metaStoreMap)
     val metaStoreFactoryMap = HashMap<String, MetaStore>().apply {
-        put(IDCRDT::class.qualifiedName.toString(), metaStore)
+        put(CRDT::class.qualifiedName.toString(), metaStore)
     }
     val metaStoreFactory = InMemoryMetaStoreFactory(metaStoreFactoryMap)
     val synkAdapterStore = SynkAdapterStore().apply {
-        register(IDCRDT::class, IDCRDTAdapter())
+        register(CRDT::class, CRDTAdapter())
     }
     return Synk(factory = metaStoreFactory, clockStorageConfiguration = storageConfiguration, synkAdapterStore = synkAdapterStore)
 }

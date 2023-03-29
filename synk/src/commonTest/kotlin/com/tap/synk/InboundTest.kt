@@ -6,8 +6,8 @@ import com.tap.synk.ext.decodeToHashmap
 import com.tap.synk.ext.encodeToString
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
-import com.tap.synk.utils.setupSynk
-import com.tap.synk.utils.storageConfig
+import com.tap.synk.config.setupSynk
+import com.tap.synk.config.storageConfig
 import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class InboundTest {
         val currentHlc = HybridLogicalClock(now)
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
-        val newCRDT = IDCRDT(
+        val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
@@ -36,7 +36,7 @@ class InboundTest {
             put("phone", pastHlc.toString())
         }
         val newMeta = Meta(
-            IDCRDT::class.qualifiedName.toString(),
+            CRDT::class.qualifiedName.toString(),
             newMetaMap
         )
         val newMessage = Message(newCRDT, newMeta)
@@ -59,7 +59,7 @@ class InboundTest {
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
         val futureHlc = HybridLogicalClock(Timestamp(now.epochMillis + (1000 * 60)))
-        val oldCRDT = IDCRDT(
+        val oldCRDT = CRDT(
             "123",
             "Jimmy",
             "Jones",
@@ -71,7 +71,7 @@ class InboundTest {
             put("last_name", currentHlc.toString())
             put("phone", futureHlc.toString())
         }
-        val newCRDT = IDCRDT(
+        val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
@@ -83,7 +83,7 @@ class InboundTest {
             put("phone", currentHlc.toString())
         }
         val newMeta = Meta(
-            IDCRDT::class.qualifiedName.toString(),
+            CRDT::class.qualifiedName.toString(),
             newMetaMap
         )
         val newMessage = Message(newCRDT, newMeta)
@@ -91,7 +91,7 @@ class InboundTest {
         metaStoreMap.put(oldCRDT.id, oldMetaMap.encodeToString())
         val syncedCRDT = synk.inbound(newMessage, oldCRDT)
 
-        val expectedCRDT = IDCRDT(
+        val expectedCRDT = CRDT(
             "123",
             "Jim",
             "Jones",

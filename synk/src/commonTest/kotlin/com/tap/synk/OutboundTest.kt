@@ -5,8 +5,8 @@ import com.tap.synk.ext.decodeToHashmap
 import com.tap.synk.ext.encodeToString
 import com.tap.synk.meta.Meta
 import com.tap.synk.relay.Message
-import com.tap.synk.utils.setupSynk
-import com.tap.synk.utils.storageConfig
+import com.tap.synk.config.setupSynk
+import com.tap.synk.config.storageConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -20,7 +20,7 @@ class OutboundTest {
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
-        val newCRDT = IDCRDT(
+        val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
@@ -36,7 +36,7 @@ class OutboundTest {
             put("phone", expectedHLC.toString())
         }
         val expectedMeta = Meta(
-            IDCRDT::class.qualifiedName.toString(),
+            CRDT::class.qualifiedName.toString(),
             expectedMetaMap
         )
         val expectedMessage = Message(newCRDT, expectedMeta)
@@ -55,14 +55,14 @@ class OutboundTest {
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
-        val oldCRDT = IDCRDT(
+        val oldCRDT = CRDT(
             "123",
             "Jim",
             "Jonesss",
             123344477
         )
 
-        val newCRDT = IDCRDT(
+        val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
@@ -80,7 +80,7 @@ class OutboundTest {
         val currentHlc = HybridLogicalClock()
         val synk = setupSynk(storageConfig, metaStoreMap, currentHlc)
 
-        val oldCRDT = IDCRDT(
+        val oldCRDT = CRDT(
             "123",
             "Jim",
             "Jonesss",
@@ -95,7 +95,7 @@ class OutboundTest {
 
         metaStoreMap.put(oldCRDT.id, oldMetaMap.encodeToString())
 
-        val newCRDT = IDCRDT(
+        val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
@@ -111,7 +111,7 @@ class OutboundTest {
             put("phone", expectedHLC.toString())
         }
         val expectedMeta = Meta(
-            IDCRDT::class.qualifiedName.toString(),
+            CRDT::class.qualifiedName.toString(),
             expectedMetaMap
         )
         val expectedMessage = Message(newCRDT, expectedMeta)
