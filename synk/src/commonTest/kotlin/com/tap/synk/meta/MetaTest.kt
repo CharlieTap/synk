@@ -30,7 +30,7 @@ class MetaTest {
             put("phone", hlcs)
         }
 
-        assertEquals("com.tap.synk.IDCRDT", result.namespace)
+        assertEquals("com.tap.synk.CRDT", result.namespace)
         assertEquals(expected, result.timestampMeta)
     }
 }

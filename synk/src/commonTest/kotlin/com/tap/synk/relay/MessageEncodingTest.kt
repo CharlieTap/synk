@@ -21,7 +21,7 @@ class MessageEncodingTest {
                     "id":"${crdt.id}"
                 },
                 "meta":{
-                    "clazz":"com.tap.synk.IDCRDT",
+                    "clazz":"com.tap.synk.CRDT",
                     "timestamp_meta":{
                         "phone":"$hlc",
                         "name":"$hlc",

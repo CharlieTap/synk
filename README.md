@@ -10,8 +10,7 @@ A Kotlin multiplatform CRDT library for building offline/local first application
 
 Synk supercharges  client side databases to have distributed database properties such as:
 
-- Replication
-- Conflict Resolution/Consensus
+- Conflict Resolution
 - Causal Ordering
 
 Allowing you to build offline first applications the way you want to, with the technologies you're familiar with.
@@ -150,7 +149,7 @@ val synk = Synk.Builder(...)
     .build()
 ```
 
-
+For more information on Synk adapters please visit the [documentation page](docs/synk-adapters.md)
 
 ## Conflict Resolution, Ordering and Messages
 

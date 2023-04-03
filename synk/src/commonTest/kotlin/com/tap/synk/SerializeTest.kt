@@ -7,9 +7,9 @@ import com.tap.synk.config.storageConfig
 import com.tap.synk.meta.meta
 import com.tap.synk.relay.Message
 import com.tap.synk.relay.MessageEncodingTest
+import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.datetime.Clock
 
 class SerializeTest {
 

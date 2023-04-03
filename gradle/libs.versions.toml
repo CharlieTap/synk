@@ -49,9 +49,9 @@ hlc = "1.1.0"
 
 junit = "4.13.2"
 
-kotlin = "1.8.10"
+kotlin = "1.8.20"
 kpoet = "1.12.0"
-ksp = "1.8.10-1.0.9"
+ksp = "1.8.20-1.0.10"
 kotlinter = "3.13.0"
 kot-compile-testing = "1.4.9"
 

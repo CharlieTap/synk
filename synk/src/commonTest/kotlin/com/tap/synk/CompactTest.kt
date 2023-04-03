@@ -2,12 +2,12 @@ package com.tap.synk
 
 import com.tap.hlc.HybridLogicalClock
 import com.tap.hlc.Timestamp
+import com.tap.synk.config.setupSynk
+import com.tap.synk.config.storageConfig
 import com.tap.synk.fake.crdt
 import com.tap.synk.fake.faker
 import com.tap.synk.meta.meta
 import com.tap.synk.relay.Message
-import com.tap.synk.config.setupSynk
-import com.tap.synk.config.storageConfig
 import kotlinx.datetime.Clock
 import kotlin.test.Test
 import kotlin.test.assertEquals
