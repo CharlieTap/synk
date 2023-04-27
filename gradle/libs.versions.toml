@@ -52,7 +52,7 @@ junit = "4.13.2"
 kotlin = "1.8.21"
 kpoet = "1.13.0"
 ksp = "1.8.21-1.0.11"
-kotlinter = "3.13.0"
+kotlinter = "3.14.0"
 kot-compile-testing = "1.5.0"
 
 kotlinx-atomic-fu = "0.20.2"

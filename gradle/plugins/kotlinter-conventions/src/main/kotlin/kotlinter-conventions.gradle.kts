@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlinter {
-    disabledRules = arrayOf("filename","multiline-if-else")
+
 }
 
 tasks.withType<LintTask>().configureEach {
