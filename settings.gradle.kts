@@ -8,6 +8,19 @@ pluginManagement {
     includeBuild("gradle/plugins/versions-conventions")
 }
 
+plugins {
+    id("com.gradle.enterprise") version ("3.3.4")
+}
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfServiceAgree = "yes"
+
+        publishAlwaysIf(!System.getenv("GITHUB_ACTIONS").isNullOrEmpty())
+    }
+}
+
 dependencyResolutionManagement {
     repositories {
         google()
