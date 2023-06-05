@@ -14,7 +14,7 @@ class SynkBuilderTest {
     fun `calling build on synk builder produces a valid synk instance`() {
         val storageConfiguration = CustomClockStorageConfiguration(
             filePath = "/test".toPath(),
-            fileSystem = FakeFileSystem()
+            fileSystem = FakeFileSystem(),
         )
         val factory = InMemoryMetaStoreFactory()
         val adapter = CRDTAdapter()
@@ -51,7 +51,7 @@ class SynkBuilderTest {
     fun `registering an adapter for a sealed class registers the adapter for all the nested subclasses`() {
         val storageConfiguration = CustomClockStorageConfiguration(
             filePath = "/test".toPath(),
-            fileSystem = FakeFileSystem()
+            fileSystem = FakeFileSystem(),
         )
         val factory = InMemoryMetaStoreFactory()
         val adapter = SealedTestAdapter()

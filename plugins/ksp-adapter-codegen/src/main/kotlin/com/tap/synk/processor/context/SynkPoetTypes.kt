@@ -16,7 +16,7 @@ import com.tap.synk.encode.SetEncoder
 import com.tap.synk.encode.StringEncoder
 
 internal class SynkPoetTypes(
-    private val symbols: SynkSymbols
+    private val symbols: SynkSymbols,
 ) {
     val stringTypeName by lazy {
         symbols.stringType.toTypeName()

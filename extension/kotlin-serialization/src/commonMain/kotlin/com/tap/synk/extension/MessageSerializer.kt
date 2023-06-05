@@ -12,7 +12,7 @@ import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.encoding.encodeStructure
 
 class MessageSerializer<T>(
-    private val innerSerializer: KSerializer<T>
+    private val innerSerializer: KSerializer<T>,
 ) : KSerializer<Message<T>> {
 
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("message") {

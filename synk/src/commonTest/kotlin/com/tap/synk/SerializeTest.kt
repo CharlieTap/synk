@@ -25,13 +25,13 @@ class SerializeTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
         val crdt2 = CRDT(
             "234",
             "Yaboy",
             "Dave",
-            1234567
+            1234567,
         )
         val adapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
@@ -59,7 +59,7 @@ class SerializeTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
 
         val adapter = CRDTAdapter()

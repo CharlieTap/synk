@@ -28,4 +28,7 @@ object DoubleStringSerializer : StringSerializer<Double> by StringSerializer.fac
 object LongStringSerializer : StringSerializer<Long> by StringSerializer.factory(Long::toString, String::toLong)
 object CharStringSerializer : StringSerializer<Char> by StringSerializer.factory(Char::toString, { str -> str.toCharArray().first() })
 
-object StringMapStringSerializer : StringSerializer<Map<String, String>> by StringSerializer.factory(Map<String, String>::encodeToString, String::decodeToHashmap)
+object StringMapStringSerializer : StringSerializer<Map<String, String>> by StringSerializer.factory(
+    Map<String, String>::encodeToString,
+    String::decodeToHashmap,
+)

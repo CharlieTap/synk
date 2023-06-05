@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.kotlin.symbol.processing) apply false
     alias(libs.plugins.sqldelight.legacy) apply false
     alias(libs.plugins.hilt) apply false
-    alias(libs.plugins.kotlinter) apply false
+
 
     id("versions-conventions")
 

@@ -17,7 +17,7 @@ class MetaTest {
             "123",
             "test",
             "test",
-            1234
+            1234,
         )
 
         val result = meta(crdt, synkAdapter, hlc)

@@ -27,7 +27,7 @@ class InboundTest {
             "123",
             "Jim",
             "Jones",
-            123344433
+            123344433,
         )
         val pastHlc = HybridLogicalClock(Timestamp(now.epochMillis - (1000 * 60)))
         val newMetaMap = HashMap<String, String>().apply {
@@ -37,7 +37,7 @@ class InboundTest {
         }
         val newMeta = Meta(
             CRDT::class.qualifiedName.toString(),
-            newMetaMap
+            newMetaMap,
         )
         val newMessage = Message(newCRDT, newMeta)
 
@@ -63,7 +63,7 @@ class InboundTest {
             "123",
             "Jimmy",
             "Jones",
-            123344438
+            123344438,
         )
         val oldMetaMap = HashMap<String, String>().apply {
             put("id", currentHlc.toString())
@@ -75,7 +75,7 @@ class InboundTest {
             "123",
             "Jim",
             "Jones",
-            123344433
+            123344433,
         )
         val newMetaMap = HashMap<String, String>().apply {
             put("name", futureHlc.toString())
@@ -84,7 +84,7 @@ class InboundTest {
         }
         val newMeta = Meta(
             CRDT::class.qualifiedName.toString(),
-            newMetaMap
+            newMetaMap,
         )
         val newMessage = Message(newCRDT, newMeta)
 
@@ -95,7 +95,7 @@ class InboundTest {
             "123",
             "Jim",
             "Jones",
-            123344438
+            123344438,
         )
         val expectedMeta = HashMap<String, String>().apply {
             put("id", currentHlc.toString())

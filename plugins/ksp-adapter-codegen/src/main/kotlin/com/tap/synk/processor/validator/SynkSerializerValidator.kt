@@ -10,7 +10,7 @@ import com.tap.synk.processor.validator.AnnotatedValidator.Invariant.factory
 
 internal class SynkSerializerValidator(
     private val synkSymbols: SynkSymbols,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
 ) : AnnotatedValidator {
 
     companion object Invariant {
@@ -28,7 +28,9 @@ internal class SynkSerializerValidator(
         return setOf(
             factory(KSClassDeclaration::validate, logger, "Failed to validate class declaration"),
             factory(Invariant::mustHaveQualifiedName, logger, "@SynkAdapter must target classes with qualified names"),
-            factory({ mustImplementStringSerializer(it, synkSymbols.stringSerializer) }, logger, "@SynkSerializer annotated class must implement StringSerializer interface")
+            factory({
+                mustImplementStringSerializer(it, synkSymbols.stringSerializer)
+            }, logger, "@SynkSerializer annotated class must implement StringSerializer interface"),
         )
     }
 }

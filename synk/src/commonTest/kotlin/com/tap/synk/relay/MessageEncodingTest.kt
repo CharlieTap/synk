@@ -40,7 +40,7 @@ class MessageEncodingTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
         val adapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
@@ -60,7 +60,7 @@ class MessageEncodingTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
         val hlc = HybridLogicalClock()
         val adapter = CRDTAdapter()
@@ -72,8 +72,8 @@ class MessageEncodingTest {
                 "id" to hlc.toString(),
                 "name" to hlc.toString(),
                 "last_name" to hlc.toString(),
-                "phone" to hlc.toString()
-            )
+                "phone" to hlc.toString(),
+            ),
         )
 
         assertEquals(crdt, result.crdt)
@@ -86,13 +86,13 @@ class MessageEncodingTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
         val crdt2 = CRDT(
             "234",
             "Yaboy",
             "Dave",
-            1234567
+            1234567,
         )
         val adapter = CRDTAdapter()
         val hlc = HybridLogicalClock()
@@ -114,13 +114,13 @@ class MessageEncodingTest {
             "123",
             "Chest",
             "Prah",
-            1234567
+            1234567,
         )
         val crdt2 = CRDT(
             "234",
             "Yaboy",
             "Dave",
-            1234567
+            1234567,
         )
         val hlc = HybridLogicalClock()
         val adapter = CRDTAdapter()
@@ -134,8 +134,8 @@ class MessageEncodingTest {
                 "id" to hlc.toString(),
                 "name" to hlc.toString(),
                 "last_name" to hlc.toString(),
-                "phone" to hlc.toString()
-            )
+                "phone" to hlc.toString(),
+            ),
         )
 
         assertEquals(crdt1, result[0].crdt)

@@ -22,7 +22,7 @@ internal class CRDTAdapter : SynkAdapter<CRDT> {
             map["id"]!!,
             map["name"]!!,
             map["last_name"]!!,
-            map["phone"]?.toInt()
+            map["phone"]?.toInt(),
         )
     }
 }

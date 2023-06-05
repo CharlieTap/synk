@@ -10,7 +10,7 @@ import com.tap.synk.processor.filespec.adapter.synkAdapter
 import com.tap.synk.processor.filespec.adapter.synkAdapterFileSpec
 
 internal class IDResolverVisitor(
-    private val processorContext: ProcessorContext
+    private val processorContext: ProcessorContext,
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
@@ -22,7 +22,7 @@ internal class IDResolverVisitor(
 
         val synkAdapter = with(adapterContext) { synkAdapter() }
         val synkAdapterFileSpec = synkAdapterFileSpec(
-            synkAdapter
+            synkAdapter,
         ) { addOriginatingKSFile(containingFile) }
 
         synkAdapterFileSpec.writeTo(codeGenerator = processorContext.codeGenerator, aggregating = false)

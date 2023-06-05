@@ -9,7 +9,7 @@ interface AnnotatedValidator {
         fun factory(
             invariant: (KSClassDeclaration) -> Boolean,
             logger: KSPLogger,
-            failureMessage: String
+            failureMessage: String,
         ): (KSClassDeclaration) -> Boolean {
             return { declaration ->
                 invariant(declaration).let { result ->

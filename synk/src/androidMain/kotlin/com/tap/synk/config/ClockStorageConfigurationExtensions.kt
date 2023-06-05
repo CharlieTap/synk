@@ -5,10 +5,10 @@ import okio.FileSystem
 import okio.Path.Companion.toPath
 
 fun ClockStorageConfiguration.Presets.Android(
-    context: Context
+    context: Context,
 ): ClockStorageConfiguration {
     return CustomClockStorageConfiguration(
         FileSystem.SYSTEM,
-        context.filesDir.absolutePath.toPath()
+        context.filesDir.absolutePath.toPath(),
     )
 }

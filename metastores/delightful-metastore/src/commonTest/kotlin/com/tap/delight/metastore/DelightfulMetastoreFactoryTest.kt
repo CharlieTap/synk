@@ -32,7 +32,7 @@ class DelightfulMetastoreFactoryTest {
             database.multistoreQueries.upsert(
                 Uuid.randomUUID().toString(),
                 namespace,
-                ""
+                "",
             )
         }
     }
@@ -42,7 +42,7 @@ class DelightfulMetastoreFactoryTest {
         val maxCacheSize = 10
         val conf = MetastoreConfig(
             maxCacheSize,
-            true
+            true,
         )
         val hasher = MurmurHasher()
         val namespace = CRDT::class.qualifiedName ?: ""
@@ -53,7 +53,7 @@ class DelightfulMetastoreFactoryTest {
             driver,
             conf,
             hasher,
-            cache
+            cache,
         )
 
         val metastore = factory.getStore(CRDT::class)
@@ -66,7 +66,7 @@ class DelightfulMetastoreFactoryTest {
         val maxCacheSize = 10
         val conf = MetastoreConfig(
             maxCacheSize,
-            false
+            false,
         )
         val hasher = MurmurHasher()
         val namespace = CRDT::class.qualifiedName ?: ""
@@ -77,7 +77,7 @@ class DelightfulMetastoreFactoryTest {
             driver,
             conf,
             hasher,
-            cache
+            cache,
         )
 
         val metastore = factory.getStore(CRDT::class)

@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 
 internal data class AdapterContext(
     private val processorContext: ProcessorContext,
-    private val classDeclaration: KSClassDeclaration
+    private val classDeclaration: KSClassDeclaration,
 ) : ProcessorContext by processorContext {
 
     companion object {

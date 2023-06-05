@@ -41,13 +41,13 @@ class CompactTest {
             if (randomMessageIndex == idx) {
                 message1Latest = Message(
                     crdt,
-                    meta(crdt, adapter, laterHlc)
+                    meta(crdt, adapter, laterHlc),
                 )
                 message1Latest!!
             } else {
                 Message(
                     crdt,
-                    meta(crdt, adapter, currentHlc)
+                    meta(crdt, adapter, currentHlc),
                 )
             }
         }
@@ -56,13 +56,13 @@ class CompactTest {
             if (randomMessageIndex == idx) {
                 message2Latest = Message(
                     crdt,
-                    meta(crdt, adapter, laterHlc)
+                    meta(crdt, adapter, laterHlc),
                 )
                 message2Latest!!
             } else {
                 Message(
                     crdt,
-                    meta(crdt, adapter, currentHlc)
+                    meta(crdt, adapter, currentHlc),
                 )
             }
         }

@@ -10,7 +10,7 @@ class DelightfulMetastore internal constructor(
     private val database: DelightfulDatabase,
     private val namespace: String,
     private val hasher: Hasher,
-    private val cache: MemCache<String, String>
+    private val cache: MemCache<String, String>,
 ) : MetaStore {
 
     private fun deriveCacheKey(id: String, namespace: String): String {

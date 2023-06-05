@@ -4,7 +4,7 @@ import com.tap.synk.adapter.SynkAdapter
 import kotlin.reflect.KClass
 
 class SynkAdapterStore(
-    private val lookup: HashMap<KClass<*>, SynkAdapter<Any>> = HashMap()
+    private val lookup: HashMap<KClass<*>, SynkAdapter<Any>> = HashMap(),
 ) {
 
     fun <T : Any> register(clazz: KClass<T>, adapter: SynkAdapter<T>) {

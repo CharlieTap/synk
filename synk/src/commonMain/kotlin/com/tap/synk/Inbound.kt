@@ -30,7 +30,7 @@ internal fun <T : Any> synkInbound(
     hlc: MutableStateFlow<HybridLogicalClock>,
     factory: MetaStoreFactory,
     synkAdapter: SynkAdapter<Any>,
-    messageMerger: MessageSemigroup<T>
+    messageMerger: MessageSemigroup<T>,
 ): T {
     val remoteHlc = message.meta.timestampMeta.map { HybridLogicalClock.decodeFromString(it.value).getOr(hlc.value) }.reduce { acc, result ->
         maxOf(acc, result)

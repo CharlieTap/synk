@@ -7,7 +7,7 @@ internal fun synkAdapter(): SynkAdapter {
     return SynkAdapter(
         synkAdapterClassName,
         deriveInterfaces(),
-        deriveParameters()
+        deriveParameters(),
     )
 }
 
@@ -16,7 +16,7 @@ private fun deriveInterfaces(): Set<AdapterInterface> {
     return setOf(
         Inherited(customSynkAdapterTypeName),
         Delegated(customIdResolverTypeName, AdapterContext.VARIABLE_NAME_ID_RESOLVER),
-        Delegated(customMapEncoderTypeName, AdapterContext.VARIABLE_NAME_MAP_ENCODER)
+        Delegated(customMapEncoderTypeName, AdapterContext.VARIABLE_NAME_MAP_ENCODER),
     )
 }
 
@@ -26,12 +26,12 @@ private fun deriveParameters(): List<AdapterParameter> {
         AdapterParameter(
             AdapterContext.VARIABLE_NAME_ID_RESOLVER,
             customIdResolverTypeName,
-            idResolverClassName
+            idResolverClassName,
         ),
         AdapterParameter(
             AdapterContext.VARIABLE_NAME_MAP_ENCODER,
             customMapEncoderTypeName,
-            mapEncoderClassName
-        )
+            mapEncoderClassName,
+        ),
     )
 }

@@ -11,7 +11,7 @@ version-name = "0.38"
 java-compiler-version = "18"
 java-bytecode-version = "11"
 
-android-build-tools-plugin = "7.4.0-beta02"
+android-build-tools-plugin = "7.4.0"
 versions-plugin = "0.46.0"
 
 androidx-core = "1.8.0-alpha05"
@@ -52,7 +52,7 @@ junit = "4.13.2"
 kotlin = "1.8.21"
 kpoet = "1.13.0"
 ksp = "1.8.21-1.0.11"
-kotlinter = "3.14.0"
+kotlinter = "3.15.0"
 kot-compile-testing = "1.5.0"
 
 kotlinx-atomic-fu = "0.20.2"

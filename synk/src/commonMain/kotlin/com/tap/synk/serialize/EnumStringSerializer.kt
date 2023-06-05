@@ -1,7 +1,7 @@
 package com.tap.synk.serialize
 
 class EnumStringSerializer<T : Enum<T>>(
-    private val values: Array<out T>
+    private val values: Array<out T>,
 ) : StringSerializer<T> {
     override fun serialize(serializable: T): String {
         return serializable.ordinal.toString()

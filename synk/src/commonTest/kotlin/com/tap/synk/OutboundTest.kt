@@ -24,7 +24,7 @@ class OutboundTest {
             "123",
             "Jim",
             "Jones",
-            123344433
+            123344433,
         )
 
         val result = synk.outbound(newCRDT)
@@ -37,7 +37,7 @@ class OutboundTest {
         }
         val expectedMeta = Meta(
             CRDT::class.qualifiedName.toString(),
-            expectedMetaMap
+            expectedMetaMap,
         )
         val expectedMessage = Message(newCRDT, expectedMeta)
 
@@ -59,14 +59,14 @@ class OutboundTest {
             "123",
             "Jim",
             "Jonesss",
-            123344477
+            123344477,
         )
 
         val newCRDT = CRDT(
             "123",
             "Jim",
             "Jones",
-            123344433
+            123344433,
         )
 
         val result = kotlin.runCatching { synk.outbound(newCRDT, oldCRDT) }
@@ -84,7 +84,7 @@ class OutboundTest {
             "123",
             "Jim",
             "Jonesss",
-            123344477
+            123344477,
         )
 
         val oldMetaMap = HashMap<String, String>().apply {
@@ -99,7 +99,7 @@ class OutboundTest {
             "123",
             "Jim",
             "Jones",
-            123344433
+            123344433,
         )
 
         val result = synk.outbound(newCRDT, oldCRDT)
@@ -112,7 +112,7 @@ class OutboundTest {
         }
         val expectedMeta = Meta(
             CRDT::class.qualifiedName.toString(),
-            expectedMetaMap
+            expectedMetaMap,
         )
         val expectedMessage = Message(newCRDT, expectedMeta)
 

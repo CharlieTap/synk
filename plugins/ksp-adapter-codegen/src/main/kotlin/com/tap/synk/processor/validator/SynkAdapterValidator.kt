@@ -10,7 +10,7 @@ import com.tap.synk.processor.validator.AnnotatedValidator.Invariant.factory
 
 internal class SynkAdapterValidator(
     private val synkSymbols: SynkSymbols,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
 ) : AnnotatedValidator {
     companion object Invariant {
         internal fun mustHaveQualifiedName(classDeclaration: KSClassDeclaration): Boolean {
@@ -27,7 +27,9 @@ internal class SynkAdapterValidator(
         return setOf(
             factory(KSClassDeclaration::validate, logger, "Failed to validate class declaration"),
             factory(Invariant::mustHaveQualifiedName, logger, "@SynkAdapter must target classes with qualified names"),
-            factory({ mustImplementIdResolver(it, synkSymbols.idResolver) }, logger, "@SynkAdapter annotated class must implement IDResolver interface")
+            factory({
+                mustImplementIdResolver(it, synkSymbols.idResolver)
+            }, logger, "@SynkAdapter annotated class must implement IDResolver interface"),
         )
     }
 }

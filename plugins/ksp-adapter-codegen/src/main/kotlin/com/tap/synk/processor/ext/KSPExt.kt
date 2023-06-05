@@ -27,7 +27,7 @@ internal inline fun <reified T> KSAnnotation.getMember(name: String): T {
     val matchingArg =
         arguments.find { it.name?.asString() == name }
             ?: error(
-                "No member name found for '$name'. All arguments: ${arguments.map { it.name?.asString() }}"
+                "No member name found for '$name'. All arguments: ${arguments.map { it.name?.asString() }}",
             )
     return matchingArg.value as? T ?: error("No value found for $name. Was ${matchingArg.value}")
 }

@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class Synk internal constructor(
     val clockStorageConfiguration: ClockStorageConfiguration,
     val factory: MetaStoreFactory = InMemoryMetaStoreFactory(),
-    val synkAdapterStore: SynkAdapterStore = SynkAdapterStore()
+    val synkAdapterStore: SynkAdapterStore = SynkAdapterStore(),
 ) {
     internal val hlc: MutableStateFlow<HybridLogicalClock> = MutableStateFlow(loadClock())
     internal val merger: MessageSemigroup<Any> = MessageSemigroup(synkAdapterStore)
@@ -68,16 +68,25 @@ class Synk internal constructor(
             return Synk(
                 storageConfiguration,
                 factory ?: InMemoryMetaStoreFactory(),
-                synkAdapterStore
+                synkAdapterStore,
             )
         }
     }
 }
 
 internal fun Synk.loadClock(): HybridLogicalClock {
-    return HybridLogicalClock.load(clockStorageConfiguration.filePath, clockStorageConfiguration.fileSystem, clockStorageConfiguration.clockFileName) ?: HybridLogicalClock()
+    return HybridLogicalClock.load(
+        clockStorageConfiguration.filePath,
+        clockStorageConfiguration.fileSystem,
+        clockStorageConfiguration.clockFileName,
+    ) ?: HybridLogicalClock()
 }
 
 internal fun Synk.storeClock(hybridLogicalClock: HybridLogicalClock) {
-    return HybridLogicalClock.store(hybridLogicalClock, clockStorageConfiguration.filePath, clockStorageConfiguration.fileSystem, clockStorageConfiguration.clockFileName)
+    return HybridLogicalClock.store(
+        hybridLogicalClock,
+        clockStorageConfiguration.filePath,
+        clockStorageConfiguration.fileSystem,
+        clockStorageConfiguration.clockFileName,
+    )
 }

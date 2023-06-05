@@ -15,14 +15,14 @@ class SynkAdapterDiffTest {
             "123",
             "test",
             "test",
-            1234
+            1234,
         )
 
         val crdt2 = CRDT(
             "123",
             "test",
             "test2",
-            1234
+            1234,
         )
 
         val diff = synkAdapter.diff(crdt1, crdt2)

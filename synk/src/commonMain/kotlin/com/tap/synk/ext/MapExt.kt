@@ -20,7 +20,9 @@ fun Map<String, String>.encodeToString(): String {
     return entries.foldIndexed("") { idx, acc, entry ->
         val postFix = if (idx < entries.size - 1) {
             "|"
-        } else ""
+        } else {
+            ""
+        }
         acc + entry.key + ":" + entry.value + postFix
     }
 }

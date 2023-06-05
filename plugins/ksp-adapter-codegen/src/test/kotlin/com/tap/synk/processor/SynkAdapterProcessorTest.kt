@@ -47,7 +47,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -78,7 +78,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
     }
 
@@ -101,7 +101,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -132,7 +132,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("BarMapEncoder.kt")
+            compilationResult.sourceFor("BarMapEncoder.kt"),
         )
 
         assertSourceEquals(
@@ -161,7 +161,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("BazMapEncoder.kt")
+            compilationResult.sourceFor("BazMapEncoder.kt"),
         )
 
         assertSourceEquals(
@@ -205,7 +205,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
     }
 
@@ -228,7 +228,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -269,7 +269,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
     }
 
@@ -292,7 +292,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -322,7 +322,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
 
         assertSourceEquals(
@@ -353,7 +353,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("BarMapEncoder.kt")
+            compilationResult.sourceFor("BarMapEncoder.kt"),
         )
 
         assertSourceEquals(
@@ -382,7 +382,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("BimMapEncoder.kt")
+            compilationResult.sourceFor("BimMapEncoder.kt"),
         )
     }
 
@@ -405,7 +405,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -435,7 +435,7 @@ internal class SynkAdapterProcessorTest {
                     }
                 }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
 
         assertSourceEquals(
@@ -462,7 +462,7 @@ internal class SynkAdapterProcessorTest {
                 }
             }
             """.trimIndent(),
-            compilationResult.sourceFor("BarMapEncoder.kt")
+            compilationResult.sourceFor("BarMapEncoder.kt"),
         )
     }
 
@@ -485,7 +485,7 @@ internal class SynkAdapterProcessorTest {
                     private val mapEncoder: MapEncoder<Foo> = FooMapEncoder(),
                 ) : SynkAdapter<Foo>, IDResolver<Foo> by idResolver, MapEncoder<Foo> by mapEncoder
             """.trimIndent(),
-            compilationResult.sourceFor("FooSynkAdapter.kt")
+            compilationResult.sourceFor("FooSynkAdapter.kt"),
         )
 
         assertSourceEquals(
@@ -522,7 +522,7 @@ internal class SynkAdapterProcessorTest {
                 }
             }
             """.trimIndent(),
-            compilationResult.sourceFor("FooMapEncoder.kt")
+            compilationResult.sourceFor("FooMapEncoder.kt"),
         )
     }
 
@@ -534,11 +534,14 @@ internal class SynkAdapterProcessorTest {
         verbose = false
     }.compile()
 
-    private fun assertSourceEquals(@Language("kotlin") expected: String, actual: String) {
+    private fun assertSourceEquals(
+        @Language("kotlin") expected: String,
+        actual: String,
+    ) {
         assertEquals(
             expected.trimIndent(),
             // unfortunate hack needed as we cannot enter expected text with tabs rather than spaces
-            actual.trimIndent().replace("\t", "    ")
+            actual.trimIndent().replace("\t", "    "),
         )
     }
 

@@ -10,5 +10,5 @@ internal fun crdt(id: String = Uuid.randomUUID().toString()): CRDT = CRDT(
     id,
     faker.name.firstName(),
     faker.name.lastName(),
-    faker.random.nextInt()
+    faker.random.nextInt(),
 )

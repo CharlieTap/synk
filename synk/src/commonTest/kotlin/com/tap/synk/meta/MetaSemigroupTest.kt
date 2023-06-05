@@ -22,14 +22,14 @@ class MetaSemigroupTest {
                 put("name", hlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
         val meta2 = Meta(
             "test",
             HashMap<String, String>().apply {
                 put("name", laterHlc.toString())
                 put("phone", hlc.toString())
-            }
+            },
         )
 
         val result = MetaSemigroup.combine(meta1, meta2)
@@ -39,7 +39,7 @@ class MetaSemigroupTest {
                 put("name", laterHlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
 
         assertEquals(expected, result)

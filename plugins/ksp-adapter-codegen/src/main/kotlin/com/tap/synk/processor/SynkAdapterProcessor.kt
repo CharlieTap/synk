@@ -21,7 +21,7 @@ import com.tap.synk.processor.visitor.MapEncoderVisitor
 internal class SynkAdapterProcessor(
     private val options: Map<String, String>,
     private val kspCodeGenerator: CodeGenerator,
-    private val kspLogger: KSPLogger
+    private val kspLogger: KSPLogger,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val synkSymbols = SynkSymbols(resolver)

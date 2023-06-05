@@ -3,7 +3,7 @@ package com.tap.delight.metastore.schema
 import com.squareup.sqldelight.db.SqlDriver
 
 class SqliteSchemaInitializer(
-    private val createSchema: (SqlDriver) -> Unit
+    private val createSchema: (SqlDriver) -> Unit,
 ) : SchemaInitializer {
 
     companion object {

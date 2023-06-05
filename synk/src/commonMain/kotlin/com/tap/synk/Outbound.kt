@@ -25,7 +25,7 @@ internal fun <T : Any> synkOutbound(
     old: T?,
     hlc: MutableStateFlow<HybridLogicalClock>,
     adapterStore: SynkAdapterStore,
-    factory: MetaStoreFactory
+    factory: MetaStoreFactory,
 ): Message<T> {
     val synkAdapter = adapterStore.resolve(new::class)
     val metaStore = factory.getStore(new::class)

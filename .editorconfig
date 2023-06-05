@@ -12,12 +12,17 @@ insert_final_newline = true
 
 [*.{kt,kts}]
 
+max_line_length=160
+
+ktlint_code_style = ktlint_official
+ktlint_ignore_back_ticked_identifier = true
+
+ktlint_standard = enabled
+ktlint_standard_filename = disabled
+
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ij_kotlin_packages_to_use_import_on_demand = unset
 
-ktlint_code_style = ktlint_official
-ktlint_standard = true
-ktlint_experimental = disabled
-ktlint_standard_filename = disabled
-ktlint_standard_multiline-if-else = disabled
+[*.{yml,yaml}]
+indent_size = 2

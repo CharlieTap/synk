@@ -31,7 +31,7 @@ class MessageSemigroupTest {
                 put("name", hlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
 
         val meta2 = Meta(
@@ -40,21 +40,21 @@ class MessageSemigroupTest {
                 put("id", hlc.toString())
                 put("name", laterHlc.toString())
                 put("phone", hlc.toString())
-            }
+            },
         )
 
         val crdt1 = CRDT(
             "123",
             "jim",
             "smith",
-            12345678
+            12345678,
         )
 
         val crdt2 = CRDT(
             "123",
             "bob",
             "jones",
-            23456789
+            23456789,
         )
 
         val message1 = Message(crdt1, meta1)
@@ -65,7 +65,7 @@ class MessageSemigroupTest {
             "123",
             "bob",
             "smith",
-            12345678
+            12345678,
         )
         val expectedMeta = Meta(
             "test",
@@ -74,7 +74,7 @@ class MessageSemigroupTest {
                 put("name", laterHlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
 
         assertEquals(Message(expectedCrdt, expectedMeta), result)
@@ -99,7 +99,7 @@ class MessageSemigroupTest {
                 put("name", hlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
 
         val meta2 = Meta(
@@ -108,21 +108,21 @@ class MessageSemigroupTest {
                 put("id", hlc.toString())
                 put("name", laterHlc.toString())
                 put("phone", hlc.toString())
-            }
+            },
         )
 
         val crdt1 = CRDT(
             "123",
             "jim",
             "smith",
-            null
+            null,
         )
 
         val crdt2 = CRDT(
             "123",
             "bob",
             "jones",
-            23456789
+            23456789,
         )
 
         val message1 = Message(crdt1, meta1)
@@ -133,7 +133,7 @@ class MessageSemigroupTest {
             "123",
             "bob",
             "smith",
-            null
+            null,
         )
         val expectedMeta = Meta(
             "test",
@@ -142,7 +142,7 @@ class MessageSemigroupTest {
                 put("name", laterHlc.toString())
                 put("last_name", hlc.toString())
                 put("phone", laterHlc.toString())
-            }
+            },
         )
 
         assertEquals(Message(expectedCrdt, expectedMeta), result)

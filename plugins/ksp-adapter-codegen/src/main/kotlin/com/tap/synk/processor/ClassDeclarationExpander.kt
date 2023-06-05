@@ -9,7 +9,7 @@ import com.tap.synk.processor.ext.isDataClass
 import com.tap.synk.processor.ext.isSealedClass
 
 internal class ClassDeclarationExpander(
-    private val symbols: SynkSymbols
+    private val symbols: SynkSymbols,
 ) {
 
     fun expand(classDeclaration: KSClassDeclaration): List<KSClassDeclaration> {
@@ -25,7 +25,9 @@ internal class ClassDeclarationExpander(
         // When the class declaration is a sealed class
         val sealedChildDeclarations = if (classDeclaration.isSealedClass()) {
             classDeclaration.getSealedSubclasses().toSet()
-        } else emptySet()
+        } else {
+            emptySet()
+        }
 
         val childClassTypes = classDeclaration.primaryConstructor?.parameters?.map { param ->
             param.type.resolve()
@@ -40,7 +42,9 @@ internal class ClassDeclarationExpander(
                     acc.add(innerTypeDeclaration)
                 }
                 acc
-            } else acc
+            } else {
+                acc
+            }
         }
         // constructor param declarations and constructor param collection inner type declarations
         val candidateClassDeclarations = childClassDeclarations + childCollectionClassDeclarations
@@ -52,7 +56,10 @@ internal class ClassDeclarationExpander(
         return sealedChildDeclarations + childDataClassDeclarations + childSealedClassDeclarations
     }
 
-    private tailrec fun recursiveClassDeclarationExpansion(classDeclarations: Set<KSClassDeclaration>, originClassDeclarations: Set<KSClassDeclaration> = emptySet()): Set<KSClassDeclaration> {
+    private tailrec fun recursiveClassDeclarationExpansion(
+        classDeclarations: Set<KSClassDeclaration>,
+        originClassDeclarations: Set<KSClassDeclaration> = emptySet(),
+    ): Set<KSClassDeclaration> {
         val subClassDeclarations = classDeclarations.flatMap { childSubClassDeclarations(it) }.toSet()
 
         return if (subClassDeclarations.isEmpty()) {

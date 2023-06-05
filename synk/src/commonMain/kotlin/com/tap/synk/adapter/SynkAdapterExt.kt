@@ -12,6 +12,8 @@ internal fun <T : Any> SynkAdapter<T>.diff(old: T, new: T): Set<String> {
 
         if (newEntry.value != oldEntry.value) {
             acc.apply { add(newEntry.key) }
-        } else acc
+        } else {
+            acc
+        }
     }
 }

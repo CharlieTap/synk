@@ -12,7 +12,7 @@ internal val FOO_DATA_CLASS = SourceFile.kotlin(
             private val baz: Int?,
             private val bim: Boolean,
         )
-    """
+    """,
 )
 
 internal val FOO_NOT_IMPLEMENTED_ID_RESOLVER = SourceFile.kotlin(
@@ -25,7 +25,7 @@ internal val FOO_NOT_IMPLEMENTED_ID_RESOLVER = SourceFile.kotlin(
         
         @SynkAdapter
         class FooResolver
-    """
+    """,
 )
 
 internal val FOO_ID_RESOLVER = SourceFile.kotlin(
@@ -42,7 +42,7 @@ internal val FOO_ID_RESOLVER = SourceFile.kotlin(
                 return crdt.bar
             }
         }
-    """
+    """,
 )
 
 internal val FOO_SEALED_CLASS = SourceFile.kotlin(
@@ -62,7 +62,7 @@ internal val FOO_SEALED_CLASS = SourceFile.kotlin(
                 val bam: String,
             ): Foo
         }
-    """
+    """,
 )
 
 internal val FOO_SEALED_ID_RESOLVER = SourceFile.kotlin(
@@ -83,7 +83,7 @@ internal val FOO_SEALED_ID_RESOLVER = SourceFile.kotlin(
                 return id
             }
         }
-    """
+    """,
 )
 
 internal val FOO_COLLECTION_CLASS = SourceFile.kotlin(
@@ -95,7 +95,7 @@ internal val FOO_COLLECTION_CLASS = SourceFile.kotlin(
             private val baz: String,
             private val bim: Set<Boolean>,
         )
-    """
+    """,
 )
 
 internal val FOO_COLLECTION_ID_RESOLVER = SourceFile.kotlin(
@@ -112,7 +112,7 @@ internal val FOO_COLLECTION_ID_RESOLVER = SourceFile.kotlin(
                 return crdt.baz
             }
         }
-    """
+    """,
 )
 
 internal val FOO_DATA_SUB_CLASS = SourceFile.kotlin(
@@ -123,7 +123,7 @@ internal val FOO_DATA_SUB_CLASS = SourceFile.kotlin(
             private val bar: Bar,
             private val baz: String,
         )
-    """
+    """,
 )
 
 internal val FOO_BAR_SUB_CLASS = SourceFile.kotlin(
@@ -134,7 +134,7 @@ internal val FOO_BAR_SUB_CLASS = SourceFile.kotlin(
             private val bim: Bim?,
             private val second: String,
         )
-    """
+    """,
 )
 
 internal val FOO_BIM_SUB_CLASS = SourceFile.kotlin(
@@ -145,7 +145,7 @@ internal val FOO_BIM_SUB_CLASS = SourceFile.kotlin(
             private val first: String,
             private val second: String,
         )
-    """
+    """,
 )
 
 internal val FOO_BAR_SUB_CLASS_RESOLVER = SourceFile.kotlin(
@@ -162,7 +162,7 @@ internal val FOO_BAR_SUB_CLASS_RESOLVER = SourceFile.kotlin(
                 return crdt.baz
             }
         }
-    """
+    """,
 )
 
 internal val FOO_COLLECTION_DATA_CLASS = SourceFile.kotlin(
@@ -172,7 +172,7 @@ internal val FOO_COLLECTION_DATA_CLASS = SourceFile.kotlin(
         data class Foo(
             private val bar: List<Bar>,
         )
-    """
+    """,
 )
 
 internal val BAR_COLLECTION_DATA_CLASS = SourceFile.kotlin(
@@ -182,7 +182,7 @@ internal val BAR_COLLECTION_DATA_CLASS = SourceFile.kotlin(
         data class Bar(
             private val bim: String,
         )
-    """
+    """,
 )
 
 internal val FOO_COLLECTION_DATA_CLASS_RESOLVER = SourceFile.kotlin(
@@ -199,7 +199,7 @@ internal val FOO_COLLECTION_DATA_CLASS_RESOLVER = SourceFile.kotlin(
                 return crdt.baz
             }
         }
-    """
+    """,
 )
 
 internal val BAR_VALUE_CLASS = SourceFile.kotlin(
@@ -208,7 +208,7 @@ internal val BAR_VALUE_CLASS = SourceFile.kotlin(
         package com.test.processor
         @JvmInline
         value class Bar(val test: Int)
-    """
+    """,
 )
 
 internal val BAR_VALUE_CLASS_SERIALIZER = SourceFile.kotlin(
@@ -229,7 +229,7 @@ internal val BAR_VALUE_CLASS_SERIALIZER = SourceFile.kotlin(
                 return Bar(serialized.toInt())
             }
         }
-    """
+    """,
 )
 
 internal val BAZ_ENUM_CLASS = SourceFile.kotlin(
@@ -240,7 +240,7 @@ internal val BAZ_ENUM_CLASS = SourceFile.kotlin(
             BIM,
             BAM,
         }
-    """
+    """,
 )
 
 internal val FOO_VALUE_CLASS = SourceFile.kotlin(
@@ -252,7 +252,7 @@ internal val FOO_VALUE_CLASS = SourceFile.kotlin(
             private val barNull: Bar?,
             private val baz: Baz,
         )
-    """
+    """,
 )
 
 internal val FOO_RESOLVER = SourceFile.kotlin(
@@ -269,5 +269,5 @@ internal val FOO_RESOLVER = SourceFile.kotlin(
                 return crdt.baz
             }
         }
-    """
+    """,
 )

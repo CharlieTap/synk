@@ -16,7 +16,7 @@ import com.tap.synk.processor.ext.isObject
 internal data class EncoderContext(
     private val processorContext: ProcessorContext,
     private val classDeclaration: KSClassDeclaration,
-    private val serializers: List<KSClassDeclaration>
+    private val serializers: List<KSClassDeclaration>,
 ) : ProcessorContext by processorContext {
 
     val type by lazy { classDeclaration.asType() }
@@ -37,7 +37,7 @@ internal data class EncoderContext(
             DerivedParameter(
                 param,
                 param.name?.asString() ?: "",
-                param.type.resolve()
+                param.type.resolve(),
             )
         }
     }
@@ -57,7 +57,7 @@ internal data class EncoderContext(
     inner class DerivedParameter(
         val parameter: KSValueParameter,
         val name: String,
-        val type: KSType
+        val type: KSType,
     ) {
         val isInstanceOfCollection by lazy {
             symbols.isCollection(type)

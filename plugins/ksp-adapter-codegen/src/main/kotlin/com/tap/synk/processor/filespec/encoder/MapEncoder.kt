@@ -11,7 +11,7 @@ internal data class MapEncoder(
     val parameters: List<EncoderParameter>,
     val extends: EncoderInterface,
     val encodeFunction: EncoderFunction,
-    val decodeFunction: EncoderFunction
+    val decodeFunction: EncoderFunction,
 )
 
 @JvmInline
@@ -23,7 +23,7 @@ internal sealed interface EncoderParameter {
     data class CompositeSubEncoder(
         val name: String,
         val genericType: ParameterizedTypeName,
-        val encoderType: TypeName
+        val encoderType: TypeName,
     ) : EncoderParameter
 
     // Collections Encoder
@@ -34,7 +34,7 @@ internal sealed interface EncoderParameter {
         val genericMapEncoderTypeName: ParameterizedTypeName,
         val genericTypeName: TypeName,
         val genericEncoderTypeName: TypeName,
-        val instantiateNestedEncoder: Boolean = false
+        val instantiateNestedEncoder: Boolean = false,
     ) : EncoderParameter
 
     // Data class Encoder
@@ -43,7 +43,7 @@ internal sealed interface EncoderParameter {
         val customEncoderVariableName: String,
         val genericTypeName: ParameterizedTypeName,
         val concreteTypeName: TypeName,
-        val nullableMapEncoder: TypeName
+        val nullableMapEncoder: TypeName,
     ) : EncoderParameter
 
     // Value class and Custom Class serializer
@@ -52,14 +52,14 @@ internal sealed interface EncoderParameter {
         val serializerVariableName: String,
         val genericTypeName: ParameterizedTypeName,
         val concreteTypeName: TypeName,
-        val instantiateSerializer: Boolean = false
+        val instantiateSerializer: Boolean = false,
     ) : EncoderParameter
 
     data class EnumSerializer(
         val parameterName: String,
         val serializerVariableName: String,
         val enumType: TypeName,
-        val parameterizedStringSerializer: ParameterizedTypeName
+        val parameterizedStringSerializer: ParameterizedTypeName,
     ) : EncoderParameter
 
     fun variableName(): String = when (this) {
@@ -84,11 +84,11 @@ internal data class EncoderFunction(
     val functionParameterName: String,
     val functionParameterTypeName: TypeName,
     val functionReturnTypeName: TypeName,
-    val encoderFunctionCodeBlock: EncoderFunctionCodeBlock
+    val encoderFunctionCodeBlock: EncoderFunctionCodeBlock,
 ) {
     enum class Type {
         Encode,
-        Decode
+        Decode,
     }
 }
 
@@ -100,18 +100,18 @@ internal sealed interface EncoderFunctionCodeBlock {
 
     data class Standard(
         val encodables: List<EncoderFunctionCodeBlockStandardEncodable>,
-        val type: TypeName? = null
+        val type: TypeName? = null,
     ) : EncoderFunctionCodeBlock
 
     data class Delegate(
-        val subEncoders: List<EncoderFunctionCodeBlockDelegateEncoder>
+        val subEncoders: List<EncoderFunctionCodeBlockDelegateEncoder>,
     ) : EncoderFunctionCodeBlock
 }
 
 internal class EncoderFunctionCodeBlockDelegateEncoder(
     val typeName: TypeName,
     val variableName: String,
-    val enumName: String
+    val enumName: String,
 )
 
 internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
@@ -119,22 +119,22 @@ internal sealed interface EncoderFunctionCodeBlockStandardEncodable {
     data class Primitive(
         val encodedKey: String,
         val conversion: String = "",
-        val nullable: Boolean
+        val nullable: Boolean,
     ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class Serializable(
         val encodedKey: String,
         val serializerVariableName: String,
-        val nullable: Boolean
+        val nullable: Boolean,
     ) : EncoderFunctionCodeBlockStandardEncodable
 
     data class NestedClass(
         val encodedKey: String,
-        val encoderVariableName: String
+        val encoderVariableName: String,
     ) : EncoderFunctionCodeBlockStandardEncodable
 }
 
 internal data class EncoderEnum(
     val name: String,
-    val options: List<String>
+    val options: List<String>,
 )

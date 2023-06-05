@@ -4,7 +4,7 @@ import com.tap.synk.abstraction.Semigroup
 import com.tap.synk.adapter.store.SynkAdapterStore
 
 internal class MessageSemigroup<T : Any>(
-    private val synkAdapterStore: SynkAdapterStore
+    private val synkAdapterStore: SynkAdapterStore,
 ) : Semigroup<Message<T>> {
     override fun combine(a: Message<T>, b: Message<T>): Message<T> {
         val synkAdapter = synkAdapterStore.resolve(a.crdt::class)

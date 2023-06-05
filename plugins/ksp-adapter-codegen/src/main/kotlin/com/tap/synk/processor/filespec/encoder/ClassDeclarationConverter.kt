@@ -17,12 +17,14 @@ internal fun mapEncoder(): MapEncoder {
         deriveParameters(),
         deriveEncoderInterface(),
         deriveEncodeFunction(),
-        deriveDecodeFunction()
+        deriveDecodeFunction(),
     )
 }
 
 context(EncoderContext)
-private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.DerivedParameter): EncoderParameter.ParameterizedCollectionEncoder? {
+private fun deriveParameterizedCollectionParameter(
+    parameter: EncoderContext.DerivedParameter,
+): EncoderParameter.ParameterizedCollectionEncoder? {
     // Inner type of collection, String or Int or Custom
     val genericType = parameter.innerType
     // StringEncoder or BarEncoder
@@ -42,7 +44,9 @@ private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.Der
 
     val genericTypeName = parameter.innerTypeName
     // MapEncoder<List<T>> or MapEncoder<Set<T>>
-    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(parameter.type.toClassName().parameterizedBy(genericTypeName))
+    val genericMapEncoderTypeName = poetTypes.mapEncoderTypeName.parameterizedBy(
+        parameter.type.toClassName().parameterizedBy(genericTypeName),
+    )
     val collectionEncoderVariableName = parameter.name + collectionEncoderTypeName.rawType.simpleNames.first() + genericType.declaration.simpleName.asString()
 
     return EncoderParameter.ParameterizedCollectionEncoder(
@@ -52,7 +56,7 @@ private fun deriveParameterizedCollectionParameter(parameter: EncoderContext.Der
         genericMapEncoderTypeName,
         genericTypeName,
         concreteEncoderPair.first,
-        concreteEncoderPair.second
+        concreteEncoderPair.second,
     )
 }
 
@@ -67,7 +71,7 @@ private fun deriveSubEncoderParameter(parameter: EncoderContext.DerivedParameter
         parameter.name + "MapEncoder",
         genericMapEncoderTypeName,
         concreteMapEncoderTypeName,
-        poetTypes.nullableMapEncoder
+        poetTypes.nullableMapEncoder,
     )
 }
 
@@ -83,7 +87,7 @@ private fun deriveSerializerParameter(parameter: EncoderContext.DerivedParameter
         parameter.name + "Serializer",
         parameterizedStringSerializer,
         concreteType,
-        requiresInstantiation
+        requiresInstantiation,
     )
 }
 
@@ -96,7 +100,7 @@ private fun deriveEnumSerializerParameter(parameter: EncoderContext.DerivedParam
         parameter.name,
         parameter.name + "Serializer",
         parameter.type.toTypeName(),
-        parameterizedEnumSerializer
+        parameterizedEnumSerializer,
     )
 }
 
@@ -122,14 +126,18 @@ private fun deriveParameters(): List<EncoderParameter> {
             deriveSerializerParameter(param)
         } else if (param.isEnum) {
             deriveEnumSerializerParameter(param)
-        } else null
+        } else {
+            null
+        }
     }
 
     val subClassEncoders = if (isSealed) {
         sealedSubClasses.map { subClassDeclaration ->
             deriveCompositeSubEncoderParameter(subClassDeclaration)
         }
-    } else emptyList()
+    } else {
+        emptyList()
+    }
 
     return paramEncoders + subClassEncoders
 }
@@ -202,7 +210,7 @@ private fun deriveEncodeFunction(): EncoderFunction {
         "crdt",
         typeName,
         poetTypes.stringMapTypeName,
-        codeBlock
+        codeBlock,
     )
 }
 
@@ -238,7 +246,7 @@ private fun deriveDecodeFunction(): EncoderFunction {
         "map",
         poetTypes.stringMapTypeName,
         typeName,
-        codeBlock
+        codeBlock,
     )
 }
 
@@ -250,5 +258,7 @@ private fun deriveEnums(): EncoderEnum? {
             sealedSubClass.simpleName.asString()
         }.toList()
         EncoderEnum(enumName, options)
-    } else null
+    } else {
+        null
+    }
 }

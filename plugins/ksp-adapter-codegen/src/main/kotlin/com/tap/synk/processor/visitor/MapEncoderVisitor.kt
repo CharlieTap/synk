@@ -11,7 +11,7 @@ import com.tap.synk.processor.filespec.encoder.mapEncoderFileSpec
 
 internal class MapEncoderVisitor(
     private val processorContext: ProcessorContext,
-    private val serializers: List<KSClassDeclaration>
+    private val serializers: List<KSClassDeclaration>,
 ) : KSVisitorVoid() {
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
@@ -23,7 +23,7 @@ internal class MapEncoderVisitor(
 
         val mapEncoder = with(encoderContext) { mapEncoder() }
         val mapEncoderFileSpec = mapEncoderFileSpec(
-            mapEncoder
+            mapEncoder,
         ) { addOriginatingKSFile(containingFile) }
         mapEncoderFileSpec.writeTo(codeGenerator = processorContext.codeGenerator, aggregating = false)
     }

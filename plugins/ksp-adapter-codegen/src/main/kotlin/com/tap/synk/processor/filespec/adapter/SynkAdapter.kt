@@ -7,7 +7,7 @@ import com.squareup.kotlinpoet.TypeName
 internal data class SynkAdapter(
     val className: ClassName,
     val interfaces: Set<AdapterInterface>,
-    val parameters: List<AdapterParameter>
+    val parameters: List<AdapterParameter>,
 )
 
 internal sealed interface AdapterInterface
@@ -19,5 +19,5 @@ internal data class Delegated(val typeName: ParameterizedTypeName, val delegate:
 internal data class AdapterParameter(
     val parameterName: String,
     val parameterType: ParameterizedTypeName,
-    val parameterDefaultType: TypeName
+    val parameterDefaultType: TypeName,
 )

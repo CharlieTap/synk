@@ -5,7 +5,7 @@ import com.tap.synk.CMap
 
 internal class DelightfulMemCache(
     private val cacheSize: Int,
-    private val cache: CMap<String, String> = CMap(lruToMap(LruCache(cacheSize)))
+    private val cache: CMap<String, String> = CMap(lruToMap(LruCache(cacheSize))),
 ) : MemCache<String, String> {
 
     companion object {

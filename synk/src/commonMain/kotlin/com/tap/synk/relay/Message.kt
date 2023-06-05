@@ -11,7 +11,7 @@ import kotlinx.serialization.json.jsonPrimitive
 
 data class Message<out T>(
     val crdt: T,
-    val meta: Meta
+    val meta: Meta,
 )
 
 internal fun <T : Any> Message<T>.encodeAsJsonObject(synkAdapter: SynkAdapter<T>): JsonObject {
@@ -21,10 +21,10 @@ internal fun <T : Any> Message<T>.encodeAsJsonObject(synkAdapter: SynkAdapter<T>
             "meta" to JsonObject(
                 mapOf(
                     "clazz" to JsonPrimitive(meta.namespace),
-                    "timestamp_meta" to meta.timestampMeta.encodeAsJsonObject()
-                )
-            )
-        )
+                    "timestamp_meta" to meta.timestampMeta.encodeAsJsonObject(),
+                ),
+            ),
+        ),
     )
 }
 
@@ -47,8 +47,8 @@ internal fun <T : Any> JsonObject.decodeToMessage(synkAdapter: SynkAdapter<T>): 
         synkAdapter.decode(crdt?.decodeToMap() ?: emptyMap()),
         Meta(
             meta?.get("clazz")?.jsonPrimitive?.content ?: "",
-            meta?.get("timestamp_meta")?.jsonObject?.decodeToMap() ?: throw IllegalStateException("Failed to find timestamp meta in Message")
-        )
+            meta?.get("timestamp_meta")?.jsonObject?.decodeToMap() ?: throw IllegalStateException("Failed to find timestamp meta in Message"),
+        ),
     )
 }
 
@@ -56,7 +56,7 @@ internal fun Map<String, String>.encodeAsJsonObject(): JsonObject {
     return JsonObject(
         this.map { entry ->
             entry.key to JsonPrimitive(entry.value)
-        }.toMap()
+        }.toMap(),
     )
 }
 

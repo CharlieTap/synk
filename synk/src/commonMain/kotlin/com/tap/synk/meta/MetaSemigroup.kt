@@ -24,7 +24,7 @@ internal object MetaSemigroup : Semigroup<Meta> {
 
         return Meta(
             a.namespace.ifEmpty { b.namespace },
-            newMap
+            newMap,
         )
     }
 }

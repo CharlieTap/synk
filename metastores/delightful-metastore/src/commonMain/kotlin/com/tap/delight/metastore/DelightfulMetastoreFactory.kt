@@ -22,7 +22,7 @@ class DelightfulMetastoreFactory(
     private val hasher: Hasher = MurmurHasher(MurmurHash3()),
     private val memCache: MemCache<String, String> = DelightfulMemCache(config?.cacheSize ?: DEFAULT_CACHE_SIZE),
     private val schemaInitializer: SchemaInitializer = delightfulSchemaInitializer(),
-    private val storeCache: HashMap<String, MetaStore> = HashMap()
+    private val storeCache: HashMap<String, MetaStore> = HashMap(),
 ) : MetaStoreFactory {
 
     companion object {
@@ -30,7 +30,9 @@ class DelightfulMetastoreFactory(
         private const val DEFAULT_CACHE_SIZE = 1000
 
         fun clazzNameToString(clazz: KClass<*>, hasher: Hasher): String {
-            val clazzName = clazz.qualifiedName ?: clazz.simpleName ?: throw IllegalStateException("Unable to generate metastore, given class has no name")
+            val clazzName = clazz.qualifiedName ?: clazz.simpleName ?: throw IllegalStateException(
+                "Unable to generate metastore, given class has no name",
+            )
             return hasher.hash(clazzName)
         }
 

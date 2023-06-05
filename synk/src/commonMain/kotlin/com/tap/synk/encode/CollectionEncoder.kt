@@ -6,7 +6,7 @@ import com.tap.synk.ext.groupedByEncodedIndex
 class CollectionEncoder<T>(
     private val key: String,
     private val encoder: MapEncoder<T>,
-    private val container: MutableCollection<T>
+    private val container: MutableCollection<T>,
 ) : MapEncoder<Collection<T>> {
 
     override fun encode(crdt: Collection<T>): Map<String, String> {

@@ -15,13 +15,13 @@ import okio.fakefilesystem.FakeFileSystem
 internal fun storageConfig() =
     CustomClockStorageConfiguration(
         filePath = "/test".toPath(),
-        fileSystem = FakeFileSystem()
+        fileSystem = FakeFileSystem(),
     )
 
 internal fun setupSynk(
     storageConfiguration: ClockStorageConfiguration,
     metaStoreMap: CMap<String, String>,
-    hlc: HybridLogicalClock = HybridLogicalClock()
+    hlc: HybridLogicalClock = HybridLogicalClock(),
 ): Synk {
     HybridLogicalClock.store(hlc, storageConfiguration.filePath, storageConfiguration.fileSystem, storageConfiguration.clockFileName)
 

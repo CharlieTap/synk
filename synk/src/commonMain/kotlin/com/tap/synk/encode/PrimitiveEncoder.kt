@@ -12,7 +12,7 @@ import com.tap.synk.serialize.ShortStringSerializer
 import com.tap.synk.serialize.StringSerializer
 
 class PrimitiveEncoder<T>(
-    private val serializer: StringSerializer<T>
+    private val serializer: StringSerializer<T>,
 ) : MapEncoder<T> {
     override fun encode(crdt: T): Map<String, String> {
         return mapOf(NO_KEY to serializer.serialize(crdt))

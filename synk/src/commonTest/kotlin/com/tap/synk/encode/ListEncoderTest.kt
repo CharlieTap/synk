@@ -11,7 +11,7 @@ internal class ListEncoderTest {
         val list = listOf(
             "Jim",
             "Bob",
-            "Jake"
+            "Jake",
         )
 
         val encoder = ListEncoder("list", StringEncoder)
@@ -21,7 +21,7 @@ internal class ListEncoderTest {
         val expected = mapOf(
             "0|list|" to "Jim",
             "1|list|" to "Bob",
-            "2|list|" to "Jake"
+            "2|list|" to "Jake",
         )
 
         assertEquals(expected, encoded)
@@ -32,7 +32,7 @@ internal class ListEncoderTest {
     fun `can encode a list of a user defined type to a map and back again`() {
         val list = listOf(
             CRDT("12323", "Jim", "Bob", 123456),
-            CRDT("12325", "Jake", "Smith", 123444)
+            CRDT("12325", "Jake", "Smith", 123444),
         )
 
         val encoder = ListEncoder("list", IDCRDTMapEncoder())
@@ -47,7 +47,7 @@ internal class ListEncoderTest {
             "1|list|id" to "12325",
             "1|list|name" to "Jake",
             "1|list|last_name" to "Smith",
-            "1|list|phone" to "123444"
+            "1|list|phone" to "123444",
         )
 
         assertEquals(expected, encoded)

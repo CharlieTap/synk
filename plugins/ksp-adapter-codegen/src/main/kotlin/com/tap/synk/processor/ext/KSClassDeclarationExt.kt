@@ -37,7 +37,9 @@ internal fun KSClassDeclaration.containsNestedClasses(symbols: SynkSymbols): Boo
 
         if (symbols.isCollection(parameterType)) {
             parameterType.innerArguments.first().type?.resolve()?.declaration?.modifiers?.any { it == Modifier.DATA || it == Modifier.SEALED } ?: false
-        } else false
+        } else {
+            false
+        }
     } ?: false
 }
 

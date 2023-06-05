@@ -5,7 +5,7 @@ import com.tap.synk.ext.decodeToHashmap
 import com.tap.synk.ext.encodeToString
 
 internal class InMemoryMetaStore(
-    private val store: CMap<String, String> = CMap()
+    private val store: CMap<String, String> = CMap(),
 ) : MetaStore {
     override fun warm() {
         // No op

@@ -12,7 +12,7 @@ class SynkAdapterProcessorProvider : SymbolProcessorProvider {
         return SynkAdapterProcessor(
             options = environment.options,
             kspCodeGenerator = environment.codeGenerator,
-            kspLogger = environment.logger
+            kspLogger = environment.logger,
         )
     }
 }
