@@ -12,9 +12,7 @@ internal class InMemoryMetaStore(
     }
 
     override fun getMeta(id: String): Map<String, String>? {
-        return store[id]?.let { serial ->
-            serial.decodeToHashmap()
-        }
+        return store[id]?.decodeToHashmap()
     }
 
     override fun putMeta(id: String, meta: Map<String, String>) {
