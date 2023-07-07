@@ -41,6 +41,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(projects.libs.annotations)
                 implementation(projects.libs.concurrentMap)
                 implementation(libs.kotlin.reflection)
                 implementation(libs.kotlinx.atomic.fu)

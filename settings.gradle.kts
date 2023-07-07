@@ -31,6 +31,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":libs:annotations")
 include(":libs:concurrent-map")
 include(":synk")
 include(":extension:kotlin-serialization")
