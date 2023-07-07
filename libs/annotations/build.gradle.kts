@@ -22,16 +22,7 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.atomic.fu)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
+            dependencies {}
         }
     }
 }
