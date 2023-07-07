@@ -14,44 +14,22 @@ java-bytecode-version = "11"
 android-build-tools-plugin = "7.4.0"
 versions-plugin = "0.46.0"
 
-androidx-core = "1.8.0-alpha05"
-androidx-appcompat = "1.4.1"
-androidx-cardview = "1.0.0"
 androidx-collection = "1.3.0-alpha02"
-androidx-constraintlayout = "2.1.3"
-androidx-datastore = "1.0.0"
-androidx-fragment = "1.4.1"
-androidx-lifecycle = "2.4.1"
-androidx-profileinstaller = "1.2.0-beta01"
-androidx-recyclerview = "1.2.1"
-androidx-startup = "1.1.1"
-androidx-work = "2.8.0-alpha02"
 
 autoservice-annotations = "1.0.1"
 autoservice-ksp = "1.0.0"
-
-compose-compiler = "1.4.3"
-compose-core = "1.2.0"
-compose-test = "1.0.5"
-compose-activity = "1.4.0"
-compose-constraint-layout = "1.0.0"
-compose-navigation = "2.5.0-rc01"
-compose-viewmodel = "2.4.0"
 
 dependency-analysis="1.18.0"
 
 faker = "1.14.0"
 
-hilt-core = "2.45"
-hilt-integrations = "1.0.0"
-hilt-compose="1.0.0"
 hlc = "1.1.0"
 
 junit = "4.13.2"
 
-kotlin = "1.8.21"
+kotlin = "1.9.0"
 kpoet = "1.13.0"
-ksp = "1.8.21-1.0.11"
+ksp = "1.9.0-1.0.11"
 kotlinter = "3.15.0"
 kot-compile-testing = "1.5.0"
 
@@ -59,8 +37,6 @@ kotlinx-atomic-fu = "0.20.2"
 kotlinx-coroutines = "1.6.4"
 kotlinx-datetime = "0.4.0"
 kotlinx-serialization = "1.5.0-RC"
-
-ktor = "2.0.3"
 
 logback = "1.2.3"
 murmurhash = "0.4.0"
@@ -80,7 +56,6 @@ android = { id = "com.android.application", version.ref = "android-build-tools-p
 android-lib = { id = "com.android.library", version.ref = "android-build-tools-plugin" }
 android-test = { id = "com.android.test", version.ref = "android-build-tools-plugin" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref="dependency-analysis" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-core" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
@@ -95,45 +70,12 @@ sqldelight-legacy = { id = "com.squareup.sqldelight", version.ref = "sqldelight"
 
 [libraries]
 
-
-androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core"}
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat"}
-androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "androidx-cardview"}
 androidx-collections-kmp = { module = "androidx.collection:collection", version.ref = "androidx-collection" }
-androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout"}
-androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore"}
-androidx-fragment = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment"}
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle"}
-androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle"}
-androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "androidx-profileinstaller" }
-androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "androidx-recyclerview"}
-androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup"}
-androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work"}
-
-androidx-compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose-core"}
-androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose-core"}
-androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose-core"}
-androidx-compose-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "compose-core"}
-androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "compose-core"}
-androidx-compose-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose-core"}
-androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "compose-core"}
-androidx-compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-core"}
-androidx-compose-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "compose-core"}
-androidx-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity"}
-androidx-compose-constraint-layout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "compose-constraint-layout" }
-androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
-androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-viewmodel"}
 
 autoservice-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice-annotations"}
 autoservice-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version.ref = "autoservice-ksp"}
 
 faker = { module = "io.github.serpro69:kotlin-faker", version.ref = "faker"}
-
-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "hilt-core"}
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-core"}
-hilt-integrations-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-integrations"}
-hilt-integrations-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt-integrations"}
-hilt-integrations-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-compose"}
 
 hlc = { module = "com.github.charlietap:hlc", version.ref = "hlc"}
 
@@ -152,15 +94,6 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines"}
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines"}
-
-ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor"}
-ktor-server-content = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor"}
-ktor-server-headers = { module = "io.ktor:ktor-server-default-headers-jvm", version.ref = "ktor"}
-ktor-server-logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor"}
-ktor-server-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json-jvm", version.ref = "ktor"}
-ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor"}
-ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor"}
-ktor-client-content = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor"}
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback"}
 murmurhash = { module = "com.goncalossilva:murmurhash", version.ref = "murmurhash"}
@@ -187,19 +120,4 @@ kotlinter-plugin = { module = "org.jmailen.gradle:kotlinter-gradle", version.ref
 
 
 [bundles]
-
-androidx = [ "androidx-core", "androidx-appcompat", "androidx-constraintlayout",
-    "androidx-datastore", "androidx-fragment", "androidx-lifecycle-runtime", "androidx-lifecycle-livedata", "androidx-work"
-]
-
-compose-ui = [ "androidx-compose-runtime", "androidx-compose-ui", "androidx-compose-foundation",
-    "androidx-compose-layout", "androidx-compose-material", "androidx-compose-icons",
-    "androidx-compose-animation", "androidx-compose-tooling", "androidx-compose-livedata",
-    "androidx-compose-activity", "androidx-compose-navigation",
-    "androidx-compose-viewmodel"
-]
-
-hilt-deps = [ "hilt-core", "hilt-integrations-work", "hilt-integrations-compose" ]
-hilt-compilers = [ "hilt-compiler", "hilt-integrations-compiler" ]
-retrofit = [ "kotlinx-serialization", "okhttp-logging-interceptor", "retrofit-core", "retrofit-serialization" ]
 
