@@ -56,7 +56,7 @@ class DelightfulMetastoreFactoryTest {
             cache,
         )
 
-        val metastore = factory.getStore(CRDT::class)
+        factory.getStore(CRDT::class)
 
         assertEquals(maxCacheSize, cache.size())
     }
@@ -80,14 +80,14 @@ class DelightfulMetastoreFactoryTest {
             cache,
         )
 
-        val metastore = factory.getStore(CRDT::class)
+        factory.getStore(CRDT::class)
 
         assertEquals(0, cache.size())
     }
 
     @Test
     fun `can init database twice in a row`() {
-        val database = DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
-        val database2 = DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
+        DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
+        DelightfulMetastoreFactory.createDatabase(driver, delightfulSchemaInitializer())
     }
 }

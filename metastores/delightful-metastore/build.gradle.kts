@@ -1,7 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
@@ -27,7 +25,7 @@ kotlin {
 
     targets {
         jvm()
-        android()
+        androidTarget()
     }
 
     sourceSets {

@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
@@ -21,7 +20,7 @@ kotlin {
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
-    android {
+    androidTarget {
         publishLibraryVariants("release")
     }
 
@@ -35,7 +34,7 @@ kotlin {
     }
 
     targets {
-        android()
+        androidTarget()
         jvm()
     }
 
