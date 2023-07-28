@@ -53,15 +53,7 @@ kotlin {
 android {
 
     namespace = "com.tap.delight.metastore"
-    compileSdk = libs.versions.compile.sdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        aarMetadata {
-            minCompileSdk = libs.versions.compile.sdk.get().toInt()
-        }
-    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.java.bytecode.version.get().toInt())

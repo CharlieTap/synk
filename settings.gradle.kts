@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.SettingsExtension
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -10,6 +12,12 @@ pluginManagement {
 
 plugins {
     id("com.gradle.enterprise") version ("3.13.4")
+    id("com.android.settings")  version("8.0.0")
+}
+
+configure<SettingsExtension> {
+    compileSdk = 32
+    minSdk = 24
 }
 
 gradleEnterprise {
