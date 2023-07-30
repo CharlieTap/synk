@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
-    alias(libs.plugins.sqldelight.legacy)
+    alias(libs.plugins.sqldelight.new)
     id("kotlinter-conventions")
     id("maven-publish")
 }
@@ -11,8 +11,10 @@ group = "com.tap.delight.metastore"
 version = libs.versions.version.name.get()
 
 sqldelight {
-    database("DelightfulDatabase") {
-        packageName = "com.tap.delight.metastore"
+    databases {
+        create("DelightfulDatabase") {
+            packageName.set("com.tap.delight.metastore")
+        }
     }
 }
 
@@ -36,7 +38,7 @@ kotlin {
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
                 implementation(libs.uuid)
-                api(libs.sqldelight.jvm.driver.legacy)
+                api(libs.sqldelight.jvm.driver.new)
 
             }
         }
@@ -44,7 +46,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(libs.sqldelight.jvm.driver.legacy)
+                implementation(libs.sqldelight.jvm.driver.new)
             }
         }
     }

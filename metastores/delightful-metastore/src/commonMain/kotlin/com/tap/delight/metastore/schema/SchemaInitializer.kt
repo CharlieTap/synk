@@ -1,6 +1,6 @@
 package com.tap.delight.metastore.schema
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 interface SchemaInitializer {
 

@@ -1,7 +1,7 @@
 package com.tap.delight.metastore
 
+import app.cash.sqldelight.db.SqlDriver
 import com.goncalossilva.murmurhash.MurmurHash3
-import com.squareup.sqldelight.db.SqlDriver
 import com.tap.delight.metastore.cache.DelightfulMemCache
 import com.tap.delight.metastore.cache.MemCache
 import com.tap.delight.metastore.config.MetastoreConfig

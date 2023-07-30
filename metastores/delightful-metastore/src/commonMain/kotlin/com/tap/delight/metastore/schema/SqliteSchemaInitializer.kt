@@ -1,6 +1,8 @@
 package com.tap.delight.metastore.schema
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlCursor
+import app.cash.sqldelight.db.SqlDriver
 
 class SqliteSchemaInitializer(
     private val createSchema: (SqlDriver) -> Unit,
@@ -8,11 +10,13 @@ class SqliteSchemaInitializer(
 
     companion object {
         private fun getSchemaVersion(driver: SqlDriver): Long {
+            val mapper = { cursor: SqlCursor ->
+                cursor.next()
+                QueryResult.Value(cursor.getLong(0) ?: 0)
+            }
+
             return kotlin.runCatching {
-                driver.executeQuery(null, "PRAGMA user_version;", 0, null).use { cursor ->
-                    cursor.next()
-                    cursor.getLong(0) ?: 0
-                }
+                driver.executeQuery(null, "PRAGMA user_version;", mapper, 0, null).value
             }.getOrDefault(0)
         }
 
@@ -31,10 +35,10 @@ class SqliteSchemaInitializer(
         }
     }
 
-    override fun init(driver: SqlDriver) {
-        if (!schemaHasBeenCreated(driver)) {
-            createSchema(driver)
-            markSchemaAsCreated(driver)
+    override fun init(sqlDriver: SqlDriver) {
+        if (!schemaHasBeenCreated(sqlDriver)) {
+            createSchema(sqlDriver)
+            markSchemaAsCreated(sqlDriver)
         }
     }
 }
