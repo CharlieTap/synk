@@ -101,14 +101,11 @@ retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "ret
 retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-serialization"}
 
 result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "result" }
-sqldelight-coroutines-new = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight"}
-sqldelight-android-driver-new = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-jvm-driver-new = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
-sqldelight-native-driver-new = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
-sqldelight-coroutines-legacy = { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqldelight"}
-sqldelight-android-driver-legacy = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
-sqldelight-jvm-driver-legacy = { module = "com.squareup.sqldelight:sqlite-driver", version.ref = "sqldelight" }
-sqldelight-native-driver-legacy = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight"}
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight"}
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-jvm-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid"}
 
 gradle-versions-plugin = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versions-plugin" }

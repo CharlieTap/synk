@@ -38,7 +38,7 @@ kotlin {
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
                 implementation(libs.uuid)
-                api(libs.sqldelight.jvm.driver.new)
+                api(libs.sqldelight.runtime)
 
             }
         }
