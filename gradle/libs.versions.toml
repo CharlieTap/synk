@@ -8,12 +8,12 @@ java-compiler-version = "18"
 java-bytecode-version = "11"
 
 android-build-tools-plugin = "8.0.0"
-versions-plugin = "0.46.0"
+versions-plugin = "0.47.0"
 
 androidx-collection = "1.3.0-alpha04"
 
 autoservice-annotations = "1.1.1"
-autoservice-ksp = "1.0.0"
+autoservice-ksp = "1.1.0"
 
 dependency-analysis="1.18.0"
 
@@ -25,26 +25,26 @@ junit = "4.13.2"
 
 kotlin = "1.9.0"
 kpoet = "1.14.2"
-ksp = "1.9.0-1.0.11"
+ksp = "1.9.0-1.0.12"
 kotlinter = "3.15.0"
 kot-compile-testing = "1.5.0"
 
 kotlinx-atomic-fu = "0.21.0"
-kotlinx-coroutines = "1.7.2"
+kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.0"
 kotlinx-serialization = "1.5.1"
 
-logback = "1.2.3"
+logback = "1.3.0"
 murmurhash = "0.4.0"
 
-okhttp-logging-interceptor = "4.9.3"
-okio="3.3.0"
+okhttp-logging-interceptor = "4.10.0"
+okio="3.4.0"
 retrofit-core="2.9.0"
 retrofit-serialization = "0.8.0"
 
 result = "1.1.16"
 sqldelight = "2.0.0"
-uuid = "0.7.1"
+uuid = "0.8.0"
 
 [plugins]
 
