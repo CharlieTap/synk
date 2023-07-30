@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
-    alias(libs.plugins.sqldelight.new)
+    alias(libs.plugins.sqldelight)
     id("kotlinter-conventions")
     id("maven-publish")
 }
@@ -38,7 +38,7 @@ kotlin {
                 implementation(libs.murmurhash)
                 implementation(libs.androidx.collections.kmp)
                 implementation(libs.uuid)
-                api(libs.sqldelight.jvm.driver.new)
+                api(libs.sqldelight.runtime)
 
             }
         }
@@ -46,7 +46,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(libs.sqldelight.jvm.driver.new)
+                implementation(libs.sqldelight.jvm.driver)
             }
         }
     }
