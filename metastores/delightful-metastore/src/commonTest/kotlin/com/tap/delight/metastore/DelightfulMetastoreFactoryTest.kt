@@ -1,7 +1,7 @@
 package com.tap.delight.metastore
 
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.benasher44.uuid.Uuid
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.tap.delight.metastore.cache.DelightfulMemCache
 import com.tap.delight.metastore.config.MetastoreConfig
 import com.tap.delight.metastore.hash.MurmurHasher

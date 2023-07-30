@@ -43,7 +43,7 @@ retrofit-core="2.9.0"
 retrofit-serialization = "0.8.0"
 
 result = "1.1.16"
-sqldelight = "1.5.5"
+sqldelight = "2.0.0"
 uuid = "0.7.1"
 
 [plugins]
