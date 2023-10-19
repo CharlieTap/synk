@@ -251,3 +251,11 @@ val testSynk = Synk.Builder(storageConfiguration)
 [badge-windows]: http://img.shields.io/badge/-windows-4D76CD.svg?style=flat
 [badge-ios]: http://img.shields.io/badge/-ios-CDCDCD.svg?style=flat
 [badge-mac]: http://img.shields.io/badge/-macos-111111.svg?style=flat
+
+
+## License
+
+This project is dual-licensed under both the MIT and Apache 2.0 licenses. You can choose which one you want to use the software under.
+
+- For details on the MIT license, please see the [LICENSE-MIT](LICENSE-MIT) file.
+- For details on the Apache 2.0 license, please see the [LICENSE-APACHE](LICENSE-APACHE) file.
