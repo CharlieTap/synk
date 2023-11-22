@@ -20,18 +20,16 @@ sqldelight {
 
 kotlin {
 
+    jvm()
+    androidTarget()
+
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
-    targets {
-        jvm()
-        androidTarget()
-    }
-
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(projects.synk)
                 implementation(projects.libs.concurrentMap)
@@ -43,7 +41,7 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.sqldelight.jvm.driver)

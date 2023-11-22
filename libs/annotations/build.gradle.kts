@@ -11,17 +11,15 @@ version = libs.versions.version.name.get()
 
 kotlin {
 
+    jvm()
+
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 
-    targets {
-        jvm()
-    }
-
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {}
         }
     }

@@ -15,6 +15,9 @@ version = libs.versions.version.name.get()
 
 kotlin {
 
+    androidTarget()
+    jvm()
+
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.compiler.version.get().toInt()))
         vendor.set(JvmVendorSpec.ADOPTIUM)
@@ -33,13 +36,8 @@ kotlin {
         }
     }
 
-    targets {
-        androidTarget()
-        jvm()
-    }
-
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(projects.libs.annotations)
                 implementation(projects.libs.concurrentMap)
@@ -54,7 +52,7 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.okio.fakefilesystem)
@@ -62,17 +60,11 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
 
             }
         }
-
-//        val nativeMain by creating {
-//            dependencies {
-//
-//            }
-//        }
     }
 }
 

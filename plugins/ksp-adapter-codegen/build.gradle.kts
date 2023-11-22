@@ -55,7 +55,8 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(JvmTarget.fromTarget(libs.versions.java.bytecode.version.get()))
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers"
+            "-Xcontext-receivers",
+            "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi",
         )
     }
 }

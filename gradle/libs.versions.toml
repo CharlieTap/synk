@@ -23,16 +23,16 @@ hlc = "1.1.0"
 
 junit = "4.13.2"
 
-kotlin = "1.9.0"
+kotlin = "1.9.20"
 kpoet = "1.14.2"
-ksp = "1.9.0-1.0.12"
+ksp = "1.9.20-1.0.13"
 kotlinter = "3.15.0"
-kot-compile-testing = "1.5.0"
+kot-compile-testing = "0.4.0"
 
-kotlinx-atomic-fu = "0.21.0"
+kotlinx-atomic-fu = "0.23.0"
 kotlinx-coroutines = "1.7.3"
-kotlinx-datetime = "0.4.0"
-kotlinx-serialization = "1.5.1"
+kotlinx-datetime = "0.4.1"
+kotlinx-serialization = "1.6.1"
 
 logback = "1.3.0"
 murmurhash = "0.4.0"
@@ -76,8 +76,8 @@ hlc = { module = "com.github.charlietap:hlc", version.ref = "hlc"}
 
 junit = { module = "junit:junit", version.ref = "junit"}
 
-kotlin-compile-testing-core = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "kot-compile-testing"}
-kotlin-compile-testing-ksp = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "kot-compile-testing"}
+kotlin-compile-testing-core = { module = "dev.zacsweers.kctfork:core", version.ref = "kot-compile-testing"}
+kotlin-compile-testing-ksp = { module = "dev.zacsweers.kctfork:ksp", version.ref = "kot-compile-testing"}
 kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin"}
 kotlin-poet-core = { module = "com.squareup:kotlinpoet", version.ref = "kpoet"}
 kotlin-poet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kpoet"}

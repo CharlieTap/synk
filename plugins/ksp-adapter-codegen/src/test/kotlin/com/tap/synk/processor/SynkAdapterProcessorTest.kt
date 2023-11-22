@@ -1,5 +1,6 @@
 package com.tap.synk.processor
 
+import com.tschuchort.compiletesting.CompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import com.tschuchort.compiletesting.symbolProcessorProviders
@@ -545,13 +546,13 @@ internal class SynkAdapterProcessorTest {
         )
     }
 
-    private fun KotlinCompilation.Result.sourceFor(fileName: String): String {
+    private fun CompilationResult.sourceFor(fileName: String): String {
         return kspGeneratedSources().find { it.name == fileName }
             ?.readText()
             ?: throw IllegalArgumentException("Could not find file $fileName in ${kspGeneratedSources()}")
     }
 
-    private fun KotlinCompilation.Result.kspGeneratedSources(): List<File> {
+    private fun CompilationResult.kspGeneratedSources(): List<File> {
         val kspWorkingDir = workingDir.resolve("ksp")
         val kspGeneratedDir = kspWorkingDir.resolve("sources")
         val kotlinGeneratedDir = kspGeneratedDir.resolve("kotlin")
@@ -560,6 +561,6 @@ internal class SynkAdapterProcessorTest {
             javaGeneratedDir.walk().toList()
     }
 
-    private val KotlinCompilation.Result.workingDir: File
+    private val CompilationResult.workingDir: File
         get() = checkNotNull(outputDirectory.parentFile)
 }
